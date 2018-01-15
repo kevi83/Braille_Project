@@ -1,6 +1,6 @@
 package enamel;
 
-//Connor made a comment 3
+//test comment
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
