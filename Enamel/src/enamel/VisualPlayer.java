@@ -117,6 +117,11 @@ public class VisualPlayer extends Player {
 				}
 
 				frame.getContentPane().add(southPanel, BorderLayout.SOUTH);
+				
+				//Connnor's added button
+				JButton openScenario = new JButton("Open Scenario File");
+				frame.getContentPane().add(openScenario, BorderLayout.NORTH);
+				openScenario.addActionListener(e -> openScenario.setText("Nice"));
 
 				frame.repaint();
 				frame.setVisible(true);
