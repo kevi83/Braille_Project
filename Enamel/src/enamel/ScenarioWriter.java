@@ -3,6 +3,7 @@ package enamel;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.GridPane;
@@ -16,6 +17,19 @@ public class ScenarioWriter extends Application{
 	Label textLabel = new Label("Please enter the spoken script");
 	Button publish = new Button("Publish");
 	
+	
+	// adding radio buttons - micah
+	RadioButton rButton1 =  new RadioButton("");
+	RadioButton rButton2 =  new RadioButton("");
+	RadioButton rButton3 =  new RadioButton("");
+	RadioButton rButton4 =  new RadioButton("");
+	RadioButton rButton5 =  new RadioButton("");
+	RadioButton rButton6 =  new RadioButton("");
+	RadioButton rButton7 =  new RadioButton("");
+	RadioButton rButton8 =  new RadioButton("");
+	Label space = new Label("");
+	Label cellButt = new Label("Pin input");
+	
 	@SuppressWarnings("static-access")
 	@Override
 	public void start(Stage primaryStage) throws Exception {
@@ -28,10 +42,24 @@ public class ScenarioWriter extends Application{
 		layout.setConstraints(textLabel, 0, 0);
 		layout.setConstraints(text, 0, 1);
 		layout.setConstraints(publish, 0, 2);
-		layout.getChildren().addAll(textLabel, text, publish);
 		
-		//Window size
-		Scene scene = new Scene(layout, 400, 400);
+		// adding my radio buttons to the stage - micah
+		layout.setConstraints(rButton1, 2, 3);
+		layout.setConstraints(rButton2, 3, 3);
+		layout.setConstraints(rButton3, 2, 4);
+		layout.setConstraints(rButton4, 3, 4);
+		layout.setConstraints(rButton5, 2, 5);
+		layout.setConstraints(rButton6, 3, 5);
+		layout.setConstraints(rButton7, 2, 6);
+		layout.setConstraints(rButton8, 3, 6);
+		layout.setConstraints(space, 1, 1);
+		layout.setConstraints(cellButt, 2, 2);
+		
+		layout.getChildren().addAll(textLabel, text, publish, space, rButton1, rButton2,
+				rButton3, rButton4, rButton5, rButton6, rButton7, rButton8, cellButt );
+		
+		//Window size  --- I extended the scene so that the text area would be full size. -micah
+		Scene scene = new Scene(layout, 600, 400);
 		primaryStage.setScene(scene);
 		primaryStage.show();
 	}
