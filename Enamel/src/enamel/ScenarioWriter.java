@@ -57,7 +57,8 @@ public class ScenarioWriter extends Application{
 		layout.setConstraints(space, 1, 1);
 		layout.setConstraints(cellButt, 2, 2);
 		
-		rButton1.setAccessibleRoleDescription("This is the first pin on the braille cell");
+		rButton1.setAccessibleRoleDescription("This is the first "
+				+ "pin on the braille cell");
 		
 		layout.getChildren().addAll(textLabel, text, publish, space, rButton1, rButton2,
 				rButton3, rButton4, rButton5, rButton6, rButton7, rButton8, cellButt );
