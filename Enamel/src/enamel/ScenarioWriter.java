@@ -18,6 +18,7 @@ public class ScenarioWriter extends Application{
 	TextArea text = new TextArea();
 	Label textLabel = new Label("Please enter the spoken script");
 	Button publish = new Button("Publish");
+
 	Label answer = new Label("Answer");
 	Label spacing = new Label();
 	
@@ -46,8 +47,22 @@ public class ScenarioWriter extends Application{
 		//placement in layout
 		layout.setConstraints(textLabel, 0, 0);
 		layout.setConstraints(text, 0, 1);
+		layout.setConstraints(publish, 0, 2);
 		
-		//Answer selection
+		// adding my radio buttons to the stage - micah
+		layout.setConstraints(rButton1, 2, 3);
+		layout.setConstraints(rButton2, 3, 3);
+		layout.setConstraints(rButton3, 2, 4);
+		layout.setConstraints(rButton4, 3, 4);
+		layout.setConstraints(rButton5, 2, 5);
+		layout.setConstraints(rButton6, 3, 5);
+		layout.setConstraints(rButton7, 2, 6);
+		layout.setConstraints(rButton8, 3, 6);
+		layout.setConstraints(space, 1, 1);
+		layout.setConstraints(cellButt, 2, 2);
+		
+		
+		
 		rb1.setToggleGroup(group);
 		rb2.setToggleGroup(group);
 		rb3.setToggleGroup(group);
@@ -59,24 +74,26 @@ public class ScenarioWriter extends Application{
 		layout.setConstraints(rb3, 0, 5);
 		layout.setConstraints(rb4, 0, 6);
 		layout.setConstraints(spacing, 0, 7);
-
-		//publish to save
-		layout.setConstraints(publish, 0, 8);
-
-		layout.getChildren().addAll(textLabel, text, publish, spacing, answer, rb1, rb2, rb3, rb4);
-				
-		//Window size
-		Scene scene = new Scene(layout, 500, 375);
-
+		
+		
+		
+		
+		rButton1.setAccessibleRoleDescription("This is the first "
+				+ "pin on the braille cell");
+		
+		layout.getChildren().addAll(textLabel, text, publish, space, rButton1, rButton2,
+				rButton3, rButton4, rButton5, rButton6, rButton7, rButton8, cellButt, spacing, answer, rb1, rb2, rb3, rb4 );
+		
+		//Window size  --- I extended the scene so that the text area would be full size. -micah
+		Scene scene = new Scene(layout, 600, 400);
 		primaryStage.setScene(scene);
 		primaryStage.show();
-		
 	}
 	
 	public static void main(String[] args) {
 		
 		//Inherited method from Application that launches GUI
-		launch(args);
+		launch();
 	}
 
 }
