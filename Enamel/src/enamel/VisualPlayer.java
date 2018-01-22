@@ -45,7 +45,8 @@ import javax.swing.SwingUtilities;
  *
  */
 public class VisualPlayer extends Player {
-
+ 
+ 
 	private JFrame frame;
 	private GridLayout cellGrid = new GridLayout(4, 2);
 	LinkedList<JPanel> panelList = new LinkedList<JPanel>();
