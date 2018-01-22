@@ -1,5 +1,5 @@
 package enamel;
-
+import java.util.concurrent.*;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridLayout;
@@ -45,7 +45,6 @@ import javax.swing.SwingUtilities;
  *
  */
 public class VisualPlayer extends Player {
- 
  
 	private JFrame frame;
 	private GridLayout cellGrid = new GridLayout(4, 2);
