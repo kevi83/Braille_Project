@@ -38,7 +38,7 @@ public class ScenarioWriter extends Application{
 		//Adding components to GUI (comp, row, column)
 		GridPane layout = new GridPane();
 		
-		//Spacing between nodes
+		//Spacing between components
 		layout.setHgap(4);
 		layout.setVgap(4);
 		
@@ -65,7 +65,7 @@ public class ScenarioWriter extends Application{
 		layout.getChildren().addAll(textLabel, text, publish, spacing, answer, rb1, rb2, rb3, rb4);
 				
 		//Window size
-		Scene scene = new Scene(layout, 480, 380);
+		Scene scene = new Scene(layout, 500, 375);
 
 		primaryStage.setScene(scene);
 		primaryStage.show();
