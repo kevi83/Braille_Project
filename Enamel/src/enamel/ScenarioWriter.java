@@ -19,14 +19,16 @@ public class ScenarioWriter extends Application{
 	
 	
 	// adding radio buttons - micah
-	RadioButton rButton1 =  new RadioButton("");
-	RadioButton rButton2 =  new RadioButton("");
-	RadioButton rButton3 =  new RadioButton("");
-	RadioButton rButton4 =  new RadioButton("");
-	RadioButton rButton5 =  new RadioButton("");
-	RadioButton rButton6 =  new RadioButton("");
-	RadioButton rButton7 =  new RadioButton("");
-	RadioButton rButton8 =  new RadioButton("");
+	RadioButton rButton1 =  new RadioButton("Pin 1");
+	//setAccessibleRole(AccessibleRole.BUTTON);
+	//NODE#accessibleRoleProperty();
+	RadioButton rButton2 =  new RadioButton("Pin 2");
+	RadioButton rButton3 =  new RadioButton("Pin 3");
+	RadioButton rButton4 =  new RadioButton("Pin 4");
+	RadioButton rButton5 =  new RadioButton("Pin 5");
+	RadioButton rButton6 =  new RadioButton("Pin 6");
+	RadioButton rButton7 =  new RadioButton("Pin 7");
+	RadioButton rButton8 =  new RadioButton("Pin 8");
 	Label space = new Label("");
 	Label cellButt = new Label("Pin input");
 	
@@ -54,6 +56,8 @@ public class ScenarioWriter extends Application{
 		layout.setConstraints(rButton8, 3, 6);
 		layout.setConstraints(space, 1, 1);
 		layout.setConstraints(cellButt, 2, 2);
+		
+		rButton1.setAccessibleRoleDescription("This is the first pin on the braille cell");
 		
 		layout.getChildren().addAll(textLabel, text, publish, space, rButton1, rButton2,
 				rButton3, rButton4, rButton5, rButton6, rButton7, rButton8, cellButt );
