@@ -36,8 +36,10 @@ public class ScenarioWriter extends Application{
 		
 		//Adding components to GUI (comp, row, column)
 		GridPane layout = new GridPane();
-		layout.setHgap(10);
-		layout.setVgap(10);
+		
+		//gap between nodes
+		layout.setHgap(5);
+		layout.setVgap(5);
 
 		layout.setConstraints(textLabel, 0, 0);
 		layout.setConstraints(text, 0, 1);
