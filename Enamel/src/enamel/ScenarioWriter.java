@@ -19,6 +19,8 @@ public class ScenarioWriter extends Application{
 	Button publish = new Button("Publish");
 	Label answer = new Label("Answer");
 	Label spacing = new Label();
+	
+	//Answer radio buttons
 	final ToggleGroup group = new ToggleGroup();
 	RadioButton rb1 = new RadioButton("A");
 	RadioButton rb2 = new RadioButton("B");
@@ -33,30 +35,37 @@ public class ScenarioWriter extends Application{
 		//Window Title
 		primaryStage.setTitle("New Scenario");
 		
-		
 		//Adding components to GUI (comp, row, column)
 		GridPane layout = new GridPane();
 		
-		//gap between nodes
-		layout.setHgap(5);
-		layout.setVgap(5);
-
+		//Spacing between nodes
+		layout.setHgap(4);
+		layout.setVgap(4);
+		
+		//placement in layout
 		layout.setConstraints(textLabel, 0, 0);
 		layout.setConstraints(text, 0, 1);
-		layout.setConstraints(publish, 0, 2);
 		
 		//Answer selection
-		layout.setConstraints(spacing, 0, 3);
-		layout.setConstraints(answer, 0, 4);
-		layout.setConstraints(rb1, 0, 5);
-		layout.setConstraints(rb2, 0, 6);
-		layout.setConstraints(rb3, 0, 7);
-		layout.setConstraints(rb4, 0, 8);
+		rb1.setToggleGroup(group);
+		rb2.setToggleGroup(group);
+		rb3.setToggleGroup(group);
+		rb4.setToggleGroup(group);
+		
+		layout.setConstraints(answer, 0, 2);
+		layout.setConstraints(rb1, 0, 3);
+		layout.setConstraints(rb2, 0, 4);
+		layout.setConstraints(rb3, 0, 5);
+		layout.setConstraints(rb4, 0, 6);
+		layout.setConstraints(spacing, 0, 7);
+
+		//publish to save
+		layout.setConstraints(publish, 0, 8);
 
 		layout.getChildren().addAll(textLabel, text, publish, spacing, answer, rb1, rb2, rb3, rb4);
 				
 		//Window size
-		Scene scene = new Scene(layout, 500, 450);
+		Scene scene = new Scene(layout, 480, 380);
 
 		primaryStage.setScene(scene);
 		primaryStage.show();
