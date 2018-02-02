@@ -1,17 +1,14 @@
 package enamel;
 
-import javax.swing.GroupLayout.Group;
-
 import javafx.application.Application;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -80,6 +77,7 @@ public class ScenarioCreator extends Application {
 		ComboBox<String> dropDown = new ComboBox<String>();
 		dropDown.setEditable(true);
 		dropDown.getItems();
+		dropDown.setPrefWidth(150);
 		String value = (String) dropDown.getValue();
 		layout.add(dropDown, 1, 1, 4, 1);
 		
@@ -101,13 +99,18 @@ public class ScenarioCreator extends Application {
 		answerText.setPrefWidth(50);
 		layout.add(answerText, 3, 4);
 		
+		// publish button
+		Button publish = new Button();
+		publish.setText("Publish");
+		layout.add(publish, 3, 6);
+		
 		// Scene
 		Scene scene = new Scene(layout, 800, 600);
 		primaryStage.setScene(scene);
 		primaryStage.show();
 		
 		// Show grid lines - set to true only for testing 
-		layout.setGridLinesVisible(true);
+		layout.setGridLinesVisible(false);
 		
 	}
 
