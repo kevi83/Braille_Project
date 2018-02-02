@@ -34,7 +34,6 @@ public class ScenarioCreator extends Application {
 		// Window Title
 		primaryStage.setTitle("New Scenario");
 		
-		
 		// File menu
 		Menu fileMenu = new Menu("File");
 		
