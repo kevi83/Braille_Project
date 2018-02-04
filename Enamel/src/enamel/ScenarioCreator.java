@@ -1,7 +1,10 @@
 package enamel;
 
+import com.sun.prism.paint.Color;
+
 import javafx.application.Application;
 import javafx.geometry.Insets;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -10,8 +13,8 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.Border;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -26,18 +29,19 @@ public class ScenarioCreator extends Application {
 	public void start(Stage primaryStage) throws Exception {
 
 		// Adding components to GUI (comp, column, row)
-
+		
+		
 		GridPane layout = new GridPane();
-		layout.setHgap(5);
+		layout.setHgap(10);
 		layout.setVgap(5);
 		layout.setPadding(new Insets(0, 10, 10, 10));
-
+		
 		// File menu
 		Menu fileMenu = new Menu("File");
 
 		// Menu Items
 		fileMenu.getItems().add(new MenuItem("New Project"));
-		fileMenu.getItems().add(new MenuItem("Edit Project"));
+		fileMenu.getItems().add(new MenuItem("Load Project"));
 		fileMenu.getItems().add(new MenuItem("Save Project"));
 
 		// Main menu bar
@@ -86,24 +90,34 @@ public class ScenarioCreator extends Application {
 		// Braille text field
 		Text braille = new Text("Braille");
 		braille.setFont(Font.font("Arial", FontWeight.SEMI_BOLD, 10));
-		layout.add(braille, 1, 6);
+		layout.add(braille, 2, 6);
 
 		TextField brailleText = new TextField();
 		brailleText.setPrefWidth(50);
-		layout.add(brailleText, 0, 6);
+		layout.add(brailleText, 0, 6, 2, 1);
 
+		// blank text field for spacing
+		Text blank = new Text("             ");
+		blank.setFont(Font.font("Arial", FontWeight.SEMI_BOLD, 10));
+		layout.add(blank, 3, 6);
+		
 		// answer text field
 		Text answer = new Text("Answer");
 		answer.setFont(Font.font("Arial", FontWeight.SEMI_BOLD, 10));
-		layout.add(answer, 3, 6);
+		layout.add(answer, 5, 6);
 
 		TextField answerText = new TextField();
-		answerText.setPrefWidth(50);
-		layout.add(answerText, 2 , 6);
+		answerText.setPrefWidth(30);
+		layout.add(answerText, 4, 6);
+		
+		// blank text field for spacing
+		Text blank1 = new Text("           ");
+		blank1.setFont(Font.font("Arial", FontWeight.SEMI_BOLD, 10));
+		layout.add(blank1, 6, 6);
 		
 		// sound button
 		Button sound = new Button("Sound");
-		layout.add(sound, 5, 6);
+		layout.add(sound, 7, 6);
 		
 		// publish button
 		Button publish = new Button("Publish");
@@ -114,7 +128,7 @@ public class ScenarioCreator extends Application {
 		primaryStage.setTitle("Scenario Creator");
 		primaryStage.setScene(scene);
 		primaryStage.show();
-
+				
 		layout.setGridLinesVisible(false);
 
 	}
