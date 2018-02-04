@@ -18,13 +18,34 @@ public class Printer {
 	 * @param fileName - Name of the file the scenario will be saved as
 	 * @param cells - Number of cells the machine used has <b>available</b>
 	 * @param buttonsAvailable - Number of buttons available on the machine
-	 * @throws IOException 
+	 * @throws IOException - Required by Java
 	 */
 	public Printer(String fileName, int cells, int buttonsAvailable) throws IOException {
 		file = new File(fileName);
 		output = new FileOutputStream(file);
 		if(!file.exists()) file.createNewFile();
 		initialBlock(cells, buttonsAvailable);
+	}
+	
+	/**
+	 * 
+	 * @param block - Single block to be printed to the text file. 
+	 */
+	public void addBlock(Block block) {
+		clearPins();
+		setPins(block.letter);
+		addSpoken(block.premise);
+		addInputBlock(block.buttonsUsed);
+		addResponse(block.correctResponse, 1, true);
+		addResponse(block.wrongResponse, 2, false);
+		newLine();
+	}
+	
+	public void print() throws IOException {
+		for(String line : lines) {
+			byte[] temp = line.getBytes();
+			output.write(temp);
+		}
 	}
 	
 	//Adds line starting with /~, string, ends with newline character
@@ -94,15 +115,6 @@ public class Printer {
 		addSkip();
 	}
 	
-	//Takes a block object as input and prints the contents accordingly
-	public void publishBlock(Block block) {
-		clearPins();
-		setPins(block.letter);
-		addSpoken(block.premise);
-		addInputBlock(block.buttonsUsed);
-		addResponse(block.correctResponse, 1, true);
-		addResponse(block.wrongResponse, 2, false);
-		addSkip();
-	}
+	
 
 }
