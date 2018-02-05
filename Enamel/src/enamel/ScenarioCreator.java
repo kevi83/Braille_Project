@@ -122,6 +122,8 @@ public class ScenarioCreator extends Application {
 		// publish button
 		Button publish = new Button("Publish");
 		layout.add(publish, 0, 18);
+		publish.setOnMouseClicked(e -> publish.setText("Saved!"));
+
 
 		// Scene
 		Scene scene = new Scene(layout, 750, 600);
@@ -129,7 +131,7 @@ public class ScenarioCreator extends Application {
 		primaryStage.setScene(scene);
 		primaryStage.show();
 				
-		layout.setGridLinesVisible(false);
+		layout.setGridLinesVisible(true);
 
 	}
 

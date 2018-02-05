@@ -85,7 +85,7 @@ public class testPrinter {
 	@Test
 	public void test1Block() throws IOException {
 		printer = new Printer("test.txt", 1, 4);
-		Block tBlock = new Block("hi", "yes", "no", 1, 'c', 2);
+		Block tBlock = new Block("hi", "yes", "no", 1, 'c');
 		printer.addBlock(tBlock);
 		printer.print();
 		reader = new Scanner(file);
@@ -97,8 +97,8 @@ public class testPrinter {
 	@Test
 	public void test2Block() throws IOException {
 		printer = new Printer("test.txt", 1, 4);
-		Block tBlock1 = new Block("hi", "yes", "no", 1, 'c', 2);
-		Block tBlock2 = new Block("hello", "yep", "nope", 1, 'd', 2);
+		Block tBlock1 = new Block("hi", "yes", "no", 1, 'c');
+		Block tBlock2 = new Block("hello", "yep", "nope", 1, 'd');
 		printer.addBlock(tBlock1);
 		printer.addBlock(tBlock2);
 		printer.print();
