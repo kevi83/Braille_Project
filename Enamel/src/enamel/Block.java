@@ -7,9 +7,9 @@ public class Block {
 	public String wrongResponse;
 	public int answer;
 	public char letter;
-	public int buttonsUsed = 2;
+	public int buttonsUsed;
 	
-	public Block(String prem, String corr, String wrong, int ans, char letter) {
+	public Block(String prem, String corr, String wrong, int ans, char letter, int buttonsUsed) {
 		premise = prem;
 		correctResponse = corr;
 		wrongResponse = wrong;

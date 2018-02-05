@@ -131,7 +131,7 @@ public class ScenarioCreator extends Application {
 		primaryStage.setScene(scene);
 		primaryStage.show();
 				
-		layout.setGridLinesVisible(true);
+		layout.setGridLinesVisible(false);
 
 	}
 
