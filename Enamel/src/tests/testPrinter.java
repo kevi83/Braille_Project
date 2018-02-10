@@ -43,6 +43,8 @@ public class testPrinter {
 		assertEquals("/~disp-cell-clear:0", reader.nextLine());
 		assertEquals("/~disp-cell-pins:0 " + interpreter.getPins(block.letter), reader.nextLine());
 		assertEquals(block.premise, reader.nextLine());
+		assertEquals("/~skip-button:0 ONEE", reader.nextLine());
+		assertEquals("/~skip-button:1 TWOO", reader.nextLine());
 		assertEquals("/~user-input", reader.nextLine());
 		assertEquals("/~ONEE", reader.nextLine());
 		assertEquals((block.answer == 1) ? "/~correct.wav" : "/~wrong.wav", reader.nextLine());
