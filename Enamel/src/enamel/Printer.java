@@ -14,6 +14,7 @@ public class Printer {
 	String[] buttonLabels = {"ONEE", "TWOO", "THREEE", "FOURR"};
 	
 	/**
+	 * Full Constructor
 	 * 
 	 * @param fileName - Name of the file the scenario will be saved as
 	 * @param cells - Number of cells the machine used has <b>available</b>
@@ -28,6 +29,17 @@ public class Printer {
 	}
 	
 	/**
+	 * Simplified constructor for 1 Cell, 4 Buttons
+	 * 
+	 * @param fileName - Name of the file the scenario will be saved as
+	 * @throws IOException - Required by Java
+	 */
+	public Printer(String fileName) throws IOException {
+		this(fileName, 1, 4);
+	}
+	
+	/**
+	 * Method used to add blocks to the text file
 	 * 
 	 * @param block - Single block to be printed to the text file. 
 	 */
@@ -41,6 +53,11 @@ public class Printer {
 		newLine();
 	}
 	
+	/**
+	 * Prints the blocks that have been sent to the printer object to the file previously provided
+	 * 
+	 * @throws IOException - Required by Java
+	 */
 	public void print() throws IOException {
 		for(String line : lines) {
 			byte[] temp = line.getBytes();

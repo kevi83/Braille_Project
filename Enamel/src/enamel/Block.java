@@ -9,11 +9,33 @@ public class Block {
 	public char letter;
 	public int buttonsUsed;
 	
-	public Block(String prem, String corr, String wrong, int ans, char letter, int buttonsUsed) {
-		premise = prem;
-		correctResponse = corr;
+	/**
+	 * 
+	 * @param premise - String containing the Question / Story
+	 * @param correct - String containing the message stated for the correct answer
+	 * @param wrong - String containing the message stated for the wrong answer
+	 * @param answer - Integer for the correct button press
+	 * @param letter - Character to show up on the braille cell
+	 * @param buttonsUsed - Amount of buttons used for answers for block
+	 */
+	public Block(String premise, String correct, String wrong, int answer, char letter, int buttonsUsed) {
+		this.premise = premise;
+		correctResponse = correct;
 		wrongResponse = wrong;
-		answer = ans;
+		this.answer = answer;
 		this.letter = letter;
+		this.buttonsUsed = buttonsUsed;
+	}
+	
+	/**
+	 * 
+	 * @param premise - String containing the Question / Story
+	 * @param correct - String containing the message stated for the correct answer
+	 * @param wrong - String containing the message stated for the wrong answer
+	 * @param answer - Integer for the correct button press
+	 * @param letter - Character to show up on the braille cell
+	 */
+	public Block(String premise, String correct, String wrong, int answer, char letter) {
+		this(premise, correct, wrong, answer, letter, 2);
 	}
 }

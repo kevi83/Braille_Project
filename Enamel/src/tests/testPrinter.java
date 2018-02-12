@@ -1,16 +1,24 @@
 package tests;
 
-import enamel.Block;
-import enamel.Printer;
-import enamel.BrailleInterpreter;
-import org.junit.*;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Scanner;
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
+import enamel.Block;
+import enamel.BrailleInterpreter;
+import enamel.Printer;
+
 public class testPrinter {
+	
+	//new comment
 	
 	File file;
 	Printer printer;

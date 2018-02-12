@@ -1,10 +1,9 @@
 package enamel;
 
-import com.sun.prism.paint.Color;
-
+import java.io.IOException;
+import java.util.ArrayList;
 import javafx.application.Application;
 import javafx.geometry.Insets;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -13,8 +12,6 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -22,14 +19,15 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class ScenarioCreator extends Application {
-
-	@SuppressWarnings("static-access")
+	
+	Printer printer;
+	ArrayList <Block> blockList;
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 
-		// Adding components to GUI (comp, column, row)
 		
+		// Adding components to GUI (comp, column, row)
 		
 		GridPane layout = new GridPane();
 		layout.setHgap(10);
@@ -52,7 +50,11 @@ public class ScenarioCreator extends Application {
 		// Story text area
 		Text story = new Text(" Story");
 		story.setFont(Font.font("Arial", FontWeight.BOLD, 10));
+		
 		layout.add(story, 0, 1, 6, 1);
+		
+		// gotta figure this out
+		story.accessibleTextProperty().set("Help I am in trouble");
 
 		TextArea storyText = new TextArea();
 		storyText.setPrefHeight(250);
@@ -122,6 +124,25 @@ public class ScenarioCreator extends Application {
 		// publish button
 		Button publish = new Button("Publish");
 		layout.add(publish, 0, 18);
+		
+		publish.setOnMouseClicked(e -> {
+		Block blockText = new Block(storyText.getText(), correctText.getText(), incorrectText.getText(), 
+					Integer.parseInt(answerText.getText()), brailleText.getText().charAt(0));
+		publish.setText("Saved!");
+		
+		// more to do 
+		// user needs to be able to enter their own file name
+		
+		try {
+			printer = new Printer("file.txt");
+			printer.addBlock(blockText);
+			printer.print();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	
+		});
 
 		// Scene
 		Scene scene = new Scene(layout, 750, 600);
@@ -131,6 +152,15 @@ public class ScenarioCreator extends Application {
 				
 		layout.setGridLinesVisible(false);
 
+		
+		// blocks should be saved to block list
+		// user can name blocks
+		// textField.setText(block.premise) 
+		// publish button - update method [fields to block] 
+							// block1, pull existing block
+							// new block, pull empty block
+		// current block
+		
 	}
 
 	public static void main(String[] args) {
