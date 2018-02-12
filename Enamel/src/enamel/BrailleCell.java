@@ -1,7 +1,7 @@
 package enamel;
 
+import java.util.Arrays;
 import java.util.HashMap;
-import java.util.*;
 
 /**
  * This class implements a Braille Cell with 8 pins. The class contains methods
