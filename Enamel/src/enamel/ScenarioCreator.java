@@ -3,7 +3,10 @@ package enamel;
 import java.io.IOException;
 import java.util.ArrayList;
 import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -12,35 +15,41 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class ScenarioCreator extends Application {
-	
+
 	Printer printer;
-	ArrayList <Block> blockList;
+	ArrayList<Block> blockList = new ArrayList<>();
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 
-		
 		// Adding components to GUI (comp, column, row)
-		
 		GridPane layout = new GridPane();
 		layout.setHgap(10);
 		layout.setVgap(5);
 		layout.setPadding(new Insets(0, 10, 10, 10));
-		
+
 		// File menu
 		Menu fileMenu = new Menu("File");
 
 		// Menu Items
-		fileMenu.getItems().add(new MenuItem("New Project"));
-		fileMenu.getItems().add(new MenuItem("Load Project"));
-		fileMenu.getItems().add(new MenuItem("Save Project"));
+		MenuItem newProject = new MenuItem("New Project");
+		MenuItem loadProject = new MenuItem("Load Project");
+		MenuItem saveProject = new MenuItem("Save Project");
+
+		fileMenu.getItems().add(newProject);
+		fileMenu.getItems().add(loadProject);
+		fileMenu.getItems().add(saveProject);
 
 		// Main menu bar
 		MenuBar menuBar = new MenuBar();
@@ -50,9 +59,9 @@ public class ScenarioCreator extends Application {
 		// Story text area
 		Text story = new Text(" Story");
 		story.setFont(Font.font("Arial", FontWeight.BOLD, 10));
-		
+
 		layout.add(story, 0, 1, 6, 1);
-		
+
 		// gotta figure this out
 		story.accessibleTextProperty().set("Help I am in trouble");
 
@@ -79,15 +88,7 @@ public class ScenarioCreator extends Application {
 		TextArea incorrectText = new TextArea();
 		incorrectText.setPrefHeight(100);
 		incorrectText.setPrefWidth(600);
-		layout.add(incorrectText, 0, 14, 8, 4);
-
-		// drop down menu
-		ComboBox<String> dropDown = new ComboBox<String>();
-		dropDown.setEditable(true);
-		dropDown.getItems();
-		dropDown.setPrefWidth(230);
-		String value = (String) dropDown.getValue();
-		layout.add(dropDown, 9, 0, 5, 1);
+		layout.add(incorrectText, 0, 14, 8, 3);
 
 		// Braille text field
 		Text braille = new Text("Braille");
@@ -102,65 +103,101 @@ public class ScenarioCreator extends Application {
 		Text blank = new Text("             ");
 		blank.setFont(Font.font("Arial", FontWeight.SEMI_BOLD, 10));
 		layout.add(blank, 3, 6);
-		
+
 		// answer text field
 		Text answer = new Text("Answer");
 		answer.setFont(Font.font("Arial", FontWeight.SEMI_BOLD, 10));
 		layout.add(answer, 5, 6);
 
 		TextField answerText = new TextField();
-		answerText.setPrefWidth(30);
+		answerText.setPrefWidth(50);
 		layout.add(answerText, 4, 6);
-		
+
 		// blank text field for spacing
-		Text blank1 = new Text("           ");
+		Text blank1 = new Text("                                  ");
 		blank1.setFont(Font.font("Arial", FontWeight.SEMI_BOLD, 10));
 		layout.add(blank1, 6, 6);
-		
+
 		// sound button
 		Button sound = new Button("Sound");
 		layout.add(sound, 7, 6);
+
+		// ComboBox (drop down menu)
+		ObservableList<String> comboBoxList = FXCollections.observableArrayList();
+		ComboBox<String> comboBox = new ComboBox<String>(comboBoxList);
+		comboBox.setPrefWidth(200);
+		layout.add(comboBox, 9, 0, 5, 1);
 		
+		// pop up after hitting publish
+		Stage dialog = new Stage();
+		GridPane layout1 = new GridPane();
+		layout1.setHgap(10);
+		layout1.setVgap(10);
+		layout1.setPadding(new Insets(0, 10, 10, 10));
+
+		// GUI for Dialog Window
+		Scene scene1 = new Scene(layout1);
+		dialog.setScene(scene1);
+		dialog.setTitle("Block name");
+		Text nameBlock = new Text("Enter Name for the Block");
+		layout1.add(nameBlock, 0, 0);
+		TextField nameField = new TextField();
+		layout1.add(nameField, 0, 1);
+		Button save = new Button("Save");
+		layout1.add(save, 0, 2);
+		
+		
+		// save button action
+		save.setOnMouseClicked(e -> {
+			
+			// get name of file from user input
+			String blockName = nameField.getText();
+
+			// save name to comboBox 
+			comboBoxList.add(blockName);
+			comboBox.setItems(comboBoxList);
+			
+			// save text to block
+			Block blockText = new Block(storyText.getText(), correctText.getText(), incorrectText.getText(),
+					Integer.parseInt(answerText.getText()), brailleText.getText().charAt(0));
+
+			// send block to printer
+			try {
+				printer = new Printer(blockName + ".txt");
+				printer.addBlock(blockText);
+				printer.print();
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+			
+			dialog.close();
+		});
+
+
 		// publish button
 		Button publish = new Button("Publish");
 		layout.add(publish, 0, 18);
-		
-		publish.setOnMouseClicked(e -> {
-		Block blockText = new Block(storyText.getText(), correctText.getText(), incorrectText.getText(), 
-					Integer.parseInt(answerText.getText()), brailleText.getText().charAt(0));
-		publish.setText("Saved!");
-		
-		// more to do 
-		// user needs to be able to enter their own file name
-		
-		try {
-			printer = new Printer("file.txt");
-			printer.addBlock(blockText);
-			printer.print();
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-	
-		});
 
+		publish.setOnMouseClicked(e -> {
+			dialog.show();
+		});
+		
 		// Scene
 		Scene scene = new Scene(layout, 750, 600);
 		primaryStage.setTitle("Scenario Creator");
 		primaryStage.setScene(scene);
 		primaryStage.show();
-				
+		layout.setBackground(new Background(new BackgroundFill(Color.DARKGREY, CornerRadii.EMPTY, Insets.EMPTY)));
+
 		layout.setGridLinesVisible(false);
 
-		
-		// blocks should be saved to block list
 		// user can name blocks
-		// textField.setText(block.premise) 
-		// publish button - update method [fields to block] 
-							// block1, pull existing block
-							// new block, pull empty block
+		// textField.setText(block.premise)
+		// publish button - update method [fields to block]
+		// block1, pull existing block
+		// new block, pull empty block
 		// current block
-		
+
 	}
 
 	public static void main(String[] args) {
