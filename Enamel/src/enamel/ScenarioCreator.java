@@ -3,17 +3,12 @@ package enamel;
 import java.io.IOException;
 import java.util.ArrayList;
 import javafx.application.Application;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
@@ -134,11 +129,11 @@ public class ScenarioCreator extends Application {
 		ComboBox<String> comboBox = new ComboBox<String>(comboBoxList);
 		comboBox.setPrefWidth(200);
 		comboBox.setEditable(true);
-		layout.add(comboBox, 9, 0, 5, 1);
-		
 		comboBox.setPromptText("Select a block");
 		comboBoxList.add(0, "New Block");
-		
+		layout.add(comboBox, 9, 0, 5, 1);
+
+		// return selected comboBox value
 		comboBox.getSelectionModel().selectedIndexProperty()
 		.addListener( e -> {
 			if (comboBox.getValue() == "New Block") {
@@ -222,15 +217,8 @@ public class ScenarioCreator extends Application {
 		primaryStage.show();
 		layout.setBackground(new Background(new BackgroundFill(Color.DARKGREY, CornerRadii.EMPTY, Insets.EMPTY)));
 
-
-		
+		// Set true to help see how nodes are aligned
 		layout.setGridLinesVisible(false);
-
-		// textField.setText(block.premise)
-		// combo box - update method [fields to block]
-		// block1, pull existing block
-		// new block, pull empty block
-		// current block
 
 	}
 
