@@ -2,6 +2,7 @@ package enamel;
 
 public class Block {
 	
+	public String name;
 	public String premise;
 	public String correctResponse;
 	public String wrongResponse;
@@ -18,7 +19,8 @@ public class Block {
 	 * @param letter - Character to show up on the braille cell
 	 * @param buttonsUsed - Amount of buttons used for answers for block
 	 */
-	public Block(String premise, String correct, String wrong, int answer, char letter, int buttonsUsed) {
+	public Block(String name, String premise, String correct, String wrong, int answer, char letter, int buttonsUsed) {
+		this.name = name;
 		this.premise = premise;
 		correctResponse = correct;
 		wrongResponse = wrong;
@@ -35,7 +37,7 @@ public class Block {
 	 * @param answer - Integer for the correct button press
 	 * @param letter - Character to show up on the braille cell
 	 */
-	public Block(String premise, String correct, String wrong, int answer, char letter) {
-		this(premise, correct, wrong, answer, letter, 2);
+	public Block(String name, String premise, String correct, String wrong, int answer, char letter) {
+		this(name, premise, correct, wrong, answer, letter, 2);
 	}
 }

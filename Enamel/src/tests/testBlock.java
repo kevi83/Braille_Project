@@ -8,7 +8,8 @@ public class testBlock {
 	
 	@Test
 	public void testConstructor() {
-		Block block = new Block("premise", "correct", "wrong", 1, 'c', 2);
+		Block block = new Block("name", "premise", "correct", "wrong", 1, 'c', 2);
+		assertEquals("name", block.name);
 		assertEquals("premise", block.premise);
 		assertEquals("correct", block.correctResponse);
 		assertEquals("wrong", block.wrongResponse);

@@ -3,6 +3,8 @@ package enamel;
 import java.io.IOException;
 import java.util.ArrayList;
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -10,6 +12,8 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
@@ -29,6 +33,8 @@ public class ScenarioCreator extends Application {
 
 	Printer printer;
 	ArrayList<Block> blockList = new ArrayList<>();
+	Block currentBlock;
+	Block blockText;
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
@@ -114,7 +120,8 @@ public class ScenarioCreator extends Application {
 		layout.add(answerText, 4, 6);
 
 		// blank text field for spacing
-		Text blank1 = new Text("                                  ");
+		Text blank1 = new Text("                                  " + "                                               "
+				+ "                                               ");
 		blank1.setFont(Font.font("Arial", FontWeight.SEMI_BOLD, 10));
 		layout.add(blank1, 6, 6);
 
@@ -126,10 +133,36 @@ public class ScenarioCreator extends Application {
 		ObservableList<String> comboBoxList = FXCollections.observableArrayList();
 		ComboBox<String> comboBox = new ComboBox<String>(comboBoxList);
 		comboBox.setPrefWidth(200);
+		comboBox.setEditable(true);
 		layout.add(comboBox, 9, 0, 5, 1);
 		
+		comboBox.setPromptText("Select a block");
+		comboBoxList.add(0, "New Block");
+		
+		comboBox.getSelectionModel().selectedIndexProperty()
+		.addListener( e -> {
+			if (comboBox.getValue() == "New Block") {
+				storyText.clear();
+				correctText.clear();
+				incorrectText.clear();
+				brailleText.clear();
+				answerText.clear();
+			}
+			else {
+			for (int i = 0; i < blockList.size(); i ++) {
+				if (comboBox.getValue() == blockList.get(i).name) {
+					storyText.setText(blockList.get(i).premise);
+					correctText.setText(blockList.get(i).correctResponse);
+					correctText.setText(blockList.get(i).wrongResponse);
+					brailleText.setText(Character.toString(blockList.get(i).letter));
+					answerText.setText(Integer.toString(blockList.get(i).answer));
+					}
+				}
+			}
+		});
+		
 		// pop up after hitting publish
-		Stage dialog = new Stage();
+		Stage nameBlockWindow = new Stage();
 		GridPane layout1 = new GridPane();
 		layout1.setHgap(10);
 		layout1.setVgap(10);
@@ -137,29 +170,30 @@ public class ScenarioCreator extends Application {
 
 		// GUI for Dialog Window
 		Scene scene1 = new Scene(layout1);
-		dialog.setScene(scene1);
-		dialog.setTitle("Block name");
+		nameBlockWindow.setScene(scene1);
+		nameBlockWindow.setTitle("Block name");
 		Text nameBlock = new Text("Enter Name for the Block");
 		layout1.add(nameBlock, 0, 0);
 		TextField nameField = new TextField();
 		layout1.add(nameField, 0, 1);
 		Button save = new Button("Save");
 		layout1.add(save, 0, 2);
-		
-		
-		// save button action
+
+		// save button action [pop up dialog box]
 		save.setOnMouseClicked(e -> {
-			
+
 			// get name of file from user input
 			String blockName = nameField.getText();
 
-			// save name to comboBox 
+			// save name to comboBox
 			comboBoxList.add(blockName);
 			comboBox.setItems(comboBoxList);
-			
+
 			// save text to block
-			Block blockText = new Block(storyText.getText(), correctText.getText(), incorrectText.getText(),
+			blockText = new Block(blockName, storyText.getText(), correctText.getText(), incorrectText.getText(),
 					Integer.parseInt(answerText.getText()), brailleText.getText().charAt(0));
+
+			blockList.add(blockText);
 
 			// send block to printer
 			try {
@@ -169,31 +203,31 @@ public class ScenarioCreator extends Application {
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}
-			
-			dialog.close();
-		});
 
+			nameBlockWindow.close();
+		});
 
 		// publish button
 		Button publish = new Button("Publish");
 		layout.add(publish, 0, 18);
 
 		publish.setOnMouseClicked(e -> {
-			dialog.show();
+			nameBlockWindow.show();
 		});
-		
+
 		// Scene
-		Scene scene = new Scene(layout, 750, 600);
+		Scene scene = new Scene(layout, 900, 640);
 		primaryStage.setTitle("Scenario Creator");
 		primaryStage.setScene(scene);
 		primaryStage.show();
 		layout.setBackground(new Background(new BackgroundFill(Color.DARKGREY, CornerRadii.EMPTY, Insets.EMPTY)));
 
+
+		
 		layout.setGridLinesVisible(false);
 
-		// user can name blocks
 		// textField.setText(block.premise)
-		// publish button - update method [fields to block]
+		// combo box - update method [fields to block]
 		// block1, pull existing block
 		// new block, pull empty block
 		// current block
