@@ -28,8 +28,6 @@ public class ScenarioCreator extends Application {
 
 	Printer printer;
 	ArrayList<Block> blockList = new ArrayList<>();
-	Block currentBlock;
-	Block blockText;
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
@@ -134,28 +132,26 @@ public class ScenarioCreator extends Application {
 		layout.add(comboBox, 9, 0, 5, 1);
 
 		// return selected comboBox value
-		comboBox.getSelectionModel().selectedIndexProperty()
-		.addListener( e -> {
+		comboBox.getSelectionModel().selectedIndexProperty().addListener(e -> {
 			if (comboBox.getValue() == "New Block") {
 				storyText.clear();
 				correctText.clear();
 				incorrectText.clear();
 				brailleText.clear();
 				answerText.clear();
-			}
-			else {
-			for (int i = 0; i < blockList.size(); i ++) {
-				if (comboBox.getValue() == blockList.get(i).name) {
-					storyText.setText(blockList.get(i).premise);
-					correctText.setText(blockList.get(i).correctResponse);
-					correctText.setText(blockList.get(i).wrongResponse);
-					brailleText.setText(Character.toString(blockList.get(i).letter));
-					answerText.setText(Integer.toString(blockList.get(i).answer));
+			} else {
+				for (int i = 0; i < blockList.size(); i++) {
+					if (comboBox.getValue() == blockList.get(i).name) {
+						storyText.setText(blockList.get(i).premise);
+						correctText.setText(blockList.get(i).correctResponse);
+						correctText.setText(blockList.get(i).wrongResponse);
+						brailleText.setText(Character.toString(blockList.get(i).letter));
+						answerText.setText(Integer.toString(blockList.get(i).answer));
 					}
 				}
 			}
 		});
-		
+
 		// pop up after hitting publish
 		Stage nameBlockWindow = new Stage();
 		GridPane layout1 = new GridPane();
@@ -185,7 +181,7 @@ public class ScenarioCreator extends Application {
 			comboBox.setItems(comboBoxList);
 
 			// save text to block
-			blockText = new Block(blockName, storyText.getText(), correctText.getText(), incorrectText.getText(),
+			Block blockText = new Block(blockName, storyText.getText(), correctText.getText(), incorrectText.getText(),
 					Integer.parseInt(answerText.getText()), brailleText.getText().charAt(0));
 
 			blockList.add(blockText);
