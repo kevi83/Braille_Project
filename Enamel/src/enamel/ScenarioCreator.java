@@ -23,7 +23,6 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 
 public class ScenarioCreator extends Application {
 
@@ -130,32 +129,11 @@ public class ScenarioCreator extends Application {
 		// sound button
 		Button sound = new Button("Sound");
 		layout.add(sound, 7, 6);
-		
-		// pop up after hitting sound
-		Stage soundWindow = new Stage();
-		GridPane layout2 = new GridPane();
-		layout2.setHgap(10);
-		layout2.setVgap(10);
-		layout2.setPadding(new Insets(0, 5, 5, 5));
 
-		// GUI for sound Window
-		Scene scene2 = new Scene(layout2);
-		soundWindow.setScene(scene2);
-		soundWindow.setTitle("Add Sound");
-		Text soundMessage = new Text("Sorry, the sound option is currently\n"
-				+ "not available for this version");
-		layout2.add(soundMessage, 0, 0, 2, 1);
-		Button okay = new Button("Okay");
-		layout2.add(okay, 2, 1);
-		
-		sound.setOnMouseClicked(e -> {
-			soundWindow.show();
-		});
-		
-		okay.setOnMouseClicked(e -> {
-			soundWindow.close();
-		});
-		
+		// publish button
+		Button publish = new Button("Publish");
+		layout.add(publish, 0, 18);
+
 		// ComboBox (drop down menu)
 		ObservableList<String> comboBoxList = FXCollections.observableArrayList();
 		ComboBox<String> comboBox = new ComboBox<String>(comboBoxList);
@@ -185,15 +163,78 @@ public class ScenarioCreator extends Application {
 				}
 			}
 		});
+		
+		
+//////////////// GUIs and Action Events ////////////////////////////
 
-		// pop up after hitting publish, window to save name of file
+
+		// GUI for Sound button
+		Stage soundWindow = new Stage();
+		GridPane layout2 = new GridPane();
+		layout2.setHgap(10);
+		layout2.setVgap(10);
+		layout2.setPadding(new Insets(0, 5, 5, 5));
+
+		Scene scene2 = new Scene(layout2);
+		soundWindow.setScene(scene2);
+		soundWindow.setTitle("Add Sound");
+		Text soundMessage = new Text("Sorry, the sound option is currently\n" + "not available for this version");
+		layout2.add(soundMessage, 0, 0, 2, 1);
+		Button soundOkay = new Button("Okay");
+		layout2.add(soundOkay, 2, 1);
+
+		// sound button events
+		sound.setOnMouseClicked(e -> {
+			soundWindow.show();
+		});
+		soundOkay.setOnMouseClicked(e -> {
+			soundWindow.close();
+		});
+
+		// GUI for answer field not containing a number
+		Stage notANumber = new Stage();
+		GridPane layout3 = new GridPane();
+		layout3.setHgap(10);
+		layout3.setVgap(10);
+		layout3.setPadding(new Insets(5, 5, 5, 5));
+
+		Scene scene3 = new Scene(layout3);
+		notANumber.setScene(scene3);
+		Text answerIsNumber = new Text("Answer field needs to contain a number " + "between 1 and 4 inclusive");
+		layout3.add(answerIsNumber, 0, 0, 2, 1);
+		Button answerOkay = new Button("Okay");
+		layout3.add(answerOkay, 2, 1);
+
+		answerOkay.setOnAction(e1 -> {
+			notANumber.close();
+		});
+		
+		// GUI for incorrect Braille cell entry
+		Stage brailleWindow = new Stage();
+		GridPane layout4 = new GridPane();
+		layout4.setHgap(10);
+		layout4.setVgap(10);
+		layout4.setPadding(new Insets(5, 5, 5, 5));
+
+		Scene scene4 = new Scene(layout4);
+		brailleWindow.setScene(scene4);
+		Text brailleEntry = new Text("Braille field can be empty or "
+				+ "should contain one letter");
+		layout4.add(brailleEntry, 0, 0, 2, 1);
+		Button brailleOkay = new Button("Okay");
+		layout4.add(brailleOkay, 2, 1);
+
+		brailleOkay.setOnAction(e1 -> {
+			brailleWindow.close();
+		});
+		
+		// GUI for naming block
 		Stage nameBlockWindow = new Stage();
 		GridPane layout1 = new GridPane();
 		layout1.setHgap(10);
 		layout1.setVgap(10);
 		layout1.setPadding(new Insets(0, 5, 5, 5));
 
-		// GUI for Dialog Window
 		Scene scene1 = new Scene(layout1);
 		nameBlockWindow.setScene(scene1);
 		nameBlockWindow.setTitle("Block name");
@@ -231,51 +272,54 @@ public class ScenarioCreator extends Application {
 
 			nameBlockWindow.close();
 		});
-
+		
 		// publish button
-		Button publish = new Button("Publish");
-		layout.add(publish, 0, 18);
-
+		// check answer field contains number
+		// check braille field contains a blank or one char
+					
 		publish.setOnMouseClicked(e -> {
+
+			if (answerText.getText().length() == 0) {
+				nameBlockWindow.show();
+			}
 			
 			try {
 				int x = Integer.parseInt(answerText.getText());
-				nameBlockWindow.show();
-			
-			} catch(NumberFormatException e2) {
+				if (x >= 1 && x <= 4) {
+					if (brailleText.getText().length() == 0) {
+						nameBlockWindow.show();
+					}
+					else if (brailleText.getText().length() == 1) {
+						if (brailleText.getText().matches("[A-z]"))
+							nameBlockWindow.show();
+						else {
+							brailleWindow.show();
+						}
+					}
+					else {
+						brailleWindow.show();
+					}
 				
-				// pop up when answer field is not a number
-				Stage notANumber = new Stage();
-				GridPane layout3 = new GridPane();
-				layout3.setHgap(10);
-				layout3.setVgap(10);
-				layout3.setPadding(new Insets(5, 5, 5, 5));
+				} else {
+					notANumber.show();
+				}
 
-				// GUI for answer field not being a number Window
-				Scene scene3 = new Scene(layout3);
-				notANumber.setScene(scene3);
-				Text answerIsNumber = new Text("Answer field needs to contain a number");
-				layout3.add(answerIsNumber, 0, 0, 2, 1);
-				Button okay1 = new Button("Okay");
-				layout3.add(okay1, 2, 1);
+			} catch (NumberFormatException e2) {
 				notANumber.show();
-				
-				okay1.setOnAction(e1 -> {
-					notANumber.close();
-				});
 			}
-			
+
 		});
 
 		// Scene
 		Scene scene = new Scene(layout, 900, 640);
 		primaryStage.setTitle("Scenario Creator");
 		primaryStage.setScene(scene);
-		primaryStage.setOpacity(0.8);;
+		primaryStage.setOpacity(0.8);
 		scene.setFill(Color.TRANSPARENT);
 		primaryStage.show();
-		layout.setBackground(new Background(new BackgroundFill(Color.gray(0.1, 0.8), CornerRadii.EMPTY, Insets.EMPTY)));
-		
+		layout.setBackground(
+				new Background(new BackgroundFill(Color.gray(0.05, 0.8), CornerRadii.EMPTY, Insets.EMPTY)));
+
 		// Set true to help see how nodes are aligned
 		layout.setGridLinesVisible(false);
 
