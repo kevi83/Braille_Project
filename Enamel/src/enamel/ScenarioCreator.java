@@ -23,6 +23,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 public class ScenarioCreator extends Application {
 
@@ -32,11 +33,11 @@ public class ScenarioCreator extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 
-		// Adding components to GUI (comp, column, row)
+		// Adding components to GUI (component, column, row)
 		GridPane layout = new GridPane();
 		layout.setHgap(10);
 		layout.setVgap(5);
-		layout.setPadding(new Insets(0, 10, 10, 10));
+		layout.setPadding(new Insets(0, 5, 5, 5));
 
 		// File menu
 		Menu fileMenu = new Menu("File");
@@ -53,12 +54,13 @@ public class ScenarioCreator extends Application {
 		// Main menu bar
 		MenuBar menuBar = new MenuBar();
 		menuBar.getMenus().addAll(fileMenu);
+		menuBar.setOpacity(0.6);
 		layout.add(menuBar, 0, 0, 8, 1);
 
 		// Story text area
 		Text story = new Text(" Story");
-		story.setFont(Font.font("Arial", FontWeight.BOLD, 10));
-
+		story.setFont(Font.font("Arial", FontWeight.BOLD, 13));
+		story.setFill(Color.WHITE);
 		layout.add(story, 0, 1, 6, 1);
 
 		// gotta figure this out
@@ -67,35 +69,41 @@ public class ScenarioCreator extends Application {
 		TextArea storyText = new TextArea();
 		storyText.setPrefHeight(250);
 		storyText.setPrefWidth(600);
+		storyText.setOpacity(0.65);
 		layout.add(storyText, 0, 2, 8, 4);
 
 		// Correct text area
 		Text correct = new Text(" Correct");
-		correct.setFont(Font.font("Arial", FontWeight.BOLD, 10));
+		correct.setFont(Font.font("Arial", FontWeight.BOLD, 13));
+		correct.setFill(Color.WHITE);
 		layout.add(correct, 0, 7);
 
 		TextArea correctText = new TextArea();
 		correctText.setPrefHeight(100);
 		correctText.setPrefWidth(600);
+		correctText.setOpacity(0.65);
 		layout.add(correctText, 0, 8, 8, 4);
 
 		// Incorrect text area
 		Text incorrect = new Text(" Incorrect");
-		incorrect.setFont(Font.font("Arial", FontWeight.BOLD, 10));
+		incorrect.setFont(Font.font("Arial", FontWeight.BOLD, 13));
+		incorrect.setFill(Color.WHITE);
 		layout.add(incorrect, 0, 13);
 
 		TextArea incorrectText = new TextArea();
 		incorrectText.setPrefHeight(100);
 		incorrectText.setPrefWidth(600);
+		incorrectText.setOpacity(0.65);
 		layout.add(incorrectText, 0, 14, 8, 3);
 
 		// Braille text field
 		Text braille = new Text("Braille");
-		braille.setFont(Font.font("Arial", FontWeight.SEMI_BOLD, 10));
+		braille.setFont(Font.font("Arial", FontWeight.BOLD, 11.5));
+		braille.setFill(Color.GHOSTWHITE);
 		layout.add(braille, 2, 6);
 
 		TextField brailleText = new TextField();
-		brailleText.setPrefWidth(50);
+		brailleText.setPrefWidth(40);
 		layout.add(brailleText, 0, 6, 2, 1);
 
 		// blank text field for spacing
@@ -105,7 +113,8 @@ public class ScenarioCreator extends Application {
 
 		// answer text field
 		Text answer = new Text("Answer");
-		answer.setFont(Font.font("Arial", FontWeight.SEMI_BOLD, 10));
+		answer.setFont(Font.font("Arial", FontWeight.BOLD, 11.5));
+		answer.setFill(Color.WHITE);
 		layout.add(answer, 5, 6);
 
 		TextField answerText = new TextField();
@@ -121,7 +130,32 @@ public class ScenarioCreator extends Application {
 		// sound button
 		Button sound = new Button("Sound");
 		layout.add(sound, 7, 6);
+		
+		// pop up after hitting sound
+		Stage soundWindow = new Stage();
+		GridPane layout2 = new GridPane();
+		layout2.setHgap(10);
+		layout2.setVgap(10);
+		layout2.setPadding(new Insets(0, 5, 5, 5));
 
+		// GUI for sound Window
+		Scene scene2 = new Scene(layout2);
+		soundWindow.setScene(scene2);
+		soundWindow.setTitle("Add Sound");
+		Text soundMessage = new Text("Sorry, the sound option is currently\n"
+				+ "not available for this version");
+		layout2.add(soundMessage, 0, 0, 2, 1);
+		Button okay = new Button("Okay");
+		layout2.add(okay, 2, 1);
+		
+		sound.setOnMouseClicked(e -> {
+			soundWindow.show();
+		});
+		
+		okay.setOnMouseClicked(e -> {
+			soundWindow.close();
+		});
+		
 		// ComboBox (drop down menu)
 		ObservableList<String> comboBoxList = FXCollections.observableArrayList();
 		ComboBox<String> comboBox = new ComboBox<String>(comboBoxList);
@@ -144,7 +178,7 @@ public class ScenarioCreator extends Application {
 					if (comboBox.getValue() == blockList.get(i).name) {
 						storyText.setText(blockList.get(i).premise);
 						correctText.setText(blockList.get(i).correctResponse);
-						correctText.setText(blockList.get(i).wrongResponse);
+						incorrectText.setText(blockList.get(i).wrongResponse);
 						brailleText.setText(Character.toString(blockList.get(i).letter));
 						answerText.setText(Integer.toString(blockList.get(i).answer));
 					}
@@ -152,12 +186,12 @@ public class ScenarioCreator extends Application {
 			}
 		});
 
-		// pop up after hitting publish
+		// pop up after hitting publish, window to save name of file
 		Stage nameBlockWindow = new Stage();
 		GridPane layout1 = new GridPane();
 		layout1.setHgap(10);
 		layout1.setVgap(10);
-		layout1.setPadding(new Insets(0, 10, 10, 10));
+		layout1.setPadding(new Insets(0, 5, 5, 5));
 
 		// GUI for Dialog Window
 		Scene scene1 = new Scene(layout1);
@@ -203,16 +237,45 @@ public class ScenarioCreator extends Application {
 		layout.add(publish, 0, 18);
 
 		publish.setOnMouseClicked(e -> {
-			nameBlockWindow.show();
+			
+			try {
+				int x = Integer.parseInt(answerText.getText());
+				nameBlockWindow.show();
+			
+			} catch(NumberFormatException e2) {
+				
+				// pop up when answer field is not a number
+				Stage notANumber = new Stage();
+				GridPane layout3 = new GridPane();
+				layout3.setHgap(10);
+				layout3.setVgap(10);
+				layout3.setPadding(new Insets(5, 5, 5, 5));
+
+				// GUI for answer field not being a number Window
+				Scene scene3 = new Scene(layout3);
+				notANumber.setScene(scene3);
+				Text answerIsNumber = new Text("Answer field needs to contain a number");
+				layout3.add(answerIsNumber, 0, 0, 2, 1);
+				Button okay1 = new Button("Okay");
+				layout3.add(okay1, 2, 1);
+				notANumber.show();
+				
+				okay1.setOnAction(e1 -> {
+					notANumber.close();
+				});
+			}
+			
 		});
 
 		// Scene
 		Scene scene = new Scene(layout, 900, 640);
 		primaryStage.setTitle("Scenario Creator");
 		primaryStage.setScene(scene);
+		primaryStage.setOpacity(0.8);;
+		scene.setFill(Color.TRANSPARENT);
 		primaryStage.show();
-		layout.setBackground(new Background(new BackgroundFill(Color.DARKGREY, CornerRadii.EMPTY, Insets.EMPTY)));
-
+		layout.setBackground(new Background(new BackgroundFill(Color.gray(0.1, 0.8), CornerRadii.EMPTY, Insets.EMPTY)));
+		
 		// Set true to help see how nodes are aligned
 		layout.setGridLinesVisible(false);
 
