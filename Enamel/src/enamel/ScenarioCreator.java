@@ -9,11 +9,13 @@ import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
@@ -62,15 +64,37 @@ public class ScenarioCreator extends Application {
 		story.setFill(Color.WHITE);
 		layout.add(story, 0, 1, 6, 1);
 
-		// gotta figure this out
-		story.accessibleTextProperty().set("Help I am in trouble");
-
 		TextArea storyText = new TextArea();
 		storyText.setPrefHeight(250);
 		storyText.setPrefWidth(600);
 		storyText.setOpacity(0.65);
+		storyText.setAccessibleText("Enter your story here");
 		layout.add(storyText, 0, 2, 8, 4);
+		
+		// Braille text field
+		Text braille = new Text("Braille");
+		braille.setFont(Font.font("Arial", FontWeight.BOLD, 11.5));
+		braille.setFill(Color.GHOSTWHITE);
+		layout.add(braille, 2, 6);
 
+		TextField brailleText = new TextField();
+		brailleText.setPrefWidth(40);
+		layout.add(brailleText, 0, 6, 2, 1);
+
+		// answer text field
+		Text answer = new Text("Answer");
+		answer.setFont(Font.font("Arial", FontWeight.BOLD, 11.5));
+		answer.setFill(Color.WHITE);
+		layout.add(answer, 5, 6);
+
+		TextField answerText = new TextField();
+		answerText.setPrefWidth(50);
+		layout.add(answerText, 4, 6);
+		
+		// sound button
+		Button sound = new Button("Sound");
+		layout.add(sound, 7, 6);
+		
 		// Correct text area
 		Text correct = new Text(" Correct");
 		correct.setFont(Font.font("Arial", FontWeight.BOLD, 13));
@@ -95,40 +119,16 @@ public class ScenarioCreator extends Application {
 		incorrectText.setOpacity(0.65);
 		layout.add(incorrectText, 0, 14, 8, 3);
 
-		// Braille text field
-		Text braille = new Text("Braille");
-		braille.setFont(Font.font("Arial", FontWeight.BOLD, 11.5));
-		braille.setFill(Color.GHOSTWHITE);
-		layout.add(braille, 2, 6);
-
-		TextField brailleText = new TextField();
-		brailleText.setPrefWidth(40);
-		layout.add(brailleText, 0, 6, 2, 1);
-
 		// blank text field for spacing
 		Text blank = new Text("             ");
 		blank.setFont(Font.font("Arial", FontWeight.SEMI_BOLD, 10));
 		layout.add(blank, 3, 6);
-
-		// answer text field
-		Text answer = new Text("Answer");
-		answer.setFont(Font.font("Arial", FontWeight.BOLD, 11.5));
-		answer.setFill(Color.WHITE);
-		layout.add(answer, 5, 6);
-
-		TextField answerText = new TextField();
-		answerText.setPrefWidth(50);
-		layout.add(answerText, 4, 6);
 
 		// blank text field for spacing
 		Text blank1 = new Text("                                  " + "                                               "
 				+ "                                               ");
 		blank1.setFont(Font.font("Arial", FontWeight.SEMI_BOLD, 10));
 		layout.add(blank1, 6, 6);
-
-		// sound button
-		Button sound = new Button("Sound");
-		layout.add(sound, 7, 6);
 
 		// publish button
 		Button publish = new Button("Publish");
@@ -145,6 +145,7 @@ public class ScenarioCreator extends Application {
 
 		// return selected comboBox value
 		comboBox.getSelectionModel().selectedIndexProperty().addListener(e -> {
+			
 			if (comboBox.getValue() == "New Block") {
 				storyText.clear();
 				correctText.clear();
@@ -164,9 +165,8 @@ public class ScenarioCreator extends Application {
 			}
 		});
 		
-		
-//////////////// GUIs and Action Events ////////////////////////////
 
+		//////////////// GUIs and Action Events ////////////////////////////
 
 		// GUI for Sound button
 		Stage soundWindow = new Stage();
@@ -190,6 +190,16 @@ public class ScenarioCreator extends Application {
 		soundOkay.setOnMouseClicked(e -> {
 			soundWindow.close();
 		});
+		sound.setOnKeyPressed(e -> {
+			if (e.getCode() == KeyCode.ENTER) {
+				soundWindow.show();
+			}
+		});
+		soundOkay.setOnKeyPressed(e -> {
+			if (e.getCode() == KeyCode.ENTER) {
+				soundWindow.close();
+			}
+		});
 
 		// GUI for answer field not containing a number
 		Stage notANumber = new Stage();
@@ -205,10 +215,15 @@ public class ScenarioCreator extends Application {
 		Button answerOkay = new Button("Okay");
 		layout3.add(answerOkay, 2, 1);
 
-		answerOkay.setOnAction(e1 -> {
+		answerOkay.setOnAction(e -> {
 			notANumber.close();
 		});
-		
+		answerOkay.setOnKeyPressed(e -> {
+			if (e.getCode() == KeyCode.ENTER) {
+				notANumber.close();
+			}
+		});
+
 		// GUI for incorrect Braille cell entry
 		Stage brailleWindow = new Stage();
 		GridPane layout4 = new GridPane();
@@ -218,8 +233,7 @@ public class ScenarioCreator extends Application {
 
 		Scene scene4 = new Scene(layout4);
 		brailleWindow.setScene(scene4);
-		Text brailleEntry = new Text("Braille field can be empty or "
-				+ "should contain one letter");
+		Text brailleEntry = new Text("Braille field must contain one letter");
 		layout4.add(brailleEntry, 0, 0, 2, 1);
 		Button brailleOkay = new Button("Okay");
 		layout4.add(brailleOkay, 2, 1);
@@ -227,7 +241,12 @@ public class ScenarioCreator extends Application {
 		brailleOkay.setOnAction(e1 -> {
 			brailleWindow.close();
 		});
-		
+		brailleOkay.setOnKeyPressed(e -> {
+			if (e.getCode() == KeyCode.ENTER) {
+				brailleWindow.close();
+			}
+		});
+
 		// GUI for naming block
 		Stage nameBlockWindow = new Stage();
 		GridPane layout1 = new GridPane();
@@ -264,7 +283,7 @@ public class ScenarioCreator extends Application {
 			// send block to printer
 			try {
 				printer = new Printer(blockName + ".txt");
-				printer.addBlock(blockText);
+				printer.addBlockList(blockList);
 				printer.print();
 			} catch (IOException e1) {
 				e1.printStackTrace();
@@ -272,34 +291,57 @@ public class ScenarioCreator extends Application {
 
 			nameBlockWindow.close();
 		});
-		
+
+		save.setOnKeyPressed(e -> {
+
+			if (e.getCode() == KeyCode.ENTER) {
+
+				// get name of file from user input
+				String blockName = nameField.getText();
+
+				// save name to comboBox
+				comboBoxList.add(blockName);
+				comboBox.setItems(comboBoxList);
+
+				// save text to block
+				Block blockText = new Block(blockName, storyText.getText(), correctText.getText(),
+						incorrectText.getText(), Integer.parseInt(answerText.getText()),
+						brailleText.getText().charAt(0));
+
+				blockList.add(blockText);
+
+				// send block to printer
+				try {
+					printer = new Printer(blockName + ".txt");
+					printer.addBlock(blockText);
+					printer.print();
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+
+				nameBlockWindow.close();
+			}
+		});
+
 		// publish button
 		// check answer field contains number
 		// check braille field contains a blank or one char
-					
+
 		publish.setOnMouseClicked(e -> {
 
-			if (answerText.getText().length() == 0) {
-				nameBlockWindow.show();
-			}
-			
 			try {
 				int x = Integer.parseInt(answerText.getText());
 				if (x >= 1 && x <= 4) {
-					if (brailleText.getText().length() == 0) {
-						nameBlockWindow.show();
-					}
-					else if (brailleText.getText().length() == 1) {
+					if (brailleText.getText().length() == 1) {
 						if (brailleText.getText().matches("[A-z]"))
 							nameBlockWindow.show();
 						else {
 							brailleWindow.show();
 						}
-					}
-					else {
+					} else {
 						brailleWindow.show();
 					}
-				
+
 				} else {
 					notANumber.show();
 				}
@@ -308,6 +350,33 @@ public class ScenarioCreator extends Application {
 				notANumber.show();
 			}
 
+		});
+
+		publish.setOnKeyPressed(e -> {
+
+			if (e.getCode() == KeyCode.ENTER) {
+
+				try {
+					int x = Integer.parseInt(answerText.getText());
+					if (x >= 1 && x <= 4) {
+						if (brailleText.getText().length() == 1) {
+							if (brailleText.getText().matches("[A-z]"))
+								nameBlockWindow.show();
+							else {
+								brailleWindow.show();
+							}
+						} else {
+							brailleWindow.show();
+						}
+
+					} else {
+						notANumber.show();
+					}
+
+				} catch (NumberFormatException e2) {
+					notANumber.show();
+				}
+			}
 		});
 
 		// Scene
