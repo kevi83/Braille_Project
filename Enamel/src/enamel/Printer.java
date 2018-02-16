@@ -53,6 +53,12 @@ public class Printer {
 		newLine();
 	}
 	
+	public void addBlockList(ArrayList<Block> blocks) {
+		for(Block block : blocks) {
+			addBlock(block);
+		}
+	}
+	
 	/**
 	 * Prints the blocks that have been sent to the printer object to the file previously provided
 	 * 
