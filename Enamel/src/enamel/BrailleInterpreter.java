@@ -37,7 +37,8 @@ public class BrailleInterpreter {
 	}
 	
 	/**
-	 * Takes a character parameter and turns it to a string of Binary that tells the Braille cell what to output for a given letter.
+	 * Takes a character parameter and turns it to a string of Binary that tells the Braille 
+	 * cell what to output for a given letter.
 	 * 
 	 * @param letter - Letter to be translated to braille
 	 * @return Binary string corresponding to braille pins for given letter
