@@ -70,5 +70,17 @@ public class testBlock {
 					
 		}
 	}
+	
+	@Test
+	public void testSimpleConstructor() throws InvalidBlockException {
+		Block block = new Block("name", "premise", "correct", "wrong", 1, 'c');
+		assertEquals("name", block.name);
+		assertEquals("premise", block.premise);
+		assertEquals("correct", block.correctResponse);
+		assertEquals("wrong", block.wrongResponse);
+		assertEquals(1, block.answer);
+		assertEquals('c', block.letter);
+		assertEquals(2, block.buttonsUsed);
+	}
 
 }

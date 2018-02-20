@@ -7,11 +7,11 @@ import java.util.ArrayList;
 
 public class Printer {
 	
-	File file;
-	FileOutputStream output;
-	ArrayList<String> lines = new ArrayList<>();
-	BrailleInterpreter interpreter = new BrailleInterpreter();
-	String[] buttonLabels = {"ONEE", "TWOO", "THREEE", "FOURR"};
+	private File file;
+	private FileOutputStream output;
+	private ArrayList<String> lines = new ArrayList<>();
+	private BrailleInterpreter interpreter = new BrailleInterpreter();
+	private String[] buttonLabels = {"ONEE", "TWOO", "THREEE", "FOURR"};
 	
 	/**
 	 * Full Constructor
@@ -114,11 +114,6 @@ public class Printer {
 	//Skips to NEXTT, used if another block will follow the current block. used at the end
 	private void addSkip() {
 		addConfig("skip:NEXTT");
-	}
-	
-	//inputs NEXTT
-	private void addNext() {
-		addConfig("NEXTT");
 	}
 	
 	//Input declaring portion of a block
