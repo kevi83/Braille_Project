@@ -35,9 +35,7 @@ public class BrailleInterpreter {
 		alphabet.put('z', "10101100");
 		alphabet.put(' ', "11111111");
 	}
-
-	public String getPins(char letter) {
-		return alphabet.get(letter);
+	
 	/**
 	 * Takes a character parameter and turns it to a string of Binary that tells the Braille 
 	 * cell what to output for a given letter.
