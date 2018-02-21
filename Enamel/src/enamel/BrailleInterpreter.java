@@ -5,7 +5,7 @@ import java.util.HashMap;
 public class BrailleInterpreter {
 
 	public HashMap<Character, String> alphabet = new HashMap<Character, String>();
-	
+
 	public BrailleInterpreter() {
 		alphabet.put('a', "10000000");
 		alphabet.put('b', "11000000");
@@ -35,8 +35,8 @@ public class BrailleInterpreter {
 		alphabet.put('z', "10101100");
 		alphabet.put(' ', "11111111");
 	}
-	
+
 	public String getPins(char letter) {
-		return  alphabet.get(letter);
+		return alphabet.get(letter);
 	}
 }

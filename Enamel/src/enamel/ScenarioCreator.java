@@ -15,11 +15,14 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
+import javafx.scene.AccessibleRole;
+import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -30,7 +33,7 @@ public class ScenarioCreator extends Application {
 
 	Printer printer;
 	ArrayList<Block> blockList = new ArrayList<>();
-
+	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 
@@ -58,6 +61,15 @@ public class ScenarioCreator extends Application {
 		menuBar.setOpacity(0.6);
 		layout.add(menuBar, 0, 0, 8, 1);
 
+		// border glow
+		int depth = 40;
+		DropShadow borderGlow = new DropShadow();
+		borderGlow.setColor(Color.ALICEBLUE);
+		borderGlow.setWidth(depth);
+		borderGlow.setHeight(depth);
+		borderGlow.setOffsetX(0f);
+		borderGlow.setOffsetY(0f);
+
 		// Story text area
 		Text story = new Text(" Story");
 		story.setFont(Font.font("Arial", FontWeight.BOLD, 13));
@@ -65,12 +77,18 @@ public class ScenarioCreator extends Application {
 		layout.add(story, 0, 1, 6, 1);
 
 		TextArea storyText = new TextArea();
+		Label storyLabel = new Label("this\nis\nthe\nstory\narea");
+		storyLabel.setLabelFor(storyText);
+		storyLabel.setVisible(false);
 		storyText.setPrefHeight(250);
 		storyText.setPrefWidth(600);
-		storyText.setOpacity(0.65);
-		storyText.setAccessibleText("Enter your story here");
+		storyText.setOpacity(0.9);
+		storyText.setWrapText(true);
+		storyText.setEffect(borderGlow);
 		layout.add(storyText, 0, 2, 8, 4);
-		
+		layout.add(storyLabel, 0, 2);
+	
+
 		// Braille text field
 		Text braille = new Text("Braille");
 		braille.setFont(Font.font("Arial", FontWeight.BOLD, 11.5));
@@ -90,11 +108,13 @@ public class ScenarioCreator extends Application {
 		TextField answerText = new TextField();
 		answerText.setPrefWidth(50);
 		layout.add(answerText, 4, 6);
-		
+
 		// sound button
 		Button sound = new Button("Sound");
+		sound.setAccessibleRoleDescription("sound button");
+		sound.setAccessibleText("Sound option is currently not available in this version");
 		layout.add(sound, 7, 6);
-		
+
 		// Correct text area
 		Text correct = new Text(" Correct");
 		correct.setFont(Font.font("Arial", FontWeight.BOLD, 13));
@@ -104,7 +124,9 @@ public class ScenarioCreator extends Application {
 		TextArea correctText = new TextArea();
 		correctText.setPrefHeight(100);
 		correctText.setPrefWidth(600);
-		correctText.setOpacity(0.65);
+		correctText.setOpacity(0.95);
+		correctText.setWrapText(true);
+		correctText.setEffect(borderGlow);
 		layout.add(correctText, 0, 8, 8, 4);
 
 		// Incorrect text area
@@ -116,7 +138,9 @@ public class ScenarioCreator extends Application {
 		TextArea incorrectText = new TextArea();
 		incorrectText.setPrefHeight(100);
 		incorrectText.setPrefWidth(600);
-		incorrectText.setOpacity(0.65);
+		incorrectText.setOpacity(0.95);
+		incorrectText.setWrapText(true);
+		incorrectText.setEffect(borderGlow);
 		layout.add(incorrectText, 0, 14, 8, 3);
 
 		// blank text field for spacing
@@ -132,6 +156,7 @@ public class ScenarioCreator extends Application {
 
 		// publish button
 		Button publish = new Button("Publish");
+		publish.setAccessibleText("Click on button to save block");
 		layout.add(publish, 0, 18);
 
 		// ComboBox (drop down menu)
@@ -145,7 +170,7 @@ public class ScenarioCreator extends Application {
 
 		// return selected comboBox value
 		comboBox.getSelectionModel().selectedIndexProperty().addListener(e -> {
-			
+
 			if (comboBox.getValue() == "New Block") {
 				storyText.clear();
 				correctText.clear();
@@ -164,12 +189,12 @@ public class ScenarioCreator extends Application {
 				}
 			}
 		});
-		
 
 		//////////////// GUIs and Action Events ////////////////////////////
 
 		// GUI for Sound button
 		Stage soundWindow = new Stage();
+		soundWindow.setTitle("Sound Menu");
 		GridPane layout2 = new GridPane();
 		layout2.setHgap(10);
 		layout2.setVgap(10);
@@ -178,7 +203,9 @@ public class ScenarioCreator extends Application {
 		Scene scene2 = new Scene(layout2);
 		soundWindow.setScene(scene2);
 		soundWindow.setTitle("Add Sound");
+		storyText.setAccessibleRoleDescription("Enter story here");
 		Text soundMessage = new Text("Sorry, the sound option is currently\n" + "not available for this version");
+
 		layout2.add(soundMessage, 0, 0, 2, 1);
 		Button soundOkay = new Button("Okay");
 		layout2.add(soundOkay, 2, 1);
@@ -186,10 +213,12 @@ public class ScenarioCreator extends Application {
 		// sound button events
 		sound.setOnMouseClicked(e -> {
 			soundWindow.show();
+
 		});
 		soundOkay.setOnMouseClicked(e -> {
 			soundWindow.close();
 		});
+
 		sound.setOnKeyPressed(e -> {
 			if (e.getCode() == KeyCode.ENTER) {
 				soundWindow.show();
@@ -381,9 +410,8 @@ public class ScenarioCreator extends Application {
 
 		// Scene
 		Scene scene = new Scene(layout, 900, 640);
-		primaryStage.setTitle("Scenario Creator");
+		primaryStage.setTitle("Scenario Creator");	
 		primaryStage.setScene(scene);
-		primaryStage.setOpacity(0.8);
 		scene.setFill(Color.TRANSPARENT);
 		primaryStage.show();
 		layout.setBackground(
