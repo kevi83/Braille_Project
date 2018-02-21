@@ -38,5 +38,17 @@ public class BrailleInterpreter {
 
 	public String getPins(char letter) {
 		return alphabet.get(letter);
+	/**
+	 * Takes a character parameter and turns it to a string of Binary that tells the Braille 
+	 * cell what to output for a given letter.
+	 * 
+	 * @param letter - Letter to be translated to braille
+	 * @return Binary string corresponding to braille pins for given letter
+	 * @throws InvalidCellException - If the given letter isn't in registered in the interpreter
+	 */
+	public String getPins(char letter) throws InvalidCellException {
+		String ans = alphabet.get(letter);
+		if(ans == null) throw new InvalidCellException();
+		return ans;
 	}
 }
