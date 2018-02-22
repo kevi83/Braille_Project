@@ -16,7 +16,15 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.SwingUtilities;
 
+import com.sun.speech.freetts.Voice;
+import com.sun.speech.freetts.VoiceManager;
+
 public class AudioPlayer extends Player {
+	// voice and voiceManager from ScenarioParser used for audio speaking - micah 
+	private Voice voice;
+	private VoiceManager vm;
+	
+	
 	
 	private JFrame frame;
 	private GridLayout cellGrid = new GridLayout(4, 2);
@@ -33,7 +41,12 @@ public class AudioPlayer extends Player {
 	public AudioPlayer(int brailleCellNumber, int buttonNumber)
 	{
 		super(brailleCellNumber, buttonNumber);
-
+		
+	// initializing voice - micah
+		 vm = VoiceManager.getInstance();
+	        voice = vm.getVoice ("kevin16");
+	        voice.allocate();
+	        
 		SwingUtilities.invokeLater(new Runnable() {
 			//@Override
 			public void run() {
@@ -183,6 +196,16 @@ public class AudioPlayer extends Player {
 				}
 			}
 		});
+	}
+	
+	/*
+	 * This method speaks out loud using the TTS methods created by FreeTTS.
+	 * copied from ScenarioParser - micah
+	 */
+	private void speak(String text) {
+		
+			voice.speak(text);
+		
 	}
 	
 
