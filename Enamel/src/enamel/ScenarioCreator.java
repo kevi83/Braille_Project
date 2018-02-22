@@ -33,7 +33,7 @@ public class ScenarioCreator extends Application {
 
 	Printer printer;
 	ArrayList<Block> blockList = new ArrayList<>();
-	
+
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 
@@ -58,13 +58,13 @@ public class ScenarioCreator extends Application {
 		// Main menu bar
 		MenuBar menuBar = new MenuBar();
 		menuBar.getMenus().addAll(fileMenu);
-		menuBar.setOpacity(0.6);
+		menuBar.setOpacity(0.7);
 		layout.add(menuBar, 0, 0, 8, 1);
 
 		// border glow
 		int depth = 40;
 		DropShadow borderGlow = new DropShadow();
-		borderGlow.setColor(Color.ALICEBLUE);
+		borderGlow.setColor(Color.LIGHTBLUE);
 		borderGlow.setWidth(depth);
 		borderGlow.setHeight(depth);
 		borderGlow.setOffsetX(0f);
@@ -77,17 +77,18 @@ public class ScenarioCreator extends Application {
 		layout.add(story, 0, 1, 6, 1);
 
 		TextArea storyText = new TextArea();
-		Label storyLabel = new Label("this\nis\nthe\nstory\narea");
-		storyLabel.setLabelFor(storyText);
-		storyLabel.setVisible(false);
 		storyText.setPrefHeight(250);
 		storyText.setPrefWidth(600);
 		storyText.setOpacity(0.9);
 		storyText.setWrapText(true);
 		storyText.setEffect(borderGlow);
 		layout.add(storyText, 0, 2, 8, 4);
-		layout.add(storyLabel, 0, 2);
-	
+
+		storyText.setAccessibleRoleDescription("this be the story text area");
+		Label storyLabel = new Label("Enter your story here");
+		storyLabel.setLabelFor(storyText);
+		storyLabel.setVisible(false);
+		layout.add(storyLabel, 0, 2, 8, 4);
 
 		// Braille text field
 		Text braille = new Text("Braille");
@@ -99,6 +100,12 @@ public class ScenarioCreator extends Application {
 		brailleText.setPrefWidth(40);
 		layout.add(brailleText, 0, 6, 2, 1);
 
+		// accessibility for braille text field
+		Label brailleLabel = new Label("Enter the letter \n you want displayed \n on the braille cell");
+		brailleLabel.setLabelFor(brailleText);
+		brailleLabel.setVisible(false);
+		layout.add(brailleLabel, 2, 6);
+
 		// answer text field
 		Text answer = new Text("Answer");
 		answer.setFont(Font.font("Arial", FontWeight.BOLD, 11.5));
@@ -109,9 +116,15 @@ public class ScenarioCreator extends Application {
 		answerText.setPrefWidth(50);
 		layout.add(answerText, 4, 6);
 
+		// accessibility for answer field
+		Label answerLabel = new Label("Enter the button\nnumber users should\npress for the\ncorrect response");
+		answerLabel.setLabelFor(answerText);
+		answerLabel.setVisible(false);
+		layout.add(answerLabel, 5, 6);
+
 		// sound button
 		Button sound = new Button("Sound");
-		sound.setAccessibleRoleDescription("sound button");
+		sound.setAccessibleRoleDescription("Sound button");
 		sound.setAccessibleText("Sound option is currently not available in this version");
 		layout.add(sound, 7, 6);
 
@@ -129,6 +142,12 @@ public class ScenarioCreator extends Application {
 		correctText.setEffect(borderGlow);
 		layout.add(correctText, 0, 8, 8, 4);
 
+		// accessibility for correct text area
+		Label correctLabel = new Label("Enter what happens \n when the right \n answer is triggered");
+		correctLabel.setLabelFor(correctText);
+		correctLabel.setVisible(false);
+		layout.add(correctLabel, 0, 8, 8, 4);
+
 		// Incorrect text area
 		Text incorrect = new Text(" Incorrect");
 		incorrect.setFont(Font.font("Arial", FontWeight.BOLD, 13));
@@ -143,20 +162,22 @@ public class ScenarioCreator extends Application {
 		incorrectText.setEffect(borderGlow);
 		layout.add(incorrectText, 0, 14, 8, 3);
 
-		// blank text field for spacing
-		Text blank = new Text("             ");
-		blank.setFont(Font.font("Arial", FontWeight.SEMI_BOLD, 10));
-		layout.add(blank, 3, 6);
+		// accessibility for incorrect text area
+		Label incorrectLabel = new Label("Enter what happens \n when the wrong\n answer is triggered");
+		incorrectLabel.setLabelFor(incorrectText);
+		incorrectLabel.setVisible(false);
+		layout.add(incorrectLabel, 0, 8, 8, 4);
 
 		// blank text field for spacing
-		Text blank1 = new Text("                                  " + "                                               "
-				+ "                                               ");
+		Text blank1 = new Text(
+				"                                  " + "                                               ");
 		blank1.setFont(Font.font("Arial", FontWeight.SEMI_BOLD, 10));
 		layout.add(blank1, 6, 6);
 
 		// publish button
 		Button publish = new Button("Publish");
-		publish.setAccessibleText("Click on button to save block");
+		publish.setAccessibleRoleDescription("Publish button");
+		publish.setAccessibleText("Press enter to save block");
 		layout.add(publish, 0, 18);
 
 		// ComboBox (drop down menu)
@@ -202,12 +223,12 @@ public class ScenarioCreator extends Application {
 
 		Scene scene2 = new Scene(layout2);
 		soundWindow.setScene(scene2);
-		soundWindow.setTitle("Add Sound");
-		storyText.setAccessibleRoleDescription("Enter story here");
 		Text soundMessage = new Text("Sorry, the sound option is currently\n" + "not available for this version");
-
 		layout2.add(soundMessage, 0, 0, 2, 1);
 		Button soundOkay = new Button("Okay");
+		soundOkay.setAccessibleRoleDescription("okay button");
+		soundOkay.setAccessibleText(
+				"Sorry, the sound option is currently not available for this version, press enter to go back to main window");
 		layout2.add(soundOkay, 2, 1);
 
 		// sound button events
@@ -239,9 +260,13 @@ public class ScenarioCreator extends Application {
 
 		Scene scene3 = new Scene(layout3);
 		notANumber.setScene(scene3);
+		notANumber.setTitle("Incorrect field");
 		Text answerIsNumber = new Text("Answer field needs to contain a number " + "between 1 and 4 inclusive");
 		layout3.add(answerIsNumber, 0, 0, 2, 1);
 		Button answerOkay = new Button("Okay");
+		answerOkay.setAccessibleRoleDescription("Okay button");
+		answerOkay.setAccessibleText(
+				"The answer field needs to contain a number between 1 and 4 inclusive, press enter to return to main window");
 		layout3.add(answerOkay, 2, 1);
 
 		answerOkay.setOnAction(e -> {
@@ -262,9 +287,13 @@ public class ScenarioCreator extends Application {
 
 		Scene scene4 = new Scene(layout4);
 		brailleWindow.setScene(scene4);
+		brailleWindow.setTitle("Incorrect field");
 		Text brailleEntry = new Text("Braille field must contain one letter");
 		layout4.add(brailleEntry, 0, 0, 2, 1);
 		Button brailleOkay = new Button("Okay");
+		brailleOkay.setAccessibleRoleDescription("Okay button");
+		brailleOkay
+				.setAccessibleText("Braille field must contain one letter only, press enter to return to main window");
 		layout4.add(brailleOkay, 2, 1);
 
 		brailleOkay.setOnAction(e1 -> {
@@ -285,12 +314,21 @@ public class ScenarioCreator extends Application {
 
 		Scene scene1 = new Scene(layout1);
 		nameBlockWindow.setScene(scene1);
-		nameBlockWindow.setTitle("Block name");
-		Text nameBlock = new Text("Enter Name for the Block");
+		nameBlockWindow.setTitle("Name Block");
+		Text nameBlock = new Text("Enter name for the block");
 		layout1.add(nameBlock, 0, 0);
 		TextField nameField = new TextField();
 		layout1.add(nameField, 0, 1);
+
+		// accessibility for nameField
+		Label nameLabel = new Label("Enter name for the block");
+		nameLabel.setLabelFor(nameField);
+		nameLabel.setVisible(false);
+		layout.add(nameLabel, 0, 1);
+
 		Button save = new Button("Save");
+		save.setAccessibleRoleDescription("Save button");
+		save.setAccessibleText("Press enter to save block");
 		layout1.add(save, 0, 2);
 
 		// save button action [pop up dialog box]
@@ -304,21 +342,47 @@ public class ScenarioCreator extends Application {
 			comboBox.setItems(comboBoxList);
 
 			// save text to block
-			Block blockText = new Block(blockName, storyText.getText(), correctText.getText(), incorrectText.getText(),
-					Integer.parseInt(answerText.getText()), brailleText.getText().charAt(0));
 
-			blockList.add(blockText);
+			int buttonsUsed = 4;
+			if (blockName.equals("") || storyText.equals("") || Integer.parseInt(answerText.getText()) > buttonsUsed) {
+				try {
+					throw new InvalidBlockException();
+				} catch (InvalidBlockException e2) {
+					// TODO Auto-generated catch block
+					e2.printStackTrace();
+				}
+			} else {
+				Block blockText;
+				try {
+					blockText = new Block(blockName, storyText.getText(), correctText.getText(),
+							incorrectText.getText(), Integer.parseInt(answerText.getText()),
+							brailleText.getText().charAt(0));
+					blockList.add(blockText);
+				} catch (NumberFormatException e2) {
+					// TODO Auto-generated catch block
+					e2.printStackTrace();
+				} catch (InvalidBlockException e2) {
+					// TODO Auto-generated catch block
+					e2.printStackTrace();
+				}
+
+			}
 
 			// send block to printer
 			try {
 				printer = new Printer(blockName + ".txt");
-				printer.addBlockList(blockList);
+				try {
+					printer.addBlockList(blockList);
+				} catch (InvalidCellException e2) {
+					e2.printStackTrace();
+				}
 				printer.print();
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}
 
 			nameBlockWindow.close();
+
 		});
 
 		save.setOnKeyPressed(e -> {
@@ -333,21 +397,34 @@ public class ScenarioCreator extends Application {
 				comboBox.setItems(comboBoxList);
 
 				// save text to block
-				Block blockText = new Block(blockName, storyText.getText(), correctText.getText(),
-						incorrectText.getText(), Integer.parseInt(answerText.getText()),
-						brailleText.getText().charAt(0));
-
-				blockList.add(blockText);
+				Block blockText = null;
+				try {
+					blockText = new Block(blockName, storyText.getText(), correctText.getText(),
+							incorrectText.getText(), Integer.parseInt(answerText.getText()),
+							brailleText.getText().charAt(0));
+					blockList.add(blockText);
+				} catch (NumberFormatException e2) {
+					// TODO Auto-generated catch block
+					e2.printStackTrace();
+				} catch (InvalidBlockException e2) {
+					// TODO Auto-generated catch block
+					e2.printStackTrace();
+				}
 
 				// send block to printer
 				try {
 					printer = new Printer(blockName + ".txt");
-					printer.addBlock(blockText);
+					try {
+						printer.addBlock(blockText);
+					} catch (InvalidCellException e2) {
+						// TODO Auto-generated catch block
+						e2.printStackTrace();
+					}
 					printer.print();
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
-
+				nameField.clear();
 				nameBlockWindow.close();
 			}
 		});
@@ -409,8 +486,8 @@ public class ScenarioCreator extends Application {
 		});
 
 		// Scene
-		Scene scene = new Scene(layout, 900, 640);
-		primaryStage.setTitle("Scenario Creator");	
+		Scene scene = new Scene(layout, 1000, 655);
+		primaryStage.setTitle("Scenario Creator");
 		primaryStage.setScene(scene);
 		scene.setFill(Color.TRANSPARENT);
 		primaryStage.show();
