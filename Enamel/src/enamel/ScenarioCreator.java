@@ -480,8 +480,10 @@ public class ScenarioCreator extends Application {
 		final ToggleGroup group = new ToggleGroup();
 		RadioButton visualButton = new RadioButton("Visual Player");
 		visualButton.setToggleGroup(group);
+		visualButton.setAccessibleText("Press enter to select visual player");
 		RadioButton audioButton = new RadioButton("Audio Player");
 		audioButton.setToggleGroup(group);
+		audioButton.setAccessibleText("Press enter to select audio player");
 		layout9.add(visualButton, 0, 2);
 		layout9.add(audioButton, 1, 2);
 
@@ -784,7 +786,9 @@ public class ScenarioCreator extends Application {
 				}
 			}
 		});
-
+		
+		
+		// starting window -> choose audio or visual player
 		testButton.setOnAction(e1 -> {
 			primaryStage.close();
 			playerSelectionWindow.show();
@@ -794,6 +798,7 @@ public class ScenarioCreator extends Application {
 				File file = fileChooser.showOpenDialog(primaryStage);
 				ScenarioParser s = new ScenarioParser(true);
 				s.setScenarioFile(file.getAbsolutePath());
+				playerSelectionWindow.close();
 			});
 			audioButton.setOnAction(e3 -> {
 				FileChooser fileChooser = new FileChooser();
@@ -801,6 +806,7 @@ public class ScenarioCreator extends Application {
 				File file = fileChooser.showOpenDialog(primaryStage);
 				ScenarioParser s = new ScenarioParser(false);
 				s.setScenarioFile(file.getAbsolutePath());
+				playerSelectionWindow.close();
 			});
 		});
 
@@ -816,6 +822,7 @@ public class ScenarioCreator extends Application {
 						File file = fileChooser.showOpenDialog(primaryStage);
 						ScenarioParser s = new ScenarioParser(true);
 						s.setScenarioFile(file.getAbsolutePath());
+						playerSelectionWindow.close();
 					}
 				});
 				audioButton.setOnKeyPressed(e2 -> {
@@ -825,6 +832,7 @@ public class ScenarioCreator extends Application {
 						File file = fileChooser.showOpenDialog(primaryStage);
 						ScenarioParser s = new ScenarioParser(false);
 						s.setScenarioFile(file.getAbsolutePath());
+						playerSelectionWindow.close();
 					}
 
 				});
