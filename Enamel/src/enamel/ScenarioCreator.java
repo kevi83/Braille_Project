@@ -818,8 +818,8 @@ public class ScenarioCreator extends Application {
 						s.setScenarioFile(file.getAbsolutePath());
 					}
 				});
-				audioButton.setOnAction(e2 -> {
-					if (e.getCode() == KeyCode.ENTER) {
+				audioButton.setOnKeyPressed(e2 -> {
+					if (e2.getCode() == KeyCode.ENTER) {
 						FileChooser fileChooser = new FileChooser();
 						fileChooser.setTitle("Open Scenario File");
 						File file = fileChooser.showOpenDialog(primaryStage);
