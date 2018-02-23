@@ -45,6 +45,7 @@ public class ScenarioCreator extends Application {
 
 		// Adding components to GUI (component, column, row, column span, row span)
 
+		
 		// GUI for start Window / primary stage
 		GridPane layout1 = new GridPane();
 		layout1.setHgap(10);
@@ -67,6 +68,7 @@ public class ScenarioCreator extends Application {
 		testButton.setAccessibleText("To test a scenario press enter");
 		layout1.add(testButton, 3, 6);
 
+		
 		// GUI for scenario Creator
 		Stage scenarioCreator = new Stage();
 		GridPane layout = new GridPane();
@@ -81,6 +83,7 @@ public class ScenarioCreator extends Application {
 		layout.setBackground(
 				new Background(new BackgroundFill(Color.gray(0.05, 0.8), CornerRadii.EMPTY, Insets.EMPTY)));
 
+		
 		// File menu
 		Menu fileMenu = new Menu("File");
 
@@ -458,6 +461,31 @@ public class ScenarioCreator extends Application {
 		Button nameSaveButton = new Button("Save");
 		layout8.add(nameSaveButton, 1, 1);
 		nameSaveButton.setAccessibleText("Press enter to save scenario and return to main window");
+		
+		
+		// pop up window - warning users that if they select new project all unsaved projects will be lost
+		Stage warningWindow = new Stage();
+		GridPane layout10 = new GridPane();
+		layout10.setHgap(10);
+		layout10.setVgap(10);
+		layout10.setPadding(new Insets(5, 5, 5, 5));
+
+		Scene scene10 = new Scene(layout10);
+		warningWindow.setScene(scene10);
+		warningWindow.setTitle("Warning");
+		Text warningText = new Text("	       Are you sure you want to start a new project?\n			any unsaved projects will be lost");
+		layout10.add(warningText, 0, 0, 2, 2);
+		Button warningOkay = new Button("Okay");
+		warningOkay.setAccessibleRoleDescription("Okay button");
+		warningOkay
+				.setAccessibleText("Are you sure you want to start a new project? any unsaved projects will be lost, press enter to continue");
+		layout10.add(warningOkay, 0, 4);
+		Button warningCancel = new Button("Cancel");
+		warningCancel.setAccessibleRoleDescription("Cancel button");
+		warningCancel
+				.setAccessibleText("Press enter to return to main window");
+		layout10.add(warningCancel, 2, 4);
+		
 
 		// Pop up window : Choose between audio / visual player for testing
 		Stage playerSelectionWindow = new Stage();
@@ -486,6 +514,7 @@ public class ScenarioCreator extends Application {
 		audioButton.setAccessibleText("Press enter to select audio player");
 		layout9.add(visualButton, 0, 2);
 		layout9.add(audioButton, 1, 2);
+
 
 		// save button
 		// Check if name field is empty
@@ -725,6 +754,53 @@ public class ScenarioCreator extends Application {
 
 		});
 
+		
+		// File Menu Selection : new project
+		newProject.setOnAction(e -> {
+			
+			warningWindow.show();
+			
+			});
+		
+		
+		warningOkay.setOnAction(e1 -> {
+			nameSectionField.clear();
+			storyText.clear();
+			correctText.clear();
+			incorrectText.clear();
+			brailleText.clear();
+			answerText.clear();
+			comboBox.getItems().removeAll(comboBoxList);
+			comboBox.setPromptText("Select a section");
+			comboBoxList.add(0, "New Section");
+			warningWindow.close();
+		});
+		warningOkay.setOnKeyPressed(e -> {
+			nameSectionField.clear();
+			storyText.clear();
+			correctText.clear();
+			incorrectText.clear();
+			brailleText.clear();
+			answerText.clear();
+			comboBox.getItems().removeAll(comboBoxList);
+			comboBox.setPromptText("Select a section");
+			comboBoxList.add(0, "New Section");
+			if (e.getCode() == KeyCode.ENTER) {
+				warningWindow.close();
+			}
+		});
+		
+		warningCancel.setOnAction(e1 -> {
+			warningWindow.close();
+		});
+		warningCancel.setOnKeyPressed(e2 -> {
+			if (e2.getCode() == KeyCode.ENTER) {
+				warningWindow.close();
+			}
+
+	
+		});		
+		
 		// File menu selection : save project
 		saveProject.setOnAction(e -> {
 
@@ -792,21 +868,22 @@ public class ScenarioCreator extends Application {
 		testButton.setOnAction(e1 -> {
 			primaryStage.close();
 			playerSelectionWindow.show();
+			
 			visualButton.setOnAction(e2 -> {
+				playerSelectionWindow.close();
 				FileChooser fileChooser = new FileChooser();
 				fileChooser.setTitle("Open Scenario File");
 				File file = fileChooser.showOpenDialog(primaryStage);
 				ScenarioParser s = new ScenarioParser(true);
 				s.setScenarioFile(file.getAbsolutePath());
-				playerSelectionWindow.close();
 			});
 			audioButton.setOnAction(e3 -> {
+				playerSelectionWindow.close();
 				FileChooser fileChooser = new FileChooser();
 				fileChooser.setTitle("Open Scenario File");
 				File file = fileChooser.showOpenDialog(primaryStage);
 				ScenarioParser s = new ScenarioParser(false);
 				s.setScenarioFile(file.getAbsolutePath());
-				playerSelectionWindow.close();
 			});
 		});
 
@@ -817,22 +894,22 @@ public class ScenarioCreator extends Application {
 
 				visualButton.setOnKeyPressed(e1 -> {
 					if (e1.getCode() == KeyCode.ENTER) {
+						playerSelectionWindow.close();
 						FileChooser fileChooser = new FileChooser();
 						fileChooser.setTitle("Open Scenario File");
 						File file = fileChooser.showOpenDialog(primaryStage);
 						ScenarioParser s = new ScenarioParser(true);
 						s.setScenarioFile(file.getAbsolutePath());
-						playerSelectionWindow.close();
 					}
 				});
 				audioButton.setOnKeyPressed(e2 -> {
 					if (e2.getCode() == KeyCode.ENTER) {
+						playerSelectionWindow.close();
 						FileChooser fileChooser = new FileChooser();
 						fileChooser.setTitle("Open Scenario File");
 						File file = fileChooser.showOpenDialog(primaryStage);
 						ScenarioParser s = new ScenarioParser(false);
 						s.setScenarioFile(file.getAbsolutePath());
-						playerSelectionWindow.close();
 					}
 
 				});
