@@ -6,7 +6,9 @@ import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.logging.Level;
 
 import javax.swing.BorderFactory;
@@ -23,7 +25,9 @@ public class AudioPlayer extends Player {
 	// voice and voiceManager from ScenarioParser used for audio speaking - micah 
 	private Voice voice;
 	private VoiceManager vm;
-	
+	// ArrayList of strings used to hold the state of the buttons, 
+	//if they are skip buttons, repeat buttons or inactive. - micah
+	private List<String> buttonState = new ArrayList<String>();
 	
 	
 	private JFrame frame;
@@ -87,15 +91,13 @@ public class AudioPlayer extends Player {
 
 					buttonList.add(button);
 					southPanel.add(button);
+					buttonState.add("inactive"); // Initalizing the state of every button. - micah
 				}
 
 				frame.getContentPane().add(southPanel, BorderLayout.SOUTH);
 				
-				//Connnor's added button
-				JButton openScenario = new JButton("Open Scenario File");
-				frame.getContentPane().add(openScenario, BorderLayout.NORTH);
-				openScenario.addActionListener(e -> openScenario.setText("Nice"));
-
+				// deleted conner's test button - micah
+				
 				frame.repaint();
 				frame.setVisible(true);
 			}
@@ -139,17 +141,36 @@ public class AudioPlayer extends Player {
 	@Override
 	public void refresh() {
 		// TODO Auto-generated method stub
+		// refresh is always called when the pins change, so audio description 
+		//needs to be given of the state of the pins. - micah
+		// I decided to remove audio update and make it it's own method. - micah
+		
+		//speak("There are " + Integer.toString(brailleList.size()) + 
+		//			" braille cells on this device.");
+		
 		for (BrailleCell s : brailleList) {
 			for (int i = 0; i < s.getNumberOfPins(); i++) {
 				pins[pinIndex[i]].setSelected(s.getPinState(i));
+			
 			}
 		}
-		
 	}
 
 	@Override
 	public void addSkipButtonListener(int index, String param, ScenarioParser sp) {
 		// TODO Auto-generated method stub
+		buttonState.set(index, "a Skip Button");
+		
+		// if the next line is not /~skip-button: then the currnet line is the 
+		// last call to addskipbuttonlistener, therefore give audio update on what 
+		// changed - micah
+		// also, /~skip-button: should not be the last line of the file. - micah
+		if( (sp.nextLineChecker.substring(0, 14).equals("/~skip-button:")) == false) {
+			speak("         ");
+			update();// this might casue problems, but i don't think it will - micah
+			
+		}
+		
 		buttonList.get(index).addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -160,11 +181,13 @@ public class AudioPlayer extends Player {
 				}
 			}
 		});
+		
 	}
 
 	@Override
 	public void removeButtonListener(int index) {
 		// TODO Auto-generated method stub
+		buttonState.set(index, "inactive");
 		if (index >= this.buttonNumber || index < 0) {
             throw new IllegalArgumentException("Invalid index.");
         }
@@ -180,6 +203,7 @@ public class AudioPlayer extends Player {
 	@Override
 	public void addRepeatButtonListener(int index, ScenarioParser sp) {
 		// TODO Auto-generated method stub
+		buttonState.set(index, "a Repeat Button");
 		getButton(index).addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -205,6 +229,32 @@ public class AudioPlayer extends Player {
 	private void speak(String text) {
 		
 			voice.speak(text);
+		
+	}
+	
+	// to be called for an audio update of the gui
+	private void update() {
+		for (BrailleCell s : brailleList) {
+			
+			speak("For the braille cell in the " + 
+					Integer.toString(brailleList.indexOf(s) + 1) + 
+						" position, it's pins are in this state.");
+			
+			for (int i = 0; i < s.getNumberOfPins(); i++) {
+				if(s.getPinState(i)) {
+					speak("The pin in the " + Integer.toString(i + 1) + " position is up.");
+				}
+				else {
+					speak("The pin in the " + Integer.toString(i + 1) + " position is down.");
+				}
+			}
+		}
+		int counter = 1;
+		for (String s: buttonState) {
+			
+			speak("Button " + Integer.toString(counter) +" is a " + s);
+			counter++;
+		}
 		
 	}
 	
