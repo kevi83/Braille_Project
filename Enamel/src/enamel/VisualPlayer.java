@@ -117,6 +117,8 @@ public class VisualPlayer extends Player {
 
 				frame.getContentPane().add(southPanel, BorderLayout.SOUTH);
 
+				// deleted conner's test button - micah
+				
 				frame.repaint();
 				frame.setVisible(true);
 			}
