@@ -2,6 +2,8 @@ package enamel;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -21,8 +23,6 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
-import javafx.scene.AccessibleRole;
-import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -33,6 +33,7 @@ public class ScenarioCreator extends Application {
 
 	Printer printer;
 	ArrayList<Block> blockList = new ArrayList<>();
+	HashMap<String, Block> blockMap = new HashMap<String, Block>();
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
@@ -70,11 +71,27 @@ public class ScenarioCreator extends Application {
 		borderGlow.setOffsetX(0f);
 		borderGlow.setOffsetY(0f);
 
+		// Block title
+		TextField nameSectionField = new TextField();
+		nameSectionField.setPrefWidth(30);
+		layout.add(nameSectionField, 0, 1);
+
+		Text sectionName = new Text("Section Name");
+		sectionName.setFont(Font.font("Arial", FontWeight.BOLD, 11.5));
+		sectionName.setFill(Color.GHOSTWHITE);
+		layout.add(sectionName, 1, 1, 2, 1);
+
+		// accessibility for braille text field
+		Label nameSectionLabel = new Label("Enter the name\n for this section \n of your story");
+		nameSectionLabel.setLabelFor(nameSectionField);
+		nameSectionLabel.setVisible(false);
+		layout.add(nameSectionLabel, 0, 1);
+
 		// Story text area
 		Text story = new Text(" Story");
 		story.setFont(Font.font("Arial", FontWeight.BOLD, 13));
 		story.setFill(Color.WHITE);
-		layout.add(story, 0, 1, 6, 1);
+		layout.add(story, 0, 2, 6, 1);
 
 		TextArea storyText = new TextArea();
 		storyText.setPrefHeight(250);
@@ -82,57 +99,57 @@ public class ScenarioCreator extends Application {
 		storyText.setOpacity(0.9);
 		storyText.setWrapText(true);
 		storyText.setEffect(borderGlow);
-		layout.add(storyText, 0, 2, 8, 4);
+		layout.add(storyText, 0, 3, 8, 4);
 
 		storyText.setAccessibleRoleDescription("this be the story text area");
 		Label storyLabel = new Label("Enter your story here");
 		storyLabel.setLabelFor(storyText);
 		storyLabel.setVisible(false);
-		layout.add(storyLabel, 0, 2, 8, 4);
+		layout.add(storyLabel, 0, 3, 8, 4);
 
 		// Braille text field
 		Text braille = new Text("Braille");
 		braille.setFont(Font.font("Arial", FontWeight.BOLD, 11.5));
 		braille.setFill(Color.GHOSTWHITE);
-		layout.add(braille, 2, 6);
+		layout.add(braille, 2, 7);
 
 		TextField brailleText = new TextField();
 		brailleText.setPrefWidth(40);
-		layout.add(brailleText, 0, 6, 2, 1);
+		layout.add(brailleText, 0, 7, 2, 1);
 
 		// accessibility for braille text field
 		Label brailleLabel = new Label("Enter the letter \n you want displayed \n on the braille cell");
 		brailleLabel.setLabelFor(brailleText);
 		brailleLabel.setVisible(false);
-		layout.add(brailleLabel, 2, 6);
+		layout.add(brailleLabel, 2, 7);
 
 		// answer text field
 		Text answer = new Text("Answer");
 		answer.setFont(Font.font("Arial", FontWeight.BOLD, 11.5));
 		answer.setFill(Color.WHITE);
-		layout.add(answer, 5, 6);
+		layout.add(answer, 5, 7);
 
 		TextField answerText = new TextField();
 		answerText.setPrefWidth(50);
-		layout.add(answerText, 4, 6);
+		layout.add(answerText, 4, 7);
 
 		// accessibility for answer field
 		Label answerLabel = new Label("Enter the button\nnumber users should\npress for the\ncorrect response");
 		answerLabel.setLabelFor(answerText);
 		answerLabel.setVisible(false);
-		layout.add(answerLabel, 5, 6);
+		layout.add(answerLabel, 5, 7);
 
 		// sound button
 		Button sound = new Button("Sound");
 		sound.setAccessibleRoleDescription("Sound button");
 		sound.setAccessibleText("Sound option is currently not available in this version");
-		layout.add(sound, 7, 6);
+		layout.add(sound, 7, 7);
 
 		// Correct text area
 		Text correct = new Text(" Correct");
 		correct.setFont(Font.font("Arial", FontWeight.BOLD, 13));
 		correct.setFill(Color.WHITE);
-		layout.add(correct, 0, 7);
+		layout.add(correct, 0, 8);
 
 		TextArea correctText = new TextArea();
 		correctText.setPrefHeight(100);
@@ -140,19 +157,19 @@ public class ScenarioCreator extends Application {
 		correctText.setOpacity(0.95);
 		correctText.setWrapText(true);
 		correctText.setEffect(borderGlow);
-		layout.add(correctText, 0, 8, 8, 4);
+		layout.add(correctText, 0, 9, 8, 4);
 
 		// accessibility for correct text area
 		Label correctLabel = new Label("Enter what happens \n when the right \n answer is triggered");
 		correctLabel.setLabelFor(correctText);
 		correctLabel.setVisible(false);
-		layout.add(correctLabel, 0, 8, 8, 4);
+		layout.add(correctLabel, 0, 9, 8, 4);
 
 		// Incorrect text area
 		Text incorrect = new Text(" Incorrect");
 		incorrect.setFont(Font.font("Arial", FontWeight.BOLD, 13));
 		incorrect.setFill(Color.WHITE);
-		layout.add(incorrect, 0, 13);
+		layout.add(incorrect, 0, 14);
 
 		TextArea incorrectText = new TextArea();
 		incorrectText.setPrefHeight(100);
@@ -160,7 +177,7 @@ public class ScenarioCreator extends Application {
 		incorrectText.setOpacity(0.95);
 		incorrectText.setWrapText(true);
 		incorrectText.setEffect(borderGlow);
-		layout.add(incorrectText, 0, 14, 8, 3);
+		layout.add(incorrectText, 0, 15, 8, 3);
 
 		// accessibility for incorrect text area
 		Label incorrectLabel = new Label("Enter what happens \n when the wrong\n answer is triggered");
@@ -172,44 +189,22 @@ public class ScenarioCreator extends Application {
 		Text blank1 = new Text(
 				"                                  " + "                                               ");
 		blank1.setFont(Font.font("Arial", FontWeight.SEMI_BOLD, 10));
-		layout.add(blank1, 6, 6);
+		layout.add(blank1, 6, 7);
 
 		// publish button
-		Button publish = new Button("Publish");
-		publish.setAccessibleRoleDescription("Publish button");
-		publish.setAccessibleText("Press enter to save block");
-		layout.add(publish, 0, 18);
+		Button saveButton = new Button("Save");
+		saveButton.setAccessibleRoleDescription("Save button");
+		saveButton.setAccessibleText("Press enter to save block");
+		layout.add(saveButton, 0, 19);
 
 		// ComboBox (drop down menu)
 		ObservableList<String> comboBoxList = FXCollections.observableArrayList();
 		ComboBox<String> comboBox = new ComboBox<String>(comboBoxList);
 		comboBox.setPrefWidth(200);
 		comboBox.setEditable(true);
-		comboBox.setPromptText("Select a block");
-		comboBoxList.add(0, "New Block");
+		comboBox.setPromptText("Select a section");
+		comboBoxList.add(0, "New Section");
 		layout.add(comboBox, 9, 0, 5, 1);
-
-		// return selected comboBox value
-		comboBox.getSelectionModel().selectedIndexProperty().addListener(e -> {
-
-			if (comboBox.getValue() == "New Block") {
-				storyText.clear();
-				correctText.clear();
-				incorrectText.clear();
-				brailleText.clear();
-				answerText.clear();
-			} else {
-				for (int i = 0; i < blockList.size(); i++) {
-					if (comboBox.getValue() == blockList.get(i).name) {
-						storyText.setText(blockList.get(i).premise);
-						correctText.setText(blockList.get(i).correctResponse);
-						incorrectText.setText(blockList.get(i).wrongResponse);
-						brailleText.setText(Character.toString(blockList.get(i).letter));
-						answerText.setText(Integer.toString(blockList.get(i).answer));
-					}
-				}
-			}
-		});
 
 		//////////////// GUIs and Action Events ////////////////////////////
 
@@ -252,15 +247,15 @@ public class ScenarioCreator extends Application {
 		});
 
 		// GUI for answer field not containing a number
-		Stage notANumber = new Stage();
+		Stage notANumberWindow = new Stage();
 		GridPane layout3 = new GridPane();
 		layout3.setHgap(10);
 		layout3.setVgap(10);
 		layout3.setPadding(new Insets(5, 5, 5, 5));
 
 		Scene scene3 = new Scene(layout3);
-		notANumber.setScene(scene3);
-		notANumber.setTitle("Incorrect field");
+		notANumberWindow.setScene(scene3);
+		notANumberWindow.setTitle("Error");
 		Text answerIsNumber = new Text("Answer field needs to contain a number " + "between 1 and 4 inclusive");
 		layout3.add(answerIsNumber, 0, 0, 2, 1);
 		Button answerOkay = new Button("Okay");
@@ -270,11 +265,11 @@ public class ScenarioCreator extends Application {
 		layout3.add(answerOkay, 2, 1);
 
 		answerOkay.setOnAction(e -> {
-			notANumber.close();
+			notANumberWindow.close();
 		});
 		answerOkay.setOnKeyPressed(e -> {
 			if (e.getCode() == KeyCode.ENTER) {
-				notANumber.close();
+				notANumberWindow.close();
 			}
 		});
 
@@ -287,7 +282,7 @@ public class ScenarioCreator extends Application {
 
 		Scene scene4 = new Scene(layout4);
 		brailleWindow.setScene(scene4);
-		brailleWindow.setTitle("Incorrect field");
+		brailleWindow.setTitle("Error");
 		Text brailleEntry = new Text("Braille field must contain one letter");
 		layout4.add(brailleEntry, 0, 0, 2, 1);
 		Button brailleOkay = new Button("Okay");
@@ -305,143 +300,177 @@ public class ScenarioCreator extends Application {
 			}
 		});
 
-		// GUI for naming block
-		Stage nameBlockWindow = new Stage();
-		GridPane layout1 = new GridPane();
-		layout1.setHgap(10);
-		layout1.setVgap(10);
-		layout1.setPadding(new Insets(0, 5, 5, 5));
+		// GUI for Story field being empty
+		Stage emptyStoryWindow = new Stage();
+		GridPane layout5 = new GridPane();
+		layout5.setHgap(10);
+		layout5.setVgap(10);
+		layout5.setPadding(new Insets(5, 5, 5, 5));
 
-		Scene scene1 = new Scene(layout1);
-		nameBlockWindow.setScene(scene1);
-		nameBlockWindow.setTitle("Name Block");
-		Text nameBlock = new Text("Enter name for the block");
-		layout1.add(nameBlock, 0, 0);
-		TextField nameField = new TextField();
-		layout1.add(nameField, 0, 1);
+		Scene scene5 = new Scene(layout5);
+		emptyStoryWindow.setScene(scene5);
+		emptyStoryWindow.setTitle("Story field is empty");
+		Text emptyStoryText = new Text("Section can not be saved\nif the story field is empty");
+		layout5.add(emptyStoryText, 0, 0, 2, 1);
+		Button emptyStoryOkay = new Button("Okay");
+		emptyStoryOkay.setAccessibleRoleDescription("Okay button");
+		emptyStoryOkay.setAccessibleText(
+				"Section can not be saved if the story field is empty, press enter to go back to main window");
+		layout5.add(emptyStoryOkay, 2, 1);
 
-		// accessibility for nameField
-		Label nameLabel = new Label("Enter name for the block");
-		nameLabel.setLabelFor(nameField);
-		nameLabel.setVisible(false);
-		layout.add(nameLabel, 0, 1);
-
-		Button save = new Button("Save");
-		save.setAccessibleRoleDescription("Save button");
-		save.setAccessibleText("Press enter to save block");
-		layout1.add(save, 0, 2);
-
-		// save button action [pop up dialog box]
-		save.setOnMouseClicked(e -> {
-
-			// get name of file from user input
-			String blockName = nameField.getText();
-
-			// save name to comboBox
-			comboBoxList.add(blockName);
-			comboBox.setItems(comboBoxList);
-
-			// save text to block
-
-			int buttonsUsed = 4;
-			if (blockName.equals("") || storyText.equals("") || Integer.parseInt(answerText.getText()) > buttonsUsed) {
-				try {
-					throw new InvalidBlockException();
-				} catch (InvalidBlockException e2) {
-					// TODO Auto-generated catch block
-					e2.printStackTrace();
-				}
-			} else {
-				Block blockText;
-				try {
-					blockText = new Block(blockName, storyText.getText(), correctText.getText(),
-							incorrectText.getText(), Integer.parseInt(answerText.getText()),
-							brailleText.getText().charAt(0));
-					blockList.add(blockText);
-				} catch (NumberFormatException e2) {
-					// TODO Auto-generated catch block
-					e2.printStackTrace();
-				} catch (InvalidBlockException e2) {
-					// TODO Auto-generated catch block
-					e2.printStackTrace();
-				}
-
-			}
-
-			// send block to printer
-			try {
-				printer = new Printer(blockName + ".txt");
-				try {
-					printer.addBlockList(blockList);
-				} catch (InvalidCellException e2) {
-					e2.printStackTrace();
-				}
-				printer.print();
-			} catch (IOException e1) {
-				e1.printStackTrace();
-			}
-
-			nameBlockWindow.close();
-
+		emptyStoryOkay.setOnAction(e -> {
+			emptyStoryWindow.close();
 		});
-
-		save.setOnKeyPressed(e -> {
-
+		emptyStoryOkay.setOnKeyPressed(e -> {
 			if (e.getCode() == KeyCode.ENTER) {
-
-				// get name of file from user input
-				String blockName = nameField.getText();
-
-				// save name to comboBox
-				comboBoxList.add(blockName);
-				comboBox.setItems(comboBoxList);
-
-				// save text to block
-				Block blockText = null;
-				try {
-					blockText = new Block(blockName, storyText.getText(), correctText.getText(),
-							incorrectText.getText(), Integer.parseInt(answerText.getText()),
-							brailleText.getText().charAt(0));
-					blockList.add(blockText);
-				} catch (NumberFormatException e2) {
-					// TODO Auto-generated catch block
-					e2.printStackTrace();
-				} catch (InvalidBlockException e2) {
-					// TODO Auto-generated catch block
-					e2.printStackTrace();
-				}
-
-				// send block to printer
-				try {
-					printer = new Printer(blockName + ".txt");
-					try {
-						printer.addBlock(blockText);
-					} catch (InvalidCellException e2) {
-						// TODO Auto-generated catch block
-						e2.printStackTrace();
-					}
-					printer.print();
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}
-				nameField.clear();
-				nameBlockWindow.close();
+				emptyStoryWindow.close();
 			}
 		});
 
-		// publish button
+		// block is not given a name
+		Stage emptyNameWindow = new Stage();
+		GridPane layout6 = new GridPane();
+		layout6.setHgap(10);
+		layout6.setVgap(10);
+		layout6.setPadding(new Insets(0, 5, 5, 5));
+
+		Scene scene6 = new Scene(layout6);
+		emptyNameWindow.setScene(scene6);
+		emptyNameWindow.setTitle("Name is empty");
+		Text emptyName = new Text("Section can not be saved unless it has a name");
+		layout6.add(emptyName, 0, 0);
+		Button emptyNameButton = new Button("Okay");
+		layout6.add(emptyNameButton, 1, 1);
+		emptyNameButton.setAccessibleText(
+				"Section can not be saved unless it has a name, press enter to go back to main window");
+
+		emptyNameButton.setOnAction(e1 -> {
+			emptyNameWindow.close();
+		});
+		emptyNameButton.setOnKeyPressed(e2 -> {
+			if (e2.getCode() == KeyCode.ENTER) {
+				emptyNameWindow.close();
+			}
+		});
+
+		// block is not given a name
+		Stage saveWindow = new Stage();
+		GridPane layout7 = new GridPane();
+		layout7.setHgap(10);
+		layout7.setVgap(10);
+		layout7.setPadding(new Insets(0, 5, 5, 5));
+
+		Scene scene7 = new Scene(layout7);
+		saveWindow.setScene(scene7);
+		saveWindow.setTitle("Save");
+		Text saveConfirmed = new Text("This section has been saved");
+		layout7.add(saveConfirmed, 0, 0);
+		Button saveOkayButton = new Button("Okay");
+		layout7.add(saveOkayButton, 1, 1);
+		saveOkayButton.setAccessibleText("This section has been saved, press enter to return to main window");
+
+		saveOkayButton.setOnAction(e1 -> {
+			saveWindow.close();
+		});
+		saveOkayButton.setOnKeyPressed(e2 -> {
+			if (e2.getCode() == KeyCode.ENTER) {
+				saveWindow.close();
+			}
+		});
+
+		// save button
+		// Check if name field is empty
+		// check story field is not empty
 		// check answer field contains number
 		// check braille field contains a blank or one char
 
-		publish.setOnMouseClicked(e -> {
+		saveButton.setOnMouseClicked(e -> {
 
 			try {
 				int x = Integer.parseInt(answerText.getText());
 				if (x >= 1 && x <= 4) {
 					if (brailleText.getText().length() == 1) {
-						if (brailleText.getText().matches("[A-z]"))
-							nameBlockWindow.show();
-						else {
+						if (brailleText.getText().matches("[A-z]")) {
+							if (storyText.getText().length() != 0) {
+								if (nameSectionField.getText().length() == 0) {
+
+									emptyNameWindow.show();
+								} else {
+
+									saveWindow.show();
+									// get name of file from user input
+									String blockName = nameSectionField.getText();
+
+									if (blockMap.containsKey(blockName)) {
+										blockList.get(blockList.indexOf(
+												(blockMap.get(nameSectionField.getText())))).premise = storyText
+														.getText();
+										blockList.get(blockList.indexOf((blockMap
+												.get(nameSectionField.getText())))).correctResponse = correctText
+														.getText();
+										blockList.get(blockList.indexOf((blockMap
+												.get(nameSectionField.getText())))).wrongResponse = incorrectText
+														.getText();
+										blockList.get(blockList.indexOf(
+												(blockMap.get(nameSectionField.getText())))).letter = brailleText
+														.getText().charAt(0);
+										blockList.get(blockList
+												.indexOf((blockMap.get(nameSectionField.getText())))).answer = Integer
+														.parseInt(answerText.getText());
+									} else {
+
+										// save name to comboBox
+										comboBoxList.add(blockName);
+										comboBox.setItems(comboBoxList);
+
+										// save text to block
+
+										int buttonsUsed = 4;
+										if (blockName.equals("") || storyText.equals("")
+												|| Integer.parseInt(answerText.getText()) > buttonsUsed) {
+											try {
+												throw new InvalidBlockException();
+											} catch (InvalidBlockException e2) {
+												// TODO Auto-generated catch block
+												e2.printStackTrace();
+											}
+										} else {
+											Block blockText;
+											try {
+												blockText = new Block(blockName, storyText.getText(),
+														correctText.getText(), incorrectText.getText(),
+														Integer.parseInt(answerText.getText()),
+														brailleText.getText().charAt(0));
+												blockList.add(blockText);
+												blockMap.put(blockName, blockText);
+											} catch (NumberFormatException e2) {
+												// TODO Auto-generated catch block
+												e2.printStackTrace();
+											} catch (InvalidBlockException e2) {
+												// TODO Auto-generated catch block
+												e2.printStackTrace();
+											}
+
+										}
+
+										// send blocklist to printer
+										try {
+											printer = new Printer(blockName + ".txt");
+											try {
+												printer.addBlockList(blockList);
+											} catch (InvalidCellException e2) {
+												e2.printStackTrace();
+											}
+											printer.print();
+										} catch (IOException e1) {
+											e1.printStackTrace();
+										}
+									}
+								}
+							} else {
+								emptyStoryWindow.show();
+							}
+						} else {
 							brailleWindow.show();
 						}
 					} else {
@@ -449,16 +478,16 @@ public class ScenarioCreator extends Application {
 					}
 
 				} else {
-					notANumber.show();
+					notANumberWindow.show();
 				}
 
 			} catch (NumberFormatException e2) {
-				notANumber.show();
+				notANumberWindow.show();
 			}
 
 		});
 
-		publish.setOnKeyPressed(e -> {
+		saveButton.setOnKeyPressed(e -> {
 
 			if (e.getCode() == KeyCode.ENTER) {
 
@@ -467,7 +496,84 @@ public class ScenarioCreator extends Application {
 					if (x >= 1 && x <= 4) {
 						if (brailleText.getText().length() == 1) {
 							if (brailleText.getText().matches("[A-z]"))
-								nameBlockWindow.show();
+								if (storyText.getText().length() != 0) {
+									if (nameSectionField.getText().length() == 0) {
+										emptyNameWindow.show();
+									} else {
+
+										saveWindow.show();
+										// get name of file from user input
+										String blockName = nameSectionField.getText();
+
+										if (blockMap.containsKey(blockName)) {
+											blockList.get(blockList.indexOf(
+													(blockMap.get(nameSectionField.getText())))).premise = storyText
+															.getText();
+											blockList.get(blockList.indexOf((blockMap
+													.get(nameSectionField.getText())))).correctResponse = correctText
+															.getText();
+											blockList.get(blockList.indexOf((blockMap
+													.get(nameSectionField.getText())))).wrongResponse = incorrectText
+															.getText();
+											blockList.get(blockList.indexOf(
+													(blockMap.get(nameSectionField.getText())))).letter = brailleText
+															.getText().charAt(0);
+											blockList.get(blockList.indexOf(
+													(blockMap.get(nameSectionField.getText())))).answer = Integer
+															.parseInt(answerText.getText());
+										} else {
+
+											// save name to comboBox
+											comboBoxList.add(blockName);
+											comboBox.setItems(comboBoxList);
+
+											// save text to block
+
+											int buttonsUsed = 4;
+											if (blockName.equals("") || storyText.equals("")
+													|| Integer.parseInt(answerText.getText()) > buttonsUsed) {
+												try {
+													throw new InvalidBlockException();
+												} catch (InvalidBlockException e2) {
+													// TODO Auto-generated catch block
+													e2.printStackTrace();
+												}
+											} else {
+												Block blockText;
+												try {
+													blockText = new Block(blockName, storyText.getText(),
+															correctText.getText(), incorrectText.getText(),
+															Integer.parseInt(answerText.getText()),
+															brailleText.getText().charAt(0));
+													blockList.add(blockText);
+													blockMap.put(blockName, blockText);
+												} catch (NumberFormatException e2) {
+													// TODO Auto-generated catch block
+													e2.printStackTrace();
+												} catch (InvalidBlockException e2) {
+													// TODO Auto-generated catch block
+													e2.printStackTrace();
+												}
+
+											}
+
+											// send blocklist to printer
+											try {
+												printer = new Printer(blockName + ".txt");
+												try {
+													printer.addBlockList(blockList);
+												} catch (InvalidCellException e2) {
+													e2.printStackTrace();
+												}
+												printer.print();
+											} catch (IOException e1) {
+												e1.printStackTrace();
+											}
+										}
+									}
+								} else {
+									emptyStoryWindow.show();
+								}
 							else {
 								brailleWindow.show();
 							}
@@ -476,11 +582,11 @@ public class ScenarioCreator extends Application {
 						}
 
 					} else {
-						notANumber.show();
+						notANumberWindow.show();
 					}
 
 				} catch (NumberFormatException e2) {
-					notANumber.show();
+					notANumberWindow.show();
 				}
 			}
 		});
@@ -493,6 +599,48 @@ public class ScenarioCreator extends Application {
 		primaryStage.show();
 		layout.setBackground(
 				new Background(new BackgroundFill(Color.gray(0.05, 0.8), CornerRadii.EMPTY, Insets.EMPTY)));
+
+		// return selected comboBox value
+		comboBox.getSelectionModel().selectedIndexProperty().addListener(e -> {
+
+			if (comboBox.getValue() == "New Section") {
+
+				blockList.get(blockList.indexOf((blockMap.get(nameSectionField.getText())))).premise = storyText
+						.getText();
+				blockList.get(
+						blockList.indexOf((blockMap.get(nameSectionField.getText())))).correctResponse = correctText
+								.getText();
+				blockList.get(
+						blockList.indexOf((blockMap.get(nameSectionField.getText())))).wrongResponse = incorrectText
+								.getText();
+				blockList.get(blockList.indexOf((blockMap.get(nameSectionField.getText())))).letter = brailleText
+						.getText().charAt(0);
+				blockList.get(blockList.indexOf((blockMap.get(nameSectionField.getText())))).answer = Integer
+						.parseInt(answerText.getText());
+
+				nameSectionField.clear();
+				storyText.clear();
+				correctText.clear();
+				incorrectText.clear();
+				brailleText.clear();
+				answerText.clear();
+
+			} else {
+
+				for (int j = 0; j < blockList.size(); j++) {
+					if (comboBox.getValue() == blockList.get(j).name) {
+						nameSectionField.setText((blockList.get(j).name));
+						storyText.setText(blockList.get(j).premise);
+						correctText.setText(blockList.get(j).correctResponse);
+						incorrectText.setText(blockList.get(j).wrongResponse);
+						brailleText.setText(Character.toString(blockList.get(j).letter));
+						answerText.setText(Integer.toString(blockList.get(j).answer));
+					}
+				}
+
+			}
+
+		});
 
 		// Set true to help see how nodes are aligned
 		layout.setGridLinesVisible(false);
