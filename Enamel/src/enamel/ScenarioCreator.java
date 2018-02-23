@@ -241,7 +241,8 @@ public class ScenarioCreator extends Application {
 		comboBoxList.add(0, "New Section");
 	
 		layout.add(comboBox, 9, 0, 5, 1);
-
+		
+		// combo box open with enter
 		comboBox.setOnKeyPressed(e -> {
 			if (e.getCode() == KeyCode.ENTER) {
 			comboBox.show();
