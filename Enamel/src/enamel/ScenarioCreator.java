@@ -43,7 +43,6 @@ public class ScenarioCreator extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 
-		
 		// Adding components to GUI (component, column, row, column span, row span)
 
 		// GUI for start Window / primary stage
@@ -242,9 +241,9 @@ public class ScenarioCreator extends Application {
 		comboBox.setEditable(true);
 		comboBox.setPromptText("Select a section");
 		comboBoxList.add(0, "New Section");
-	
+
 		layout.add(comboBox, 9, 0, 5, 1);
-		
+
 		//////////////// Action Events ////////////////////////////
 
 		// starting window action events
@@ -259,14 +258,13 @@ public class ScenarioCreator extends Application {
 			}
 		});
 
-
 		// combo box open with enter
 		comboBox.setOnKeyPressed(e -> {
 			if (e.getCode() == KeyCode.ENTER) {
-			comboBox.show();
+				comboBox.show();
 			}
 		});
-		
+
 		// GUI for Sound button
 		Stage soundWindow = new Stage();
 		soundWindow.setTitle("Sound Menu");
@@ -460,8 +458,8 @@ public class ScenarioCreator extends Application {
 		Button nameSaveButton = new Button("Save");
 		layout8.add(nameSaveButton, 1, 1);
 		nameSaveButton.setAccessibleText("Press enter to save scenario and return to main window");
-		
-		// Pop up window : Choose between audio / visual player for testing 
+
+		// Pop up window : Choose between audio / visual player for testing
 		Stage playerSelectionWindow = new Stage();
 		GridPane layout9 = new GridPane();
 		layout9.setHgap(10);
@@ -478,7 +476,7 @@ public class ScenarioCreator extends Application {
 		playerLabel.setLabelFor(playerSelectionText);
 		playerLabel.setVisible(false);
 		layout9.add(nameLabel, 0, 1);
-		
+
 		final ToggleGroup group = new ToggleGroup();
 		RadioButton visualButton = new RadioButton("Visual Player");
 		visualButton.setToggleGroup(group);
@@ -486,7 +484,6 @@ public class ScenarioCreator extends Application {
 		audioButton.setToggleGroup(group);
 		layout9.add(visualButton, 0, 2);
 		layout9.add(audioButton, 1, 2);
-		
 
 		// save button
 		// Check if name field is empty
@@ -732,11 +729,10 @@ public class ScenarioCreator extends Application {
 			nameWindow.show();
 
 		});
-		
+
 		loadProject.setOnAction(e -> {
-			
+
 		});
-		
 
 		nameSaveButton.setOnAction(e1 -> {
 
@@ -788,7 +784,7 @@ public class ScenarioCreator extends Application {
 				}
 			}
 		});
-		
+
 		testButton.setOnAction(e1 -> {
 			primaryStage.close();
 			playerSelectionWindow.show();
@@ -804,31 +800,33 @@ public class ScenarioCreator extends Application {
 				fileChooser.setTitle("Open Scenario File");
 				File file = fileChooser.showOpenDialog(primaryStage);
 				ScenarioParser s = new ScenarioParser(false);
-	    	    s.setScenarioFile(file.getAbsolutePath());
+				s.setScenarioFile(file.getAbsolutePath());
 			});
 		});
-		
+
 		testButton.setOnKeyPressed(e -> {
 			if (e.getCode() == KeyCode.ENTER) {
 				primaryStage.close();
 				playerSelectionWindow.show();
-				
+
 				visualButton.setOnKeyPressed(e1 -> {
 					if (e1.getCode() == KeyCode.ENTER) {
-					FileChooser fileChooser = new FileChooser();
-					fileChooser.setTitle("Open Scenario File");
-					File file = fileChooser.showOpenDialog(primaryStage);
-					ScenarioParser s = new ScenarioParser(true);
-					s.setScenarioFile(file.getAbsolutePath());
+						FileChooser fileChooser = new FileChooser();
+						fileChooser.setTitle("Open Scenario File");
+						File file = fileChooser.showOpenDialog(primaryStage);
+						ScenarioParser s = new ScenarioParser(true);
+						s.setScenarioFile(file.getAbsolutePath());
 					}
 				});
 				audioButton.setOnAction(e2 -> {
-					FileChooser fileChooser = new FileChooser();
-					fileChooser.setTitle("Open Scenario File");
-					File file = fileChooser.showOpenDialog(primaryStage);
-					ScenarioParser s = new ScenarioParser(false);
-		    	    s.setScenarioFile(file.getAbsolutePath());
-	
+					if (e.getCode() == KeyCode.ENTER) {
+						FileChooser fileChooser = new FileChooser();
+						fileChooser.setTitle("Open Scenario File");
+						File file = fileChooser.showOpenDialog(primaryStage);
+						ScenarioParser s = new ScenarioParser(false);
+						s.setScenarioFile(file.getAbsolutePath());
+					}
+
 				});
 			}
 		});
