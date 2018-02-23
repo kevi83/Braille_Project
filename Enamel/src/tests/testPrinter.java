@@ -6,6 +6,7 @@ import static org.junit.Assert.fail;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 import org.junit.After;
@@ -14,6 +15,8 @@ import org.junit.Test;
 
 import enamel.Block;
 import enamel.BrailleInterpreter;
+import enamel.InvalidBlockException;
+import enamel.InvalidCellException;
 import enamel.Printer;
 
 public class testPrinter {
@@ -45,10 +48,12 @@ public class testPrinter {
 	}
 	
 	//Commonly reused tests for new blocks
-	public void checkBlock(Block block) {
+	public void checkBlock(Block block) throws InvalidCellException {
 		assertEquals("/~disp-cell-clear:0", reader.nextLine());
 		assertEquals("/~disp-cell-pins:0 " + interpreter.getPins(block.letter), reader.nextLine());
 		assertEquals(block.premise, reader.nextLine());
+		assertEquals("/~skip-button:0 ONEE", reader.nextLine());
+		assertEquals("/~skip-button:1 TWOO", reader.nextLine());
 		assertEquals("/~user-input", reader.nextLine());
 		assertEquals("/~ONEE", reader.nextLine());
 		assertEquals((block.answer == 1) ? "/~correct.wav" : "/~wrong.wav", reader.nextLine());
@@ -91,9 +96,9 @@ public class testPrinter {
 	}
 	
 	@Test
-	public void test1Block() throws IOException {
-		printer = new Printer("test.txt", 1, 4);
-		Block tBlock = new Block("hi", "yes", "no", 1, 'c', 2);
+	public void test1Block() throws IOException, InvalidBlockException, InvalidCellException {
+		printer = new Printer("test.txt");
+		Block tBlock = new Block("name", "hi", "yes", "no", 1, 'c', 2);
 		printer.addBlock(tBlock);
 		printer.print();
 		reader = new Scanner(file);
@@ -103,10 +108,10 @@ public class testPrinter {
 	}
 	
 	@Test
-	public void test2Block() throws IOException {
+	public void test2Block() throws IOException, InvalidBlockException, InvalidCellException {
 		printer = new Printer("test.txt", 1, 4);
-		Block tBlock1 = new Block("hi", "yes", "no", 1, 'c', 2);
-		Block tBlock2 = new Block("hello", "yep", "nope", 1, 'd', 2);
+		Block tBlock1 = new Block("name", "hi", "yes", "no", 1, 'c');
+		Block tBlock2 = new Block("name", "hello", "yep", "nope", 2, 'd');
 		printer.addBlock(tBlock1);
 		printer.addBlock(tBlock2);
 		printer.print();
@@ -117,6 +122,35 @@ public class testPrinter {
 		checkBlock(tBlock2);
 	}
 	
+	@Test
+	public void testBlockList1() throws IOException, InvalidBlockException, InvalidCellException {
+		printer = new Printer("test.txt", 1, 4);
+		Block tBlock1 = new Block("name", "hi", "yes", "no", 1, 'c', 2);
+		Block tBlock2 = new Block("name", "hello", "yep", "nope", 2, 'd', 2);
+		ArrayList<Block> blockList = new ArrayList<>();
+		blockList.add(tBlock1);
+		blockList.add(tBlock2);
+		printer.addBlockList(blockList);
+		printer.print();
+		reader = new Scanner(file);
+		
+		initialBlock(1, 4);
+		checkBlock(tBlock1);
+		checkBlock(tBlock2);
+	}
 	
+	@Test
+	public void testBlockList2() throws IOException, InvalidBlockException, InvalidCellException {
+		printer = new Printer("test.txt", 1, 4);
+		Block tBlock1 = new Block("name", "hi", "yes", "no", 1, 'c', 2);
+		ArrayList<Block> blockList = new ArrayList<>();
+		blockList.add(tBlock1);
+		printer.addBlockList(blockList);
+		printer.print();
+		reader = new Scanner(file);
+		
+		initialBlock(1, 4);
+		checkBlock(tBlock1);
+	}
 
 }

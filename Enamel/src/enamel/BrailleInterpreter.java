@@ -5,7 +5,7 @@ import java.util.HashMap;
 public class BrailleInterpreter {
 
 	public HashMap<Character, String> alphabet = new HashMap<Character, String>();
-	
+
 	public BrailleInterpreter() {
 		alphabet.put('a', "10000000");
 		alphabet.put('b', "11000000");
@@ -36,7 +36,17 @@ public class BrailleInterpreter {
 		alphabet.put(' ', "11111111");
 	}
 	
-	public String getPins(char letter) {
-		return  alphabet.get(letter);
+	/**
+	 * Takes a character parameter and turns it to a string of Binary that tells the Braille 
+	 * cell what to output for a given letter.
+	 * 
+	 * @param letter - Letter to be translated to braille
+	 * @return Binary string corresponding to braille pins for given letter
+	 * @throws InvalidCellException - If the given letter isn't in registered in the interpreter
+	 */
+	public String getPins(char letter) throws InvalidCellException {
+		String ans = alphabet.get(letter);
+		if(ans == null) throw new InvalidCellException();
+		return ans;
 	}
 }

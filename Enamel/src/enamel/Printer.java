@@ -7,11 +7,11 @@ import java.util.ArrayList;
 
 public class Printer {
 	
-	File file;
-	FileOutputStream output;
-	ArrayList<String> lines = new ArrayList<>();
-	BrailleInterpreter interpreter = new BrailleInterpreter();
-	String[] buttonLabels = {"ONEE", "TWOO", "THREEE", "FOURR"};
+	private File file;
+	private FileOutputStream output;
+	private ArrayList<String> lines = new ArrayList<>();
+	private BrailleInterpreter interpreter = new BrailleInterpreter();
+	private String[] buttonLabels = {"ONEE", "TWOO", "THREEE", "FOURR"};
 	
 	/**
 	 * Full Constructor
@@ -23,7 +23,7 @@ public class Printer {
 	 */
 	public Printer(String fileName, int cells, int buttonsAvailable) throws IOException {
 		file = new File(fileName);
-		output = new FileOutputStream(file);
+		output = new FileOutputStream(file, true);
 		if(!file.exists()) file.createNewFile();
 		initialBlock(cells, buttonsAvailable);
 	}
@@ -42,15 +42,22 @@ public class Printer {
 	 * Method used to add blocks to the text file
 	 * 
 	 * @param block - Single block to be printed to the text file. 
+	 * @throws InvalidCellException 
 	 */
-	public void addBlock(Block block) {
+	public void addBlock(Block block) throws InvalidCellException {
 		clearPins();
 		setPins(block.letter);
 		addSpoken(block.premise);
 		addInputBlock(block.buttonsUsed);
-		addResponse(block.correctResponse, 1, true);
-		addResponse(block.wrongResponse, 2, false);
+		addResponse((block.answer == 1) ? block.correctResponse : block.wrongResponse, 1, (block.answer == 1));
+		addResponse((block.answer == 2) ? block.correctResponse : block.wrongResponse, 2, (block.answer == 2));
 		newLine();
+	}
+	
+	public void addBlockList(ArrayList<Block> blocks) throws InvalidCellException {
+		for(Block block : blocks) {
+			addBlock(block);
+		}
 	}
 	
 	/**
@@ -94,7 +101,7 @@ public class Printer {
 	}
 	
 	//Sets pins for the requested character
-	private void setPins(char letter) {
+	private void setPins(char letter) throws InvalidCellException {
 		addConfig("disp-cell-pins:0 " + interpreter.getPins(letter));
 	}
 	
@@ -107,11 +114,6 @@ public class Printer {
 	//Skips to NEXTT, used if another block will follow the current block. used at the end
 	private void addSkip() {
 		addConfig("skip:NEXTT");
-	}
-	
-	//inputs NEXTT
-	private void addNext() {
-		addConfig("NEXTT");
 	}
 	
 	//Input declaring portion of a block

@@ -116,7 +116,6 @@ public class VisualPlayer extends Player {
 				}
 
 				frame.getContentPane().add(southPanel, BorderLayout.SOUTH);
-				
 
 				// deleted conner's test button - micah
 				
