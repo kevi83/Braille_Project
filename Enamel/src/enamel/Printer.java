@@ -66,6 +66,7 @@ public class Printer {
 	 * @throws IOException - Required by Java
 	 */
 	public void print() throws IOException {
+		clearPins();
 		for(String line : lines) {
 			byte[] temp = line.getBytes();
 			output.write(temp);
