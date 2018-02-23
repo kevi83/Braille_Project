@@ -399,9 +399,12 @@ public class ScenarioParser {
 		try {
 			// this scanner is going to lead file scanner by one line
 			// gives audio player ability to see next line 
+		for (int i=0; i<=2; i++) {	
 			if (nextLineCheck.hasNextLine()) {
 				nextLineCheck.nextLine();
 			}
+		}	
+			
 			while (fileScanner.hasNextLine()) {
 				
 
@@ -414,6 +417,8 @@ public class ScenarioParser {
 				
 				nextLineChecker = nextLineCheck.nextLine();
 				fileLine = fileScanner.nextLine();
+				System.out.println("This is FileLine: " + fileLine);
+				System.out.println("This is NextLineChecker: " + nextLineChecker);
 				performAction(fileLine);
 			}
 			if (!fileScanner.hasNextLine()) {
