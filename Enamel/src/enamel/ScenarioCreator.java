@@ -1,5 +1,7 @@
 package enamel;
 
+import java.awt.Desktop;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,6 +29,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 public class ScenarioCreator extends Application {
@@ -252,14 +255,22 @@ public class ScenarioCreator extends Application {
 			}
 		});
 		testButton.setOnAction(e1 -> {
-			scenarioCreator.show();
 			primaryStage.close();
+			FileChooser fileChooser = new FileChooser();
+			fileChooser.setTitle("Open Scenario File");
+			File file = fileChooser.showOpenDialog(primaryStage);
+			ScenarioParser s = new ScenarioParser(true);
+    	    s.setScenarioFile(file.getAbsolutePath());
 
 		});
 		testButton.setOnKeyPressed(e -> {
 			if (e.getCode() == KeyCode.ENTER) {
-				scenarioCreator.show();
 				primaryStage.close();
+				FileChooser fileChooser = new FileChooser();
+				fileChooser.setTitle("Open Scenario File");
+				File file = fileChooser.showOpenDialog(primaryStage);
+				ScenarioParser s = new ScenarioParser(false);
+	    	    s.setScenarioFile(file.getAbsolutePath());
 			}
 		});
 
