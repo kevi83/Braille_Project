@@ -165,11 +165,16 @@ public class AudioPlayer extends Player {
 		// last call to addskipbuttonlistener, therefore give audio update on what 
 		// changed - micah
 		// also, /~skip-button: should not be the last line of the file. - micah
-		if( (sp.nextLineChecker.substring(0, 14).equals("/~skip-button:")) == false) {
-			speak("         ");
-			update();// this might casue problems, but i don't think it will - micah
-			
+		if(sp.nextLineChecker.length() > 14) {
+			if( (sp.nextLineChecker.substring(0, 14).equals("/~skip-button:")) == false) {
+				//speak("         ");
+				update();// this might casue problems, but i don't think it will - micah
+			}
 		}
+		else {
+			update();
+		}
+		
 		
 		buttonList.get(index).addActionListener(new ActionListener() {
 			@Override
@@ -188,6 +193,7 @@ public class AudioPlayer extends Player {
 	public void removeButtonListener(int index) {
 		// TODO Auto-generated method stub
 		buttonState.set(index, "inactive");
+		
 		if (index >= this.buttonNumber || index < 0) {
             throw new IllegalArgumentException("Invalid index.");
         }
@@ -204,6 +210,7 @@ public class AudioPlayer extends Player {
 	public void addRepeatButtonListener(int index, ScenarioParser sp) {
 		// TODO Auto-generated method stub
 		buttonState.set(index, "a Repeat Button");
+		
 		getButton(index).addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
