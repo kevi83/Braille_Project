@@ -39,14 +39,14 @@ public class ScenarioCreator extends Application {
 	public void start(Stage primaryStage) throws Exception {
 
 		// Adding components to GUI (component, column, row, column span, row span)
-		
-		// GUI for start Window / primary stage 
+
+		// GUI for start Window / primary stage
 		GridPane layout1 = new GridPane();
 		layout1.setHgap(10);
 		layout1.setVgap(10);
 		layout1.setPadding(new Insets(5, 5, 5, 5));
 		Scene scene1 = new Scene(layout1, 550, 200);
-		
+
 		Text startWindowText = new Text("                       Welcome to Scenario Creator");
 		startWindowText.setFont(Font.font("Arial", FontWeight.BOLD, 20));
 		startWindowText.setFill(Color.WHITE);
@@ -54,31 +54,27 @@ public class ScenarioCreator extends Application {
 		Button createButton = new Button("Create New Scenario");
 		createButton.setMinSize(150, 60);
 		createButton.setAccessibleRoleDescription("Create new scenario button");
-		createButton
-				.setAccessibleText("Welcome to scenario creator, To create a new scenario press enter");
+		createButton.setAccessibleText("Welcome to scenario creator, To create a new scenario press enter");
 		layout1.add(createButton, 0, 6);
 		Button testButton = new Button("Test Scenario");
 		testButton.setMinSize(150, 60);
 		testButton.setAccessibleRoleDescription("Test Scenario button");
-		testButton
-				.setAccessibleText("To test a scenario press enter");
+		testButton.setAccessibleText("To test a scenario press enter");
 		layout1.add(testButton, 3, 6);
-		
-		
+
 		// GUI for scenario Creator
 		Stage scenarioCreator = new Stage();
 		GridPane layout = new GridPane();
 		layout.setHgap(10);
 		layout.setVgap(5);
 		layout.setPadding(new Insets(0, 5, 5, 5));
-		
+
 		Scene scene = new Scene(layout, 1000, 655);
 		scenarioCreator.setScene(scene);
 		scenarioCreator.setTitle("Scenario Creator");
 		scene.setFill(Color.TRANSPARENT);
 		layout.setBackground(
 				new Background(new BackgroundFill(Color.gray(0.05, 0.8), CornerRadii.EMPTY, Insets.EMPTY)));
-		
 
 		// File menu
 		Menu fileMenu = new Menu("File");
@@ -242,11 +238,7 @@ public class ScenarioCreator extends Application {
 		comboBoxList.add(0, "New Section");
 		layout.add(comboBox, 9, 0, 5, 1);
 
-		
-		
-		////////////////  Action Events ////////////////////////////
-
-
+		//////////////// Action Events ////////////////////////////
 
 		// starting window action events
 		createButton.setOnAction(e1 -> {
@@ -270,7 +262,7 @@ public class ScenarioCreator extends Application {
 				primaryStage.close();
 			}
 		});
-		
+
 		// GUI for Sound button
 		Stage soundWindow = new Stage();
 		soundWindow.setTitle("Sound Menu");
@@ -390,7 +382,7 @@ public class ScenarioCreator extends Application {
 			}
 		});
 
-		// block is not given a name
+		// Window Pop up when user tries to save a section with name field empty
 		Stage emptyNameWindow = new Stage();
 		GridPane layout6 = new GridPane();
 		layout6.setHgap(10);
@@ -416,7 +408,7 @@ public class ScenarioCreator extends Application {
 			}
 		});
 
-		// block is not given a name
+		// Window pop up to confirm that block has been saved
 		Stage saveWindow = new Stage();
 		GridPane layout7 = new GridPane();
 		layout7.setHgap(10);
@@ -440,6 +432,30 @@ public class ScenarioCreator extends Application {
 				saveWindow.close();
 			}
 		});
+
+		// name entire scenario (blocklist)
+		Stage nameWindow = new Stage();
+		GridPane layout8 = new GridPane();
+		layout8.setHgap(10);
+		layout8.setVgap(10);
+		layout8.setPadding(new Insets(0, 5, 5, 5));
+
+		Scene scene8 = new Scene(layout8);
+		nameWindow.setScene(scene8);
+		nameWindow.setTitle("Story Name");
+		Text nameScenario = new Text("Enter name for the scenario");
+		layout8.add(nameScenario, 0, 0);
+		TextField nameScenarioText = new TextField();
+		layout8.add(nameScenarioText, 0, 1);
+
+		Label nameLabel = new Label("Enter the name\nof the scenario");
+		nameLabel.setLabelFor(nameScenarioText);
+		nameLabel.setVisible(false);
+		layout8.add(nameLabel, 0, 1);
+
+		Button nameSaveButton = new Button("Save");
+		layout8.add(nameSaveButton, 1, 1);
+		nameSaveButton.setAccessibleText("Press enter to save scenario and return to main window");
 
 		// save button
 		// Check if name field is empty
@@ -516,18 +532,6 @@ public class ScenarioCreator extends Application {
 
 										}
 
-										// send blocklist to printer
-										try {
-											printer = new Printer(blockName + ".txt");
-											try {
-												printer.addBlockList(blockList);
-											} catch (InvalidCellException e2) {
-												e2.printStackTrace();
-											}
-											printer.print();
-										} catch (IOException e1) {
-											e1.printStackTrace();
-										}
 									}
 								}
 							} else {
@@ -702,6 +706,64 @@ public class ScenarioCreator extends Application {
 
 			}
 
+		});
+
+		// File menu selection : save project
+		saveProject.setOnAction(e -> {
+
+			nameWindow.show();
+
+		});
+
+		nameSaveButton.setOnAction(e1 -> {
+
+			String blockListName = nameScenarioText.getText();
+
+			if (blockListName.length() == 0) {
+				return;
+			} else {
+				// send blocklist to printer == save txt file
+				try {
+
+					printer = new Printer(blockListName + ".txt");
+					try {
+						printer.addBlockList(blockList);
+					} catch (InvalidCellException e2) {
+						e2.printStackTrace();
+					}
+					printer.print();
+				} catch (IOException e3) {
+					e3.printStackTrace();
+				}
+
+				nameWindow.close();
+			}
+		});
+		nameSaveButton.setOnKeyPressed(e2 -> {
+			if (e2.getCode() == KeyCode.ENTER) {
+
+				String blockListName = nameScenarioText.getText();
+
+				if (blockListName.length() == 0) {
+					return;
+				} else {
+					// send blocklist to printer == save txt file
+					try {
+
+						printer = new Printer(blockListName + ".txt");
+						try {
+							printer.addBlockList(blockList);
+						} catch (InvalidCellException e3) {
+							e3.printStackTrace();
+						}
+						printer.print();
+					} catch (IOException e3) {
+						e3.printStackTrace();
+					}
+
+					nameWindow.close();
+				}
+			}
 		});
 
 		// Set true to help see how nodes are aligned
