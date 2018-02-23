@@ -17,8 +17,10 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Background;
@@ -41,6 +43,7 @@ public class ScenarioCreator extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 
+		
 		// Adding components to GUI (component, column, row, column span, row span)
 
 		// GUI for start Window / primary stage
@@ -227,7 +230,7 @@ public class ScenarioCreator extends Application {
 		layout.add(blank1, 6, 7);
 
 		// save button
-		Button saveButton = new Button("Save");
+		Button saveButton = new Button("Save Section");
 		saveButton.setAccessibleRoleDescription("Save button");
 		saveButton.setAccessibleText("Press enter to save section");
 		layout.add(saveButton, 0, 19);
@@ -242,13 +245,6 @@ public class ScenarioCreator extends Application {
 	
 		layout.add(comboBox, 9, 0, 5, 1);
 		
-		// combo box open with enter
-		comboBox.setOnKeyPressed(e -> {
-			if (e.getCode() == KeyCode.ENTER) {
-			comboBox.show();
-			}
-		});
-		
 		//////////////// Action Events ////////////////////////////
 
 		// starting window action events
@@ -262,31 +258,15 @@ public class ScenarioCreator extends Application {
 				primaryStage.close();
 			}
 		});
-		testButton.setOnAction(e1 -> {
-			primaryStage.close();
-			FileChooser fileChooser = new FileChooser();
-			fileChooser.setTitle("Open Scenario File");
-			try {
-				File file = fileChooser.showOpenDialog(primaryStage);
-				ScenarioParser s = new ScenarioParser(true);
-				s.setScenarioFile(file.getAbsolutePath());
-			}
-			catch (NullPointerException ex) {}				
-		});
-		testButton.setOnKeyPressed(e -> {
-			if (e.getCode() == KeyCode.ENTER) {
-				primaryStage.close();
-				FileChooser fileChooser = new FileChooser();
-				fileChooser.setTitle("Open Scenario File");
-				try {
-					File file = fileChooser.showOpenDialog(primaryStage);
-					ScenarioParser s = new ScenarioParser(false);
-					s.setScenarioFile(file.getAbsolutePath());
-				}
-				catch (NullPointerException ex) {}
-			}
-		});
 
+
+		// combo box open with enter
+		comboBox.setOnKeyPressed(e -> {
+			if (e.getCode() == KeyCode.ENTER) {
+			comboBox.show();
+			}
+		});
+		
 		// GUI for Sound button
 		Stage soundWindow = new Stage();
 		soundWindow.setTitle("Sound Menu");
@@ -379,7 +359,7 @@ public class ScenarioCreator extends Application {
 			}
 		});
 
-		// GUI for Story field being empty
+		// pop up window : Story field is empty
 		Stage emptyStoryWindow = new Stage();
 		GridPane layout5 = new GridPane();
 		layout5.setHgap(10);
@@ -406,7 +386,7 @@ public class ScenarioCreator extends Application {
 			}
 		});
 
-		// Window Pop up when user tries to save a section with name field empty
+		// pop up window : when user tries to save a section with name field empty
 		Stage emptyNameWindow = new Stage();
 		GridPane layout6 = new GridPane();
 		layout6.setHgap(10);
@@ -432,7 +412,7 @@ public class ScenarioCreator extends Application {
 			}
 		});
 
-		// Window pop up to confirm that block has been saved
+		// pop up window : to confirm that block has been saved
 		Stage saveWindow = new Stage();
 		GridPane layout7 = new GridPane();
 		layout7.setHgap(10);
@@ -457,7 +437,7 @@ public class ScenarioCreator extends Application {
 			}
 		});
 
-		// name entire scenario (blocklist)
+		// pop up window : name entire scenario (blocklist)
 		Stage nameWindow = new Stage();
 		GridPane layout8 = new GridPane();
 		layout8.setHgap(10);
@@ -480,6 +460,33 @@ public class ScenarioCreator extends Application {
 		Button nameSaveButton = new Button("Save");
 		layout8.add(nameSaveButton, 1, 1);
 		nameSaveButton.setAccessibleText("Press enter to save scenario and return to main window");
+		
+		// Pop up window : Choose between audio / visual player for testing 
+		Stage playerSelectionWindow = new Stage();
+		GridPane layout9 = new GridPane();
+		layout9.setHgap(10);
+		layout9.setVgap(10);
+		layout9.setPadding(new Insets(0, 5, 5, 5));
+
+		Scene scene9 = new Scene(layout9);
+		playerSelectionWindow.setScene(scene9);
+		playerSelectionWindow.setTitle("Player selection");
+		Text playerSelectionText = new Text("       Would you like to test with\n     visual player or audio player?");
+		layout9.add(playerSelectionText, 0, 1, 3, 1);
+
+		Label playerLabel = new Label("Would you like to test with visual player or audio player?");
+		playerLabel.setLabelFor(playerSelectionText);
+		playerLabel.setVisible(false);
+		layout9.add(nameLabel, 0, 1);
+		
+		final ToggleGroup group = new ToggleGroup();
+		RadioButton visualButton = new RadioButton("Visual Player");
+		visualButton.setToggleGroup(group);
+		RadioButton audioButton = new RadioButton("Audio Player");
+		audioButton.setToggleGroup(group);
+		layout9.add(visualButton, 0, 2);
+		layout9.add(audioButton, 1, 2);
+		
 
 		// save button
 		// Check if name field is empty
@@ -725,6 +732,11 @@ public class ScenarioCreator extends Application {
 			nameWindow.show();
 
 		});
+		
+		loadProject.setOnAction(e -> {
+			
+		});
+		
 
 		nameSaveButton.setOnAction(e1 -> {
 
@@ -774,6 +786,50 @@ public class ScenarioCreator extends Application {
 
 					nameWindow.close();
 				}
+			}
+		});
+		
+		testButton.setOnAction(e1 -> {
+			primaryStage.close();
+			playerSelectionWindow.show();
+			visualButton.setOnAction(e2 -> {
+				FileChooser fileChooser = new FileChooser();
+				fileChooser.setTitle("Open Scenario File");
+				File file = fileChooser.showOpenDialog(primaryStage);
+				ScenarioParser s = new ScenarioParser(true);
+				s.setScenarioFile(file.getAbsolutePath());
+			});
+			audioButton.setOnAction(e3 -> {
+				FileChooser fileChooser = new FileChooser();
+				fileChooser.setTitle("Open Scenario File");
+				File file = fileChooser.showOpenDialog(primaryStage);
+				ScenarioParser s = new ScenarioParser(false);
+	    	    s.setScenarioFile(file.getAbsolutePath());
+			});
+		});
+		
+		testButton.setOnKeyPressed(e -> {
+			if (e.getCode() == KeyCode.ENTER) {
+				primaryStage.close();
+				playerSelectionWindow.show();
+				
+				visualButton.setOnKeyPressed(e1 -> {
+					if (e1.getCode() == KeyCode.ENTER) {
+					FileChooser fileChooser = new FileChooser();
+					fileChooser.setTitle("Open Scenario File");
+					File file = fileChooser.showOpenDialog(primaryStage);
+					ScenarioParser s = new ScenarioParser(true);
+					s.setScenarioFile(file.getAbsolutePath());
+					}
+				});
+				audioButton.setOnAction(e2 -> {
+					FileChooser fileChooser = new FileChooser();
+					fileChooser.setTitle("Open Scenario File");
+					File file = fileChooser.showOpenDialog(primaryStage);
+					ScenarioParser s = new ScenarioParser(false);
+		    	    s.setScenarioFile(file.getAbsolutePath());
+	
+				});
 			}
 		});
 
