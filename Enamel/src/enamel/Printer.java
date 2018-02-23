@@ -66,6 +66,7 @@ public class Printer {
 	 * @throws IOException - Required by Java
 	 */
 	public void print() throws IOException {
+		addNext();
 		clearPins();
 		for(String line : lines) {
 			byte[] temp = line.getBytes();
@@ -94,6 +95,7 @@ public class Printer {
 		addSpoken("Cell " + cells);
 		addSpoken("Button " + buttonsAvailable);
 		newLine();
+		addPause(1);
 	}
 	
 	//Standard line used at the beginning of a block
@@ -115,6 +117,14 @@ public class Printer {
 	//Skips to NEXTT, used if another block will follow the current block. used at the end
 	private void addSkip() {
 		addConfig("skip:NEXTT");
+	}
+	
+	private void addPause(int length) {
+		addConfig("pause:" + length);
+	}
+	
+	private void addNext() {
+		addConfig("NEXTT");
 	}
 	
 	//Input declaring portion of a block
