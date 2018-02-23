@@ -239,8 +239,15 @@ public class ScenarioCreator extends Application {
 		comboBox.setEditable(true);
 		comboBox.setPromptText("Select a section");
 		comboBoxList.add(0, "New Section");
+	
 		layout.add(comboBox, 9, 0, 5, 1);
 
+		comboBox.setOnKeyPressed(e -> {
+			if (e.getCode() == KeyCode.ENTER) {
+			comboBox.show();
+			}
+		});
+		
 		//////////////// Action Events ////////////////////////////
 
 		// starting window action events
@@ -686,19 +693,6 @@ public class ScenarioCreator extends Application {
 		comboBox.getSelectionModel().selectedIndexProperty().addListener(e -> {
 
 			if (comboBox.getValue() == "New Section") {
-
-				blockList.get(blockList.indexOf((blockMap.get(nameSectionField.getText())))).premise = storyText
-						.getText();
-				blockList.get(
-						blockList.indexOf((blockMap.get(nameSectionField.getText())))).correctResponse = correctText
-								.getText();
-				blockList.get(
-						blockList.indexOf((blockMap.get(nameSectionField.getText())))).wrongResponse = incorrectText
-								.getText();
-				blockList.get(blockList.indexOf((blockMap.get(nameSectionField.getText())))).letter = brailleText
-						.getText().charAt(0);
-				blockList.get(blockList.indexOf((blockMap.get(nameSectionField.getText())))).answer = Integer
-						.parseInt(answerText.getText());
 
 				nameSectionField.clear();
 				storyText.clear();
