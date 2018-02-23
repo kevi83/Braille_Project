@@ -414,8 +414,10 @@ public class ScenarioParser {
 				while (userInput) {
 					Thread.sleep(400);
 				}
+				if(nextLineCheck.hasNextLine()) {
+					nextLineChecker = nextLineCheck.nextLine();
+				}
 				
-				nextLineChecker = nextLineCheck.nextLine();
 				fileLine = fileScanner.nextLine();
 				System.out.println("This is FileLine: " + fileLine);
 				System.out.println("This is NextLineChecker: " + nextLineChecker);
@@ -438,11 +440,13 @@ public class ScenarioParser {
 				exit();
 			}
 		} catch (Exception e) {
+			System.out.println(e.toString());
 			errorLog("Exception error : " + e.toString(),
 					"Strange error occurred if you are able to read this message. Possibilities "
 							+ "could include possible file corruption, or that you have enter characters that "
 							+ "could not be read/interpreted.");
 		}
+	
 	}
 
 	/*
