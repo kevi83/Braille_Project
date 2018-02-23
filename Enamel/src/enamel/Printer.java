@@ -12,6 +12,7 @@ public class Printer {
 	private ArrayList<String> lines = new ArrayList<>();
 	private BrailleInterpreter interpreter = new BrailleInterpreter();
 	private String[] buttonLabels = {"ONEE", "TWOO", "THREEE", "FOURR"};
+	private boolean first = true;
 	
 	/**
 	 * Full Constructor
@@ -45,6 +46,8 @@ public class Printer {
 	 * @throws InvalidCellException 
 	 */
 	public void addBlock(Block block) throws InvalidCellException {
+		if(first) first = false;
+		else addNext();
 		clearPins();
 		setPins(block.letter);
 		addSpoken(block.premise);
@@ -109,9 +112,13 @@ public class Printer {
 	}
 	
 	//Adds sound for the response depending on if the response is correct
-	private void addSound(boolean correct) {
-		if(correct) addConfig("correct.wav");
-		else addConfig("wrong.wav");
+	private void addAnswerSound(boolean correct) {
+		if(correct) addSound("correct.wav");
+		else addSound("wrong.wav");
+	}
+	
+	private void addSound(String fileName) {
+		addConfig("sound:" + fileName);
 	}
 	
 	//Skips to NEXTT, used if another block will follow the current block. used at the end
@@ -140,7 +147,7 @@ public class Printer {
 	//NOTE: button refers to the number displayed on the box / simulation. 1 = 1
 	private void addResponse(String spoken, int button, boolean correct) {
 		addConfig(buttonLabels[button-1]);
-		addSound(correct);
+		addAnswerSound(correct);
 		addSpoken(spoken);
 		addSkip();
 	}
