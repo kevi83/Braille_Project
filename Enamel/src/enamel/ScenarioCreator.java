@@ -38,11 +38,47 @@ public class ScenarioCreator extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 
-		// Adding components to GUI (component, column, row)
+		// Adding components to GUI (component, column, row, column span, row span)
+		
+		// GUI for start Window / primary stage 
+		GridPane layout1 = new GridPane();
+		layout1.setHgap(10);
+		layout1.setVgap(10);
+		layout1.setPadding(new Insets(5, 5, 5, 5));
+		Scene scene1 = new Scene(layout1, 550, 200);
+		
+		Text startWindowText = new Text("                       Welcome to Scenario Creator");
+		startWindowText.setFont(Font.font("Arial", FontWeight.BOLD, 20));
+		startWindowText.setFill(Color.WHITE);
+		layout1.add(startWindowText, 0, 2, 3, 1);
+		Button createButton = new Button("Create New Scenario");
+		createButton.setMinSize(150, 60);
+		createButton.setAccessibleRoleDescription("Create new scenario button");
+		createButton
+				.setAccessibleText("Welcome to scenario creator, To create a new scenario press enter");
+		layout1.add(createButton, 0, 6);
+		Button testButton = new Button("Test Scenario");
+		testButton.setMinSize(150, 60);
+		testButton.setAccessibleRoleDescription("Test Scenario button");
+		testButton
+				.setAccessibleText("To test a scenario press enter");
+		layout1.add(testButton, 3, 6);
+		
+		
+		// GUI for scenario Creator
+		Stage scenarioCreator = new Stage();
 		GridPane layout = new GridPane();
 		layout.setHgap(10);
 		layout.setVgap(5);
 		layout.setPadding(new Insets(0, 5, 5, 5));
+		
+		Scene scene = new Scene(layout, 1000, 655);
+		scenarioCreator.setScene(scene);
+		scenarioCreator.setTitle("Scenario Creator");
+		scene.setFill(Color.TRANSPARENT);
+		layout.setBackground(
+				new Background(new BackgroundFill(Color.gray(0.05, 0.8), CornerRadii.EMPTY, Insets.EMPTY)));
+		
 
 		// File menu
 		Menu fileMenu = new Menu("File");
@@ -62,7 +98,7 @@ public class ScenarioCreator extends Application {
 		menuBar.setOpacity(0.7);
 		layout.add(menuBar, 0, 0, 8, 1);
 
-		// border glow
+		// border glow to make things look fancy
 		int depth = 40;
 		DropShadow borderGlow = new DropShadow();
 		borderGlow.setColor(Color.LIGHTBLUE);
@@ -191,10 +227,10 @@ public class ScenarioCreator extends Application {
 		blank1.setFont(Font.font("Arial", FontWeight.SEMI_BOLD, 10));
 		layout.add(blank1, 6, 7);
 
-		// publish button
+		// save button
 		Button saveButton = new Button("Save");
 		saveButton.setAccessibleRoleDescription("Save button");
-		saveButton.setAccessibleText("Press enter to save block");
+		saveButton.setAccessibleText("Press enter to save section");
 		layout.add(saveButton, 0, 19);
 
 		// ComboBox (drop down menu)
@@ -206,8 +242,35 @@ public class ScenarioCreator extends Application {
 		comboBoxList.add(0, "New Section");
 		layout.add(comboBox, 9, 0, 5, 1);
 
-		//////////////// GUIs and Action Events ////////////////////////////
+		
+		
+		////////////////  Action Events ////////////////////////////
 
+
+
+		// starting window action events
+		createButton.setOnAction(e1 -> {
+			scenarioCreator.show();
+			primaryStage.close();
+		});
+		createButton.setOnKeyPressed(e -> {
+			if (e.getCode() == KeyCode.ENTER) {
+				scenarioCreator.show();
+				primaryStage.close();
+			}
+		});
+		testButton.setOnAction(e1 -> {
+			scenarioCreator.show();
+			primaryStage.close();
+
+		});
+		testButton.setOnKeyPressed(e -> {
+			if (e.getCode() == KeyCode.ENTER) {
+				scenarioCreator.show();
+				primaryStage.close();
+			}
+		});
+		
 		// GUI for Sound button
 		Stage soundWindow = new Stage();
 		soundWindow.setTitle("Sound Menu");
@@ -592,13 +655,12 @@ public class ScenarioCreator extends Application {
 		});
 
 		// Scene
-		Scene scene = new Scene(layout, 1000, 655);
-		primaryStage.setTitle("Scenario Creator");
-		primaryStage.setScene(scene);
-		scene.setFill(Color.TRANSPARENT);
+		primaryStage.setTitle("Welcome");
+		primaryStage.setScene(scene1);
+		scene1.setFill(Color.TRANSPARENT);
 		primaryStage.show();
-		layout.setBackground(
-				new Background(new BackgroundFill(Color.gray(0.05, 0.8), CornerRadii.EMPTY, Insets.EMPTY)));
+		layout1.setBackground(
+				new Background(new BackgroundFill(Color.gray(0.05, 0.6), CornerRadii.EMPTY, Insets.EMPTY)));
 
 		// return selected comboBox value
 		comboBox.getSelectionModel().selectedIndexProperty().addListener(e -> {

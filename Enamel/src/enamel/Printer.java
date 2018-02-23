@@ -23,7 +23,7 @@ public class Printer {
 	 */
 	public Printer(String fileName, int cells, int buttonsAvailable) throws IOException {
 		file = new File(fileName);
-		output = new FileOutputStream(file);
+		output = new FileOutputStream(file, true);
 		if(!file.exists()) file.createNewFile();
 		initialBlock(cells, buttonsAvailable);
 	}
