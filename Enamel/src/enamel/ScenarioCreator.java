@@ -258,19 +258,24 @@ public class ScenarioCreator extends Application {
 			primaryStage.close();
 			FileChooser fileChooser = new FileChooser();
 			fileChooser.setTitle("Open Scenario File");
-			File file = fileChooser.showOpenDialog(primaryStage);
-			ScenarioParser s = new ScenarioParser(true);
-    	    s.setScenarioFile(file.getAbsolutePath());
-
+			try {
+				File file = fileChooser.showOpenDialog(primaryStage);
+				ScenarioParser s = new ScenarioParser(true);
+				s.setScenarioFile(file.getAbsolutePath());
+			}
+			catch (NullPointerException ex) {}				
 		});
 		testButton.setOnKeyPressed(e -> {
 			if (e.getCode() == KeyCode.ENTER) {
 				primaryStage.close();
 				FileChooser fileChooser = new FileChooser();
 				fileChooser.setTitle("Open Scenario File");
-				File file = fileChooser.showOpenDialog(primaryStage);
-				ScenarioParser s = new ScenarioParser(false);
-	    	    s.setScenarioFile(file.getAbsolutePath());
+				try {
+					File file = fileChooser.showOpenDialog(primaryStage);
+					ScenarioParser s = new ScenarioParser(false);
+					s.setScenarioFile(file.getAbsolutePath());
+				}
+				catch (NullPointerException ex) {}
 			}
 		});
 
