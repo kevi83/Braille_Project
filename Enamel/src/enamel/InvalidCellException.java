@@ -6,6 +6,7 @@ package enamel;
  * @author Connor
  *
  */
+@SuppressWarnings("serial")
 public class InvalidCellException extends Exception{
 
 	public InvalidCellException() {
