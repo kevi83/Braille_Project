@@ -27,6 +27,7 @@ public class testPrinter {
 	Printer printer;
 	Scanner reader;
 	BrailleInterpreter interpreter = new BrailleInterpreter();
+	boolean first;
 	
 	//Initiates the file for each test
 	@Before
@@ -45,10 +46,14 @@ public class testPrinter {
 		assertEquals("Cell " + cell, reader.nextLine());
 		assertEquals("Button " + buttons, reader.nextLine());
 		assertEquals("", reader.nextLine());
+		assertEquals("/~pause:1", reader.nextLine());
+		first = true;
 	}
 	
 	//Commonly reused tests for new blocks
 	public void checkBlock(Block block) throws InvalidCellException {
+		if(first) first = false;
+		else assertEquals("/~NEXTT", reader.nextLine());
 		assertEquals("/~disp-cell-clear:0", reader.nextLine());
 		assertEquals("/~disp-cell-pins:0 " + interpreter.getPins(block.letter), reader.nextLine());
 		assertEquals(block.premise, reader.nextLine());
@@ -56,11 +61,11 @@ public class testPrinter {
 		assertEquals("/~skip-button:1 TWOO", reader.nextLine());
 		assertEquals("/~user-input", reader.nextLine());
 		assertEquals("/~ONEE", reader.nextLine());
-		assertEquals((block.answer == 1) ? "/~correct.wav" : "/~wrong.wav", reader.nextLine());
+		assertEquals((block.answer == 1) ? "/~sound:correct.wav" : "/~sound:wrong.wav", reader.nextLine());
 		assertEquals((block.answer == 1) ? block.correctResponse : block.wrongResponse, reader.nextLine());
 		assertEquals("/~skip:NEXTT", reader.nextLine());
 		assertEquals("/~TWOO", reader.nextLine());
-		assertEquals((block.answer == 2) ? "/~correct.wav" : "/~wrong.wav", reader.nextLine());
+		assertEquals((block.answer == 2) ? "/~sound:correct.wav" : "/~sound:wrong.wav", reader.nextLine());
 		assertEquals((block.answer == 2) ? block.correctResponse : block.wrongResponse, reader.nextLine());
 		assertEquals("/~skip:NEXTT", reader.nextLine());
 		assertEquals("", reader.nextLine());
@@ -90,9 +95,6 @@ public class testPrinter {
 		}
 		
 		initialBlock(1, 4);
-		
-		//No more lines
-		assertEquals(false, reader.hasNextLine());
 	}
 	
 	@Test
