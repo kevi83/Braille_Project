@@ -168,5 +168,5 @@ public abstract class Player {
 	public void setup() {
 		// TODO Auto-generated method stub
 		
-	}
+	}	
 }

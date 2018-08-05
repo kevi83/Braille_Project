@@ -18,6 +18,8 @@ public class ScenarioParser {
 	private Voice voice;
 	private VoiceManager vm;
 	private Scanner fileScanner;
+	public Scanner nextLineCheck; // This is so that audio player can check the next line. - micah
+	public String nextLineChecker;// to go with nextLineCheck scanner. - micah
 	private int cellNum;
 	private int buttonNum;
 	public Player player;
@@ -63,6 +65,9 @@ public class ScenarioParser {
 	 */
 	void skip(String indicator) {
 		while (fileScanner.hasNextLine()) {
+			if (nextLineCheck.hasNextLine()) {
+				nextLineCheck.nextLine();
+			}
 			if (fileScanner.nextLine().equals("/~" + indicator)) {
 				break;
 			}
@@ -71,6 +76,7 @@ public class ScenarioParser {
 		// that exists in the scenario file.
 		if (!fileScanner.hasNextLine()) {
 			fileScanner.close();
+			nextLineCheck.close();
 			errorLog("Exception error: IllegalArgumentException",
 					"Expected the keyphrase: \n" + "/~" + indicator
 							+ " \n ,somewhere in the scenario file, to indicate where "
@@ -391,17 +397,28 @@ public class ScenarioParser {
 	private void play() {
 		String fileLine;
 		try {
+			// this scanner is going to lead file scanner by one line
+			// gives audio player ability to see next line 
+			if (nextLineCheck.hasNextLine()) {
+				nextLineCheck.nextLine();
+			}
 			while (fileScanner.hasNextLine()) {
+				
+
+				
 				// This while loop is created to wait for a user to press a
 				// button.
 				while (userInput) {
 					Thread.sleep(400);
 				}
+				
+				nextLineChecker = nextLineCheck.nextLine();
 				fileLine = fileScanner.nextLine();
 				performAction(fileLine);
 			}
 			if (!fileScanner.hasNextLine()) {
 				fileScanner.close();
+				nextLineCheck.close();
 				// The if statement is created to check if there is an
 				// /~endrepeat for a previously
 				// declared /~repeat in the scenario file.
@@ -530,6 +547,7 @@ public class ScenarioParser {
 
 			File f = new File(scenarioFile);
 			fileScanner = new Scanner(f);
+			nextLineCheck = new Scanner(f); // identical scanner
 			String absolutePath = f.getAbsolutePath();
 			scenarioFilePath = absolutePath.substring(0, absolutePath.lastIndexOf(File.separator));
 			setCellAndButton();
