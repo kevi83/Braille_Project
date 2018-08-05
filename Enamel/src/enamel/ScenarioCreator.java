@@ -2,7 +2,6 @@ package enamel;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,12 +28,10 @@ import javafx.scene.effect.DropShadow;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -85,10 +82,8 @@ public class ScenarioCreator extends Application {
 	private GridPane recordLayout;
 	private Button exitButton;
 	private boolean recording;
-	
-	
+
 	private final static Logger LOGR = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
-	
 
 	/*
 	 * GUI for start Window / primary stage
@@ -584,9 +579,11 @@ public class ScenarioCreator extends Application {
 
 		// action events
 		scenarioSavedOkay.setOnAction(e1 -> {
+			LOGR.info("Scenario Saved");
 			scenarioSavedWindow.close();
 		});
 		scenarioSavedOkay.setOnKeyPressed(e2 -> {
+			LOGR.info("Scenario Saved");
 			if (e2.getCode() == KeyCode.ENTER) {
 				scenarioSavedWindow.close();
 			}
@@ -632,11 +629,13 @@ public class ScenarioCreator extends Application {
 		// action events
 		clearSectionButtonOkay.setOnAction(e1 -> {
 			clearSection();
+			LOGR.info("Section cleared / new section created");
 		});
 
 		clearSectionButtonOkay.setOnKeyPressed(e2 -> {
 			if (e2.getCode() == KeyCode.ENTER) {
 				clearSection();
+				LOGR.info("Section cleared / new section created");
 			}
 		});
 
@@ -1219,11 +1218,13 @@ public class ScenarioCreator extends Application {
 
 		record.setOnAction(e -> {
 			recorder.record();
+			LOGR.info("Sound file recorded");
 		});
 
 		record.setOnKeyReleased(e -> {
 			if (e.getCode() == KeyCode.ENTER) {
 				recorder.record();
+				LOGR.info("Sound file recorded");
 			}
 		});
 	}
@@ -1256,23 +1257,24 @@ public class ScenarioCreator extends Application {
 				int length;
 				while ((length = is.read(buffer)) > 0) {
 					os.write(buffer, 0, length);
+					LOGR.info("Sound file imported");
 				}
 			} catch (IOException e1) {
-				e1.printStackTrace();
+				LOGR.warning("Failed or interrupted I/O operation");
 			} finally {
 				try {
 					is.close();
 					os.close();
 				} catch (IOException e1) {
+					LOGR.warning("Failed or interrupted I/O operation");
 				}
 
 			}
-			// Tell the user the file was imported, show how they use <> brackets
-			// <example.wav>
 		}
 
 		else {
 			soundErrorWindow.show();
+			LOGR.warning("Sound import failed, file was not of the format .wav");
 		}
 
 	}
@@ -1366,8 +1368,6 @@ public class ScenarioCreator extends Application {
 		 * 
 		 */
 		createButton.setOnAction(e1 -> {
-			LOGR.info("t");
-
 			brailleCellsUsedWindow.show();
 			primaryStage.close();
 		});
@@ -1411,18 +1411,23 @@ public class ScenarioCreator extends Application {
 			}
 		});
 	}
-	
-	public static void main(String[] args) throws SecurityException, IOException {
+
+	public static void main(String[] args) {
 
 		// --- logger
-				
-		FileHandler fh = new FileHandler("The Log of Doom", true);
-		fh.setLevel(Level.INFO);
-		LOGR.addHandler(fh);	
-		
+
+		FileHandler fh;
+		try {
+			fh = new FileHandler("The log of doom", true);
+			fh.setLevel(Level.FINE);
+			LOGR.addHandler(fh);
+		} catch (SecurityException | IOException e) {
+			LOGR.severe("Security Violation");
+		}
+
 		// Inherited method from Application that lunches GUI
 		launch(args);
-		
+
 	}
 
 	@Override
@@ -1513,6 +1518,7 @@ public class ScenarioCreator extends Application {
 			saveSection(nameSectionField, answerButtonsUsedField, storyText, brailleText, answerText, correctText,
 					incorrectText, comboBoxList, comboBox, brailleCellsField, answerButtonsField, notANumberWindow,
 					brailleWindow, emptyNameWindow, buttonsUsedWindow, emptyStoryWindow, saveWindow);
+			LOGR.info("Section Saved");
 
 		});
 
@@ -1523,13 +1529,14 @@ public class ScenarioCreator extends Application {
 				saveSection(nameSectionField, answerButtonsUsedField, storyText, brailleText, answerText, correctText,
 						incorrectText, comboBoxList, comboBox, brailleCellsField, answerButtonsField, notANumberWindow,
 						brailleWindow, emptyNameWindow, buttonsUsedWindow, emptyStoryWindow, saveWindow);
-
+				LOGR.info("Section Saved");
 			}
 		});
 
 		saveButton.setOnKeyPressed(e -> {
 			new KeyCodeCombination(KeyCode.TAB, KeyCodeCombination.CONTROL_DOWN);
 			clearSectionButton.requestFocus();
+			LOGR.info("Section Saved");
 		});
 
 		/**
@@ -1584,14 +1591,12 @@ public class ScenarioCreator extends Application {
 			}
 
 		});
-		
+
 		comboBox.setOnKeyPressed(e -> {
 			new KeyCodeCombination(KeyCode.TAB, KeyCodeCombination.CONTROL_DOWN);
 			scenarioMenuButton.requestFocus();
 		});
-		
-		
-		
+
 		/**
 		 * scenario menu button
 		 */
@@ -1599,7 +1604,6 @@ public class ScenarioCreator extends Application {
 			new KeyCodeCombination(KeyCode.TAB, KeyCodeCombination.CONTROL_DOWN);
 			nameSectionField.requestFocus();
 		});
-		
 
 		/*
 		 * ---------<{scenario menu action
@@ -1616,7 +1620,7 @@ public class ScenarioCreator extends Application {
 		newProject.setAccelerator(
 				new KeyCodeCombination(KeyCode.N, KeyCodeCombination.CONTROL_DOWN, KeyCodeCombination.ALT_DOWN));
 
-		// warning window okay button pressed
+		// user starts a new project
 		warningOkay.setOnAction(e -> {
 			scenarioCreator.close();
 			warningWindow.close();
@@ -1624,6 +1628,7 @@ public class ScenarioCreator extends Application {
 			scenarioNameField.clear();
 			brailleCellsField.clear();
 			answerButtonsField.clear();
+			LOGR.info("New project created");
 
 		});
 
@@ -1635,6 +1640,7 @@ public class ScenarioCreator extends Application {
 				scenarioNameField.clear();
 				brailleCellsField.clear();
 				answerButtonsField.clear();
+				LOGR.info("New project created");
 			}
 		});
 
@@ -1662,11 +1668,11 @@ public class ScenarioCreator extends Application {
 					printer.addBlockList(blockList);
 					scenarioSavedWindow.show();
 					printer.print();
+					LOGR.info("Project Saved");
 				} catch (IOException e3) {
-					e3.printStackTrace();
+					LOGR.warning("Failed or interrupted I/O operations");
 				} catch (InvalidCellException e4) {
-					// TODO Auto-generated catch block
-					e4.printStackTrace();
+					LOGR.warning("Invalid input passed to Braille Interpreter");
 				}
 			}
 		});
@@ -1690,6 +1696,7 @@ public class ScenarioCreator extends Application {
 			saveSection(nameSectionField, answerButtonsUsedField, storyText, brailleText, answerText, correctText,
 					incorrectText, comboBoxList, comboBox, brailleCellsField, answerButtonsField, notANumberWindow,
 					brailleWindow, emptyNameWindow, buttonsUsedWindow, emptyStoryWindow, saveWindow);
+			LOGR.info("Section saved");
 		});
 
 		saveSection.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN));
@@ -1834,9 +1841,10 @@ public class ScenarioCreator extends Application {
 			try {
 				scenarioCreator.show();
 				brailleCellsUsedWindow.close();
+				LOGR.info("New scenario created");
 			} catch (NumberFormatException e3) {
 				errorWindow.show();
-				e3.printStackTrace();
+				LOGR.warning("Invalid input for the number of braille cells and answer buttons available");
 			}
 		}
 	}
@@ -1925,7 +1933,7 @@ public class ScenarioCreator extends Application {
 
 				} catch (NumberFormatException e2) {
 					notANumberWindow.show();
-					e2.printStackTrace();
+					LOGR.warning("Invalid input for the answer text field");
 				} catch (InvalidBlockException e2) {
 					if (Integer.parseInt(answerText.getText()) < 1
 							|| Integer.parseInt(answerText.getText()) > Integer
@@ -1937,6 +1945,7 @@ public class ScenarioCreator extends Application {
 					} else if (storyText.getText().length() == 0) {
 						emptyStoryWindow.show();
 					}
+					LOGR.warning("Invalid input passed to Block");
 
 				}
 			}
