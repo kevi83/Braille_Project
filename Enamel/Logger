@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-08-05T02:17:43.565938Z</date>
+  <millis>1533435463565</millis>
+  <nanos>938000</nanos>
+  <sequence>0</sequence>
+  <logger>global</logger>
+  <level>INFO</level>
+  <class>enamel.ScenarioCreator</class>
+  <method>main</method>
+  <thread>1</thread>
+  <message>uhh</message>
+</record>
+</log>
