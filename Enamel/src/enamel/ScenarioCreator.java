@@ -1366,7 +1366,7 @@ public class ScenarioCreator extends Application {
 		 * 
 		 */
 		createButton.setOnAction(e1 -> {
-			LOGR.info("yeh it worked?");
+			LOGR.info("?");
 
 			brailleCellsUsedWindow.show();
 			primaryStage.close();
