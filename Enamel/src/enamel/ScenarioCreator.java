@@ -1414,7 +1414,6 @@ public class ScenarioCreator extends Application {
 	
 	public static void main(String[] args) throws SecurityException, IOException {
 
-		//
 		// --- logger
 				
 		FileHandler fh = new FileHandler("The Log of Doom", true);
