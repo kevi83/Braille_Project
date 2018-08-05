@@ -1419,10 +1419,7 @@ public class ScenarioCreator extends Application {
 				
 		FileHandler fh = new FileHandler("The Log of Doom", true);
 		fh.setLevel(Level.INFO);
-		LOGR.addHandler(fh);
-
-		LOGR.info("bleh");
-	
+		LOGR.addHandler(fh);	
 		
 		// Inherited method from Application that lunches GUI
 		launch(args);
