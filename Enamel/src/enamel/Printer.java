@@ -47,7 +47,7 @@ public class Printer {
 	public void addBlock(Block block) throws InvalidCellException {
 		clearPins();
 		setPins(block.letter);
-		addSpoken(block.premise);
+		addSpoken(block.story);
 		addInputBlock(block.buttonsUsed);
 		addResponse((block.answer == 1) ? block.correctResponse : block.wrongResponse, 1, (block.answer == 1));
 		addResponse((block.answer == 2) ? block.correctResponse : block.wrongResponse, 2, (block.answer == 2));
