@@ -10,9 +10,9 @@ public class testBlock {
 	
 	@Test
 	public void testConstructor1() throws InvalidBlockException {
-		Block block = new Block("name", "premise", "correct", "wrong", 1, 'c', 2);
+		Block block = new Block("name", "story", "correct", "wrong", 1, 'c', 2);
 		assertEquals("name", block.name);
-		assertEquals("premise", block.premise);
+		assertEquals("story", block.story);
 		assertEquals("correct", block.correctResponse);
 		assertEquals("wrong", block.wrongResponse);
 		assertEquals(1, block.answer);
@@ -22,9 +22,9 @@ public class testBlock {
 	
 	@Test
 	public void testConstructor2() throws InvalidBlockException {
-		Block block = new Block("name", "premise", "", "", 2, 'f', 2);
+		Block block = new Block("name", "story", "", "", 2, 'f', 2);
 		assertEquals("name", block.name);
-		assertEquals("premise", block.premise);
+		assertEquals("story", block.story);
 		assertEquals("", block.correctResponse);
 		assertEquals("", block.wrongResponse);
 		assertEquals(2, block.answer);
@@ -73,9 +73,9 @@ public class testBlock {
 	
 	@Test
 	public void testSimpleConstructor() throws InvalidBlockException {
-		Block block = new Block("name", "premise", "correct", "wrong", 1, 'c');
+		Block block = new Block("name", "story", "correct", "wrong", 1, 'c');
 		assertEquals("name", block.name);
-		assertEquals("premise", block.premise);
+		assertEquals("story", block.story);
 		assertEquals("correct", block.correctResponse);
 		assertEquals("wrong", block.wrongResponse);
 		assertEquals(1, block.answer);

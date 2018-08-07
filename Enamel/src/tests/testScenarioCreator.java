@@ -1,10 +1,7 @@
 package tests;
 
-import org.junit.*;
-
+import org.junit.Test;
 import enamel.ScenarioCreator;
-
-import static org.junit.Assert.*;
 
 public class testScenarioCreator {
 
