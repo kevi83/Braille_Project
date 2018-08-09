@@ -80,6 +80,8 @@ public class Printer {
 		for(Block block : blocks) {
 			addBlock(block);
 		}
+		addConfig("ENDD");
+		addConfig("disp-cell-clear:0");
 	}
 	
 	/**
@@ -247,10 +249,11 @@ public class Printer {
 		
 		int index = blocks.indexOf(block);
 		
-		if(index == blocks.size() - 1) return;
+		if(index == blocks.size() - 1) 
+			addConfig("skip:ENDD");
 		
 		else {
-			addConfig("skip:" + blocks.get(index + 1).name.toUpperCase());
+			addConfig("skip:" + blocks.get(index + 1).name);
 		}
 	}
 	
@@ -284,7 +287,7 @@ public class Printer {
 	//NOTE: buttonsUsed refers to the buttons being used for the given scenario / block
 	private void addInputBlock(int buttonsUsed) {
 		for(int i = 1; i <= buttonsUsed; i++) {
-			addConfig("skip-button:" + i + " " + "JUMPP" + i);
+			addConfig("skip-button:" + (i - 1) + " " + "JUMPP" + i);
 		}
 		addConfig("user-input");
 	}
