@@ -8,7 +8,7 @@
 	<classpathentry exported="true" kind="lib" path="lib/cmutimelex.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/en_us.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/freetts-jsapi10.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/freetts.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/freetts.jar" sourcepath="lib/mbrola.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jsapi.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/assertj-core-3.6.2.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/commons-io-2.5.jar"/>

@@ -239,6 +239,7 @@ public class ScenarioParser {
 			player.addSkipButtonListener(paramIndex, param[1], this);
 
 		} catch (Exception e) {
+			e.printStackTrace();
 			errorLog("Exception error: " + e.toString(),
 					"Expected format: \n num1 string1 \n where num1 is"
 							+ " the button number to receive the action listener and str1 is the identifier for"
@@ -327,6 +328,7 @@ public class ScenarioParser {
 			player.getCell(paramIndex).raiseOnePin(pinNum);
 			player.refresh();
 		} catch (Exception e) {
+			e.printStackTrace();
 			errorLog("Exception error: " + e.toString(),
 					"Expected format: \n num1 num2 \n where num1 is the cell affected, "
 							+ "and num2 is the pin affected. Also that num1 and num2 are valid intergers. "
@@ -348,6 +350,7 @@ public class ScenarioParser {
 			player.getCell(cellIndex).clear();
 			player.refresh();
 		} catch (Exception e) {
+			e.printStackTrace();
 			errorLog("Exception error: " + e.toString(), "Expected format: num1 \n where num1 is the cell affected, "
 					+ "and that num1 is a valid integer. Received format was: " + paramArgs);
 		}

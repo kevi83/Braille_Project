@@ -125,11 +125,7 @@ public class VisualPlayer extends Player {
 		});
 		
 
-}
-	
-	
-	
-	
+}	
 
 	
 	/**
@@ -205,7 +201,7 @@ public class VisualPlayer extends Player {
 	@Override
 	public void refresh() {
 		for (BrailleCell s : brailleList) {
-			for (int i = 0; i < s.getNumberOfPins(); i++) {
+			for (int i = 0; i < 8; i++) {
 				pins[pinIndex[i]].setSelected(s.getPinState(i));
 			}
 		}

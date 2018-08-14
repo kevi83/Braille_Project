@@ -8,7 +8,7 @@ import java.util.*;
 
 public class Loader {
 	
-	// basic char used to inicailize a blank block
+	// basic char used to initialize a blank block
 	char a = "a".charAt(0);
 	
 	Block holdOn;
