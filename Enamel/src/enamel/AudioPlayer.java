@@ -47,6 +47,7 @@ public class AudioPlayer extends Player {
 		super(brailleCellNumber, buttonNumber);
 		
 	// initializing voice - micah
+		System.setProperty("freetts.voices", "com.sun.speech.freetts.en.us.cmu_us_kal.KevinVoiceDirectory");		
 		 vm = VoiceManager.getInstance();
 	        voice = vm.getVoice ("kevin16");
 	        voice.allocate();

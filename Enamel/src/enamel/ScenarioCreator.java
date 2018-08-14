@@ -46,18 +46,19 @@ public class ScenarioCreator extends Application {
 	ArrayList<Block> blockList = new ArrayList<>();
 	HashMap<String, Block> blockMap = new HashMap<String, Block>();
 	GridPane layout, layout1, layout2, layout3, layout4, layout5, layout6, layout7, layout8, layout9, layout10,
-			layout11, layout12, layout13, layout14, layout15, layout16, layout17, layout18;
+			layout11, layout12, layout13, layout14, layout15, layout16, layout17, layout18, layout19;
 	Scene scene, scene1, scene2, scene3, scene4, scene5, scene6, scene7, scene8, scene9, scene10, scene11, scene12,
-			scene13, scene14, scene15, scene16, scene17, scene18;
+			scene13, scene14, scene15, scene16, scene17, scene18, scene19;
 	Button createButton, testButton, sound, saveButton, scenarioMenuButton, clearSectionButton, errorMessageButton,
 			okayStart, warningOkay, warningCancel, soundRecord, soundImport, soundExit, answerOkay, brailleOkay,
 			emptyNameButton, buttonsUsedWindowOkay, emptyStoryOkay, noSectionSavedOkay, saveOkayButton,
 			scenarioSavedOkay, clearSectionButtonOkay, clearSectionButtonCancel, soundErrorButton, soundNameOkay,
-			soundNameCancel, nameSoundErrorButton;
+			soundNameCancel, nameSoundErrorButton, newScenarioButton, loadScenarioButton, saveScenarioButton,
+			cancelScenarioButton, testScenarioButton;
 	Stage scenarioCreator, errorWindow, brailleCellsUsedWindow, soundWindow, notANumberWindow, brailleWindow,
 			emptyNameWindow, buttonsUsedWindow, emptyStoryWindow, noSectionsSavedWindow, saveWindow,
 			scenarioSavedWindow, warningWindow, playerSelectionWindow, scenarioMenuWindow, soundErrorWindow,
-			clearSectionWarning, nameSoundFileWindow, nameSoundErrorWindow;
+			clearSectionWarning, nameSoundFileWindow, nameSoundErrorWindow, scenarioWindow;
 	Text startWindowText, sectionName, answerButtonsUsedText, correct, story, braille, answer, incorrect,
 			scenarioNameText, nameBrailleAnswer, brailleCellsText, answerButtonsText, blank1, errorMessage, warningText,
 			soundMessage, answerIsNumber, brailleEntry, emptyName, buttonsUsedError, emptyStoryText, noSectionsSaved,
@@ -459,7 +460,7 @@ public class ScenarioCreator extends Application {
 		scene9 = new Scene(layout9);
 		playerSelectionWindow.setScene(scene9);
 		playerSelectionWindow.setTitle("Player selection");
-		playerSelectionText = new Text("       Would you like to test with\n     visual player or audio player?");
+		playerSelectionText = new Text("		  Would you like to test with visual player or audio player?");
 		layout9.add(playerSelectionText, 0, 1, 3, 1);
 
 		playerLabel = new Label("Would you like to test with visual player or audio player?");
@@ -587,6 +588,146 @@ public class ScenarioCreator extends Application {
 				LOGR.info("Scenario Saved");
 			}
 		});
+	}
+
+	private void scenarioMenuGUI() {
+
+		// quick access to scenario menu
+		scenarioWindow = new Stage();
+		layout19 = new GridPane();
+		layout19.setHgap(10);
+		layout19.setVgap(10);
+		layout19.setPadding(new Insets(10, 5, 5, 5));
+
+		scene19 = new Scene(layout19, 210, 200);
+		scenarioWindow.setScene(scene19);
+		scenarioWindow.setTitle("Scenario Window");
+
+		newScenarioButton = new Button("New Scenario");
+		newScenarioButton.setStyle("-fx-base: #87ceeb;"); // sky blue
+		newScenarioButton.setAccessibleText("Press enter to create a new scenario");
+		layout19.add(newScenarioButton, 5, 0);
+
+		loadScenarioButton = new Button("Load Scenario");
+		loadScenarioButton.setStyle("-fx-base: #87ceeb;"); // sky blue
+		loadScenarioButton.setAccessibleText("Press enter to load a saved scenario");
+		layout19.add(loadScenarioButton, 5, 1);
+
+		saveScenarioButton = new Button("Save Scenario");
+		saveScenarioButton.setStyle("-fx-base: #87ceeb;"); // sky blue
+		saveScenarioButton.setAccessibleText("Press enter to save your scenario");
+		layout19.add(saveScenarioButton, 5, 2);
+
+		testScenarioButton = new Button("Test Scenario");
+		testScenarioButton.setStyle("-fx-base: #87ceeb;"); // sky blue
+		newScenarioButton.setAccessibleText("Press enter to test a saved scenario");
+		layout19.add(testScenarioButton, 5, 3);
+
+		cancelScenarioButton = new Button("Cancel");
+		cancelScenarioButton.setStyle("-fx-base: #87ceeb;"); // sky blue
+		cancelScenarioButton.setAccessibleText("Press enter to go back to scenario creator");
+		layout19.add(cancelScenarioButton, 5, 4);
+
+		layout19.setBackground(
+				new Background(new BackgroundFill(Color.gray(0.3, 0.8), CornerRadii.EMPTY, Insets.EMPTY)));
+
+		newScenarioButton.setOnAction(e -> {
+			warningWindow.show();
+			scenarioWindow.close();
+		});
+
+		newScenarioButton.setOnKeyPressed(e -> {
+			if (e.getCode() == KeyCode.ENTER) {
+				warningWindow.show();
+				scenarioWindow.close();
+			}
+		});
+
+		loadScenarioButton.setOnAction(e -> {
+
+		});
+
+		loadScenarioButton.setOnKeyPressed(e -> {
+			if (e.getCode() == KeyCode.ENTER) {
+
+			}
+		});
+
+		saveScenarioButton.setOnAction(e -> {
+			if (blockList.size() == 0) {
+				noSectionsSavedWindow.show();
+			} else {
+				// send blocklist to printer == save txt file
+				try {
+					printer = new Printer(scenarioNameField.getText() + ".txt",
+							Integer.parseInt(brailleCellsField.getText()),
+							Integer.parseInt(answerButtonsField.getText()));
+					printer.addBlockList(blockList);
+					scenarioSavedWindow.show();
+					printer.print();
+					LOGR.info("Project Saved");
+				} catch (IOException e3) {
+					LOGR.warning("Failed or interrupted I/O operations");
+				} catch (OddSpecialCharacterException e3) {
+					LOGR.warning("Odd special character exception");
+				} catch (InvalidBlockException e3) {
+					LOGR.warning("Invalid input passed to Braille Interpreter");
+				}
+			}
+			scenarioWindow.close();
+
+		});
+
+		saveScenarioButton.setOnKeyPressed(e -> {
+			if (e.getCode() == KeyCode.ENTER) {
+				if (blockList.size() == 0) {
+					noSectionsSavedWindow.show();
+				} else {
+					// send blocklist to printer == save txt file
+					try {
+						printer = new Printer(scenarioNameField.getText() + ".txt",
+								Integer.parseInt(brailleCellsField.getText()),
+								Integer.parseInt(answerButtonsField.getText()));
+						printer.addBlockList(blockList);
+						scenarioSavedWindow.show();
+						printer.print();
+						LOGR.info("Project Saved");
+					} catch (IOException e3) {
+						LOGR.warning("Failed or interrupted I/O operations");
+					} catch (OddSpecialCharacterException e3) {
+						LOGR.warning("Odd special character exception");
+					} catch (InvalidBlockException e3) {
+						LOGR.warning("Invalid input passed to Braille Interpreter");
+					}
+				}
+			}
+			scenarioWindow.close();
+
+		});
+
+		testScenarioButton.setOnAction(e -> {
+			runTest(brailleCellsUsedWindow, playerSelectionWindow, visualButton, audioButton);
+			scenarioWindow.close();
+		});
+
+		testScenarioButton.setOnKeyPressed(e -> {
+			if (e.getCode() == KeyCode.ENTER) {
+				runTest(brailleCellsUsedWindow, playerSelectionWindow, visualButton, audioButton);
+				scenarioWindow.close();
+			}
+		});
+
+		cancelScenarioButton.setOnAction(e -> {
+			scenarioWindow.close();
+
+		});
+
+		cancelScenarioButton.setOnKeyPressed(e -> {
+			if (e.getCode() == KeyCode.ENTER) {
+				scenarioWindow.close();
+			}
+		});
+
 	}
 
 	private void clearSectionWarningGUI() {
@@ -1268,8 +1409,7 @@ public class ScenarioCreator extends Application {
 					LOGR.warning("Failed or interrupted I/O operation");
 				}
 			}
-		}
-		else {
+		} else {
 			soundErrorWindow.show();
 			LOGR.warning("Sound import failed, file was not of the format .wav");
 		}
@@ -1379,10 +1519,19 @@ public class ScenarioCreator extends Application {
 	private void scenarioMenuButton() {
 		// manage scenario button
 		scenarioMenuButton = new Button("Scenario Menu");
-		scenarioMenuButton.setAccessibleRoleDescription("Test Scenario");
-		scenarioMenuButton.setAccessibleText("Press enter to test current scenario");
+		scenarioMenuButton.setAccessibleRoleDescription("Scenario Menu");
+		scenarioMenuButton.setAccessibleText("Press enter to go to the scenario menu");
 		scenarioMenuButton.setStyle("-fx-base: #FFFFFF;"); // white
 		layout.add(scenarioMenuButton, 7, 1);
+
+		scenarioMenuButton.setOnAction(e1 -> {
+			scenarioWindow.show();
+		});
+		createButton.setOnKeyPressed(e -> {
+			if (e.getCode() == KeyCode.ENTER) {
+				scenarioWindow.show();
+			}
+		});
 	}
 
 	/*
@@ -1465,6 +1614,7 @@ public class ScenarioCreator extends Application {
 		nameSoundFileGUI();
 		recordSoundGUI();
 		nameSoundErrorGUI();
+		scenarioMenuGUI();
 
 		// Scene
 		primaryStage.setTitle("Welcome");
@@ -1664,7 +1814,9 @@ public class ScenarioCreator extends Application {
 					printer.print();
 					LOGR.info("Project Saved");
 				} catch (IOException e3) {
-					LOGR.warning("Failed or interrupted I/O operations");				} catch (OddSpecialCharacterException e3) {
+					LOGR.warning("Failed or interrupted I/O operations");
+				} catch (OddSpecialCharacterException e3) {
+					LOGR.warning("Odd special character exception");
 				} catch (InvalidBlockException e3) {
 					LOGR.warning("Invalid input passed to Braille Interpreter");
 				}
@@ -1675,9 +1827,23 @@ public class ScenarioCreator extends Application {
 		saveProject.setAccelerator(
 				new KeyCodeCombination(KeyCode.S, KeyCodeCombination.CONTROL_DOWN, KeyCodeCombination.ALT_DOWN));
 
+		
+		//File menu selection : load project
+		
+		
 		loadProject.setOnAction(e -> {
 
 		});
+		
+		
+		// file menu selection : test project
+		
+		testProject.setOnAction(e -> {
+			runTest(brailleCellsUsedWindow, playerSelectionWindow, visualButton, audioButton);
+		});
+		
+		testProject.setAccelerator(
+				new KeyCodeCombination(KeyCode.T, KeyCodeCombination.CONTROL_DOWN, KeyCodeCombination.ALT_DOWN));
 
 		/*
 		 * ------<<[section menu actions
@@ -1927,7 +2093,8 @@ public class ScenarioCreator extends Application {
 
 				} catch (NumberFormatException e2) {
 					notANumberWindow.show();
-					LOGR.warning("Invalid input for the answer text field");				} catch (InvalidBlockException e2) {
+					LOGR.warning("Invalid input for the answer text field");
+				} catch (InvalidBlockException e2) {
 					if (Integer.parseInt(answerText.getText()) < 1
 							|| Integer.parseInt(answerText.getText()) > Integer
 									.parseInt(answerButtonsUsedField.getText())
