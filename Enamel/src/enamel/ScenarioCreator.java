@@ -1816,6 +1816,7 @@ public class ScenarioCreator extends Application {
 				} catch (IOException e3) {
 					LOGR.warning("Failed or interrupted I/O operations");
 				} catch (OddSpecialCharacterException e3) {
+					LOGR.warning("Odd special character exception");
 				} catch (InvalidBlockException e3) {
 					LOGR.warning("Invalid input passed to Braille Interpreter");
 				}
