@@ -671,6 +671,9 @@ public class ScenarioCreator extends Application {
 				} catch (OddSpecialCharacterException e3) {
 					LOGR.warning("Odd special character exception");
 				} catch (InvalidBlockException e3) {
+					LOGR.warning("Invalid input passed to Printer");
+				} catch (InvalidCellException e1) {
+					// TODO Auto-generated catch block
 					LOGR.warning("Invalid input passed to Braille Interpreter");
 				}
 			}
@@ -697,6 +700,8 @@ public class ScenarioCreator extends Application {
 					} catch (OddSpecialCharacterException e3) {
 						LOGR.warning("Odd special character exception");
 					} catch (InvalidBlockException e3) {
+						LOGR.warning("Invalid input passed to Printer");
+					} catch (InvalidCellException e1) {
 						LOGR.warning("Invalid input passed to Braille Interpreter");
 					}
 				}
@@ -1818,6 +1823,9 @@ public class ScenarioCreator extends Application {
 				} catch (OddSpecialCharacterException e3) {
 					LOGR.warning("Odd special character exception");
 				} catch (InvalidBlockException e3) {
+					LOGR.warning("Invalid input passed to Printer");
+				} catch (InvalidCellException e4) {
+					// TODO Auto-generated catch block
 					LOGR.warning("Invalid input passed to Braille Interpreter");
 				}
 			}

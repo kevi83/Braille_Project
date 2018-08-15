@@ -15,6 +15,7 @@ public class Printer {
 	private int cellsAmt;
 	private ArrayList<Block> blocks;
 	private int buttons;
+	private BrailleInterpreter interpreter = new BrailleInterpreter();
 	
 	/**
 	 * Full Constructor
@@ -56,12 +57,13 @@ public class Printer {
 	 * @throws OddSpecialCharacterException 
 	 * @throws InvalidBlockException 
 	 */
-	public void addBlock(Block block) throws OddSpecialCharacterException, InvalidBlockException {
+	public void addBlock(Block block) throws OddSpecialCharacterException, InvalidBlockException, InvalidCellException {
 		boolean repeat = (block.buttonsUsed < this.buttons);
 		addSectionName(block.name);
 		clearPins();
 		if(repeat) addRepeat();
-		displayString(block.cells);
+		if(block.cells.length() > 1) displayString(block.cells);
+		else setPins(block.cells.toCharArray()[0]);
 		addSpoken(block.story);
 		if(repeat) {
 			endRepeat();
@@ -74,7 +76,7 @@ public class Printer {
 		newLine();
 	}
 	
-	public void addBlockList(ArrayList<Block> blocks) throws OddSpecialCharacterException, InvalidBlockException {
+	public void addBlockList(ArrayList<Block> blocks) throws OddSpecialCharacterException, InvalidBlockException, InvalidCellException {
 		
 		this.blocks = blocks;
 		for(Block block : blocks) {
@@ -209,11 +211,11 @@ public class Printer {
 		addConfig("disp-clearAll");
 	}
 	
-	/*Sets pins for the requested character
+	//Sets pins for the requested character
 	private void setPins(char letter) throws InvalidCellException {
 		addConfig("disp-cell-pins:0 " + interpreter.getPins(letter));
 	}
-	*/
+	
 	
 	//Adds sound for the response depending on if the response is correct
 	private void addAnswerSound(boolean correct) {
