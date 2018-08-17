@@ -1979,7 +1979,7 @@ public class ScenarioCreator extends Application {
 			fileChooser.setTitle("Open Scenario File");
 			File file = fileChooser.showOpenDialog(primaryStage);
 			ScenarioParser s = new ScenarioParser(true);
-			s.setScenarioFile(file.getAbsolutePath());
+			s.setScenarioFile("brailleTest.txt");
 
 		});
 
