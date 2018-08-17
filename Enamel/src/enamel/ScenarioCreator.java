@@ -1,5 +1,6 @@
 package enamel;
 
+import java.awt.Desktop;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -1835,21 +1836,18 @@ public class ScenarioCreator extends Application {
 		saveProject.setAccelerator(
 				new KeyCodeCombination(KeyCode.S, KeyCodeCombination.CONTROL_DOWN, KeyCodeCombination.ALT_DOWN));
 
-		
-		//File menu selection : load project
-		
-		
+		// File menu selection : load project
+
 		loadProject.setOnAction(e -> {
 
 		});
-		
-		
+
 		// file menu selection : test project
-		
+
 		testProject.setOnAction(e -> {
 			runTest(brailleCellsUsedWindow, playerSelectionWindow, visualButton, audioButton);
 		});
-		
+
 		testProject.setAccelerator(
 				new KeyCodeCombination(KeyCode.T, KeyCodeCombination.CONTROL_DOWN, KeyCodeCombination.ALT_DOWN));
 
@@ -1967,9 +1965,11 @@ public class ScenarioCreator extends Application {
 	 * 
 	 * 
 	 */
+	private Desktop desktop = Desktop.getDesktop();
 
 	private void runTest(Stage primaryStage, Stage playerSelectionWindow, RadioButton visualButton,
 			RadioButton audioButton) {
+		
 		primaryStage.close();
 		playerSelectionWindow.show();
 
@@ -1980,6 +1980,7 @@ public class ScenarioCreator extends Application {
 			File file = fileChooser.showOpenDialog(primaryStage);
 			ScenarioParser s = new ScenarioParser(true);
 			s.setScenarioFile(file.getAbsolutePath());
+
 		});
 
 		audioButton.setOnAction(e3 -> {

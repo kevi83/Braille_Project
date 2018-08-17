@@ -35,7 +35,7 @@ public class ScenarioParser {
         //System.setProperty("mbrola.base", currDir + File.separator + "lib/mbrola.jar");
 		System.setProperty("freetts.voices", "com.sun.speech.freetts.en.us.cmu_us_kal.KevinVoiceDirectory");		
 		vm = VoiceManager.getInstance();
-        voice = vm.getVoice ("kevin");
+        voice = vm.getVoice ("kevin16");
         voice.allocate();
         repeatedText = new ArrayList<String> ();
         userInput = false;
