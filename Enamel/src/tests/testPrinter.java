@@ -30,11 +30,11 @@ public class testPrinter {
 	int buttons;
 	BrailleInterpreter interpreter = new BrailleInterpreter();
 	boolean first;
-	
+
 	/*
-	private String[] buttonLabels = { "ONEE", "TWOO", "THREEE", "FOURR", "FIVEE", "SIXX", "SEVENN", "EIGHTT", "NINEE",
-			"TENN", "ELEVENN", "TWELVEE" };
-	*/
+	 * private String[] buttonLabels = { "ONEE", "TWOO", "THREEE", "FOURR", "FIVEE",
+	 * "SIXX", "SEVENN", "EIGHTT", "NINEE", "TENN", "ELEVENN", "TWELVEE" };
+	 */
 
 	// Initiates the file for each test
 	@Before
@@ -119,7 +119,10 @@ public class testPrinter {
 		assertEquals("/~disp-clearAll", reader.nextLine());
 		if (repeat)
 			assertEquals("/~repeat", reader.nextLine());
-		assertEquals("/~disp-string:" + block.cells, reader.nextLine());
+		if (block.cells.length() == 1)
+			assertEquals("/~disp-cell-pins:0 " + interpreter.getPins((block.cells.charAt(0))), reader.nextLine());
+		else
+			assertEquals("/~disp-string:" + block.cells, reader.nextLine());
 		assertEquals(block.story, reader.nextLine());
 		if (repeat) {
 			assertEquals("/~endrepeat", reader.nextLine());
@@ -174,7 +177,7 @@ public class testPrinter {
 	}
 
 	@Test
-	public void test1OldBlock()
+	public void testOldBlock1()
 			throws IOException, InvalidBlockException, InvalidCellException, OddSpecialCharacterException {
 		printer = new Printer("test.txt");
 		Block tBlock = new Block("name", "hi", "yes", "no", 1, 'c', 2);
@@ -189,7 +192,7 @@ public class testPrinter {
 	}
 
 	@Test
-	public void testOld2Block()
+	public void testOldBlock2()
 			throws IOException, InvalidBlockException, InvalidCellException, OddSpecialCharacterException {
 		printer = new Printer("test.txt", 1, 4);
 		Block tBlock1 = new Block("name", "hi", "yes", "no", 1, 'c');
@@ -297,7 +300,10 @@ public class testPrinter {
 		assertEquals("/~disp-clearAll", reader.nextLine());
 		if (repeat)
 			assertEquals("/~repeat", reader.nextLine());
-		assertEquals("/~disp-string:" + tBlock.cells, reader.nextLine());
+		if (tBlock.cells.length() == 1)
+			assertEquals("/~disp-cell-pins:0 " + interpreter.getPins((tBlock.cells.charAt(0))), reader.nextLine());
+		else
+			assertEquals("/~disp-string:" + tBlock.cells, reader.nextLine());
 		assertEquals(tBlock.story.split("<")[0], reader.nextLine());
 		assertEquals("/~sound:correct.wav", reader.nextLine());
 		if (repeat) {
@@ -338,7 +344,10 @@ public class testPrinter {
 		assertEquals("/~disp-clearAll", reader.nextLine());
 		if (repeat)
 			assertEquals("/~repeat", reader.nextLine());
-		assertEquals("/~disp-string:" + tBlock.cells, reader.nextLine());
+		if (tBlock.cells.length() == 1)
+			assertEquals("/~disp-cell-pins:0 " + interpreter.getPins((tBlock.cells.charAt(0))), reader.nextLine());
+		else
+			assertEquals("/~disp-string:" + tBlock.cells, reader.nextLine());
 		assertEquals(tBlock.story.split("<")[0], reader.nextLine());
 		assertEquals("/~sound:correct.wav", reader.nextLine());
 		assertEquals(tBlock.story.split("<")[1].split(">")[1], reader.nextLine());
@@ -380,7 +389,10 @@ public class testPrinter {
 		assertEquals("/~disp-clearAll", reader.nextLine());
 		if (repeat)
 			assertEquals("/~repeat", reader.nextLine());
-		assertEquals("/~disp-string:" + tBlock.cells, reader.nextLine());
+		if (tBlock.cells.length() == 1)
+			assertEquals("/~disp-cell-pins:0 " + interpreter.getPins((tBlock.cells.charAt(0))), reader.nextLine());
+		else
+			assertEquals("/~disp-string:" + tBlock.cells, reader.nextLine());
 		assertEquals(tBlock.story.split("<")[0], reader.nextLine());
 		assertEquals("/~sound:correct.wav", reader.nextLine());
 		assertEquals(tBlock.story.split("<")[1].split(">")[1], reader.nextLine());
@@ -422,7 +434,10 @@ public class testPrinter {
 		assertEquals("/~disp-clearAll", reader.nextLine());
 		if (repeat)
 			assertEquals("/~repeat", reader.nextLine());
-		assertEquals("/~disp-string:" + tBlock.cells, reader.nextLine());
+		if (tBlock.cells.length() == 1)
+			assertEquals("/~disp-cell-pins:0 " + interpreter.getPins((tBlock.cells.charAt(0))), reader.nextLine());
+		else
+			assertEquals("/~disp-string:" + tBlock.cells, reader.nextLine());
 		assertEquals(tBlock.story.split("<")[0], reader.nextLine());
 		assertEquals("/~sound:correct.wav", reader.nextLine());
 		if (repeat) {
@@ -511,7 +526,10 @@ public class testPrinter {
 		assertEquals("/~disp-clearAll", reader.nextLine());
 		if (repeat)
 			assertEquals("/~repeat", reader.nextLine());
-		assertEquals("/~disp-string:" + tBlock.cells, reader.nextLine());
+		if (tBlock.cells.length() == 1)
+			assertEquals("/~disp-cell-pins:0 " + interpreter.getPins((tBlock.cells.charAt(0))), reader.nextLine());
+		else
+			assertEquals("/~disp-string:" + tBlock.cells, reader.nextLine());
 		assertEquals(tBlock.story.split("\\*")[0], reader.nextLine());
 		assertEquals("/~disp-string:" + tBlock.story.split("\\*")[1], reader.nextLine());
 		assertEquals(tBlock.story.split("\\*")[2], reader.nextLine());
@@ -553,7 +571,10 @@ public class testPrinter {
 		assertEquals("/~disp-clearAll", reader.nextLine());
 		if (repeat)
 			assertEquals("/~repeat", reader.nextLine());
-		assertEquals("/~disp-string:" + tBlock.cells, reader.nextLine());
+		if (tBlock.cells.length() == 1)
+			assertEquals("/~disp-cell-pins:0 " + interpreter.getPins((tBlock.cells.charAt(0))), reader.nextLine());
+		else
+			assertEquals("/~disp-string:" + tBlock.cells, reader.nextLine());
 		assertEquals(tBlock.story.split("\\*")[0], reader.nextLine());
 		assertEquals("/~disp-string:" + tBlock.story.split("\\*")[1], reader.nextLine());
 		assertEquals(tBlock.story.split("\\*")[2], reader.nextLine());
@@ -595,7 +616,10 @@ public class testPrinter {
 		assertEquals("/~disp-clearAll", reader.nextLine());
 		if (repeat)
 			assertEquals("/~repeat", reader.nextLine());
-		assertEquals("/~disp-string:" + tBlock.cells, reader.nextLine());
+		if (tBlock.cells.length() == 1)
+			assertEquals("/~disp-cell-pins:0 " + interpreter.getPins((tBlock.cells.charAt(0))), reader.nextLine());
+		else
+			assertEquals("/~disp-string:" + tBlock.cells, reader.nextLine());
 		assertEquals(tBlock.story.split("\\*")[0], reader.nextLine());
 		assertEquals("/~disp-string:" + tBlock.story.split("\\*")[1], reader.nextLine());
 		if (repeat) {
