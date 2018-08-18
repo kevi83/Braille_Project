@@ -168,7 +168,7 @@ public class AudioPlayer extends Player {
 		// also, /~skip-button: should not be the last line of the file. - micah
 		if( (sp.nextLineChecker.substring(0, 14).equals("/~skip-button:")) == false) {
 			speak("         ");
-			update();// this might casue problems, but i don't think it will - micah
+			update();// this might cause problems, but i don't think it will - micah
 			
 		}
 		

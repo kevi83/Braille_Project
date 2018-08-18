@@ -317,8 +317,8 @@ public class Printer {
 	// NOTE: buttonsUsed refers to the buttons being used for the given scenario /
 	// block
 	private void addInputBlock(int buttonsUsed) {
-		for (int i = 0; i < buttonsUsed; i++) {
-			addConfig("skip-button:" + (i ) + " " + "JUMPP" + i);
+		for (int i = 1; i <= buttonsUsed; i++) {
+			addConfig("skip-button:" + (i - 1) + " " + "JUMPP" + i);
 		}
 		addConfig("user-input");
 	}
