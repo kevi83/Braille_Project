@@ -856,7 +856,8 @@ public class ScenarioCreator extends Application {
 		scene5 = new Scene(layout5);
 		emptyStoryWindow.setScene(scene5);
 		emptyStoryWindow.setTitle("Story field is empty");
-		emptyStoryText = new Text("Section can not be saved\nif the story field is empty");
+		emptyStoryText = new Text("Section can not be saved\nThe Story field has less than 15 characters.\n"
+				+ "Come on, make it exciting! Use your words.");
 		emptyStoryText.setFill(Color.WHITE);
 		layout5.add(emptyStoryText, 0, 0, 2, 1);
 		emptyStoryOkay = new Button("Okay");
@@ -1103,7 +1104,10 @@ public class ScenarioCreator extends Application {
 		scene3 = new Scene(layout3);
 		notANumberWindow.setScene(scene3);
 		notANumberWindow.setTitle("Error");
-		answerIsNumber = new Text("The answer field and answer buttons used field needs to contain a number");
+		answerIsNumber = new Text(
+				"The Answer and Answer Buttons Used field need to contain a number, remember, "
+				+ "the number you choose for the answer needs to be less than the number of buttons available."
+				+ "and the Answer Buttons Used field ");
 		answerIsNumber.setFill(Color.WHITE);
 		layout3.add(answerIsNumber, 0, 0, 2, 1);
 		answerOkay = new Button("Okay");
@@ -1670,7 +1674,6 @@ public class ScenarioCreator extends Application {
 			saveSection(nameSectionField, answerButtonsUsedField, storyText, brailleText, answerText, correctText,
 					incorrectText, comboBoxList, comboBox, brailleCellsField, answerButtonsField, notANumberWindow,
 					brailleWindow, emptyNameWindow, buttonsUsedWindow, emptyStoryWindow, saveWindow);
-			LOGR.info("Section Saved");
 		});
 
 		saveButton.setOnKeyPressed(e -> {
@@ -1680,14 +1683,12 @@ public class ScenarioCreator extends Application {
 				saveSection(nameSectionField, answerButtonsUsedField, storyText, brailleText, answerText, correctText,
 						incorrectText, comboBoxList, comboBox, brailleCellsField, answerButtonsField, notANumberWindow,
 						brailleWindow, emptyNameWindow, buttonsUsedWindow, emptyStoryWindow, saveWindow);
-				LOGR.info("Section Saved");
 			}
 		});
 
 		saveButton.setOnKeyPressed(e -> {
 			new KeyCodeCombination(KeyCode.TAB, KeyCodeCombination.CONTROL_DOWN);
 			clearSectionButton.requestFocus();
-			LOGR.info("Section Saved");
 		});
 
 		/**
@@ -1779,6 +1780,7 @@ public class ScenarioCreator extends Application {
 			scenarioNameField.clear();
 			brailleCellsField.clear();
 			answerButtonsField.clear();
+			clearSection();
 			LOGR.info("New project created");
 		});
 
@@ -1790,6 +1792,7 @@ public class ScenarioCreator extends Application {
 				scenarioNameField.clear();
 				brailleCellsField.clear();
 				answerButtonsField.clear();
+				clearSection();
 				LOGR.info("New project created");
 			}
 		});
@@ -1969,7 +1972,7 @@ public class ScenarioCreator extends Application {
 
 	private void runTest(Stage primaryStage, Stage playerSelectionWindow, RadioButton visualButton,
 			RadioButton audioButton) {
-		
+
 		primaryStage.close();
 		playerSelectionWindow.show();
 
@@ -1978,6 +1981,7 @@ public class ScenarioCreator extends Application {
 			FileChooser fileChooser = new FileChooser();
 			fileChooser.setTitle("Open Scenario File");
 			File file = fileChooser.showOpenDialog(primaryStage);
+
 			ScenarioParser s = new ScenarioParser(true);
 			s.setScenarioFile(file.getAbsolutePath());
 
@@ -2069,13 +2073,20 @@ public class ScenarioCreator extends Application {
 			TextField answerButtonsField, Stage notANumberWindow, Stage brailleWindow, Stage emptyNameWindow,
 			Stage buttonsUsedWindow, Stage emptyStoryWindow, Stage saveWindow) {
 
-		// get name of section from user input
+		/*
+		 * Check that all required fields are filled out properly
+		 * 
+		 * section name
+		 * 
+		 */
 		if (nameSectionField.getText().equals("")) {
 			emptyNameWindow.show();
 		} else if (brailleText.getText().length() == 0
 				|| brailleText.getText().length() > Integer.parseInt(brailleCellsField.getText())
 				|| !brailleText.getText().matches("[A-z]+")) {
 			brailleWindow.show();
+		} else if (storyText.getText().length() < 14) {
+			emptyStoryWindow.show();
 		} else {
 
 			String blockName = nameSectionField.getText();
@@ -2084,8 +2095,8 @@ public class ScenarioCreator extends Application {
 				fillFields(nameSectionField, storyText, brailleText, answerText, correctText, incorrectText,
 						answerButtonsField);
 				saveWindow.show();
+				LOGR.info("Section Saved");
 			} else {
-
 				// save text to block
 				Block blockText;
 
@@ -2104,16 +2115,7 @@ public class ScenarioCreator extends Application {
 					notANumberWindow.show();
 					LOGR.warning("Invalid input for the answer text field");
 				} catch (InvalidBlockException e2) {
-					if (Integer.parseInt(answerText.getText()) < 1
-							|| Integer.parseInt(answerText.getText()) > Integer
-									.parseInt(answerButtonsUsedField.getText())
-							|| Integer.parseInt(answerText.getText()) > Integer.parseInt(answerButtonsField.getText())
-							|| Integer.parseInt(answerButtonsUsedField.getText()) > Integer
-									.parseInt(answerButtonsField.getText())) {
-						buttonsUsedWindow.show();
-					} else if (storyText.getText().length() == 0) {
-						emptyStoryWindow.show();
-					}
+
 					LOGR.warning("Invalid input passed to Block");
 				}
 			}
