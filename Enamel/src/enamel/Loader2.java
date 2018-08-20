@@ -23,8 +23,9 @@ public class Loader2 {
 	public static ArrayList<Block> load(File file) throws FileNotFoundException, CorruptFileException, InvalidBlockException {
 		
 		Scanner reader = new Scanner(file);
-		String init = loadInit(reader);
+		String[] init = loadInit(reader).split("%");
 		ArrayList<Block> result = new ArrayList<Block>();
+		result.add(new Block("fake", "fake", "fake", "fake", Integer.parseInt(init[1]), 'f',  Integer.parseInt(init[3])));
 		
 		while(true) {
 			try {

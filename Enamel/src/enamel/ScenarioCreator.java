@@ -2,6 +2,7 @@ package enamel;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -84,6 +85,10 @@ public class ScenarioCreator extends Application {
 	private Button exitButton;
 	private boolean recording;
 	private final static Logger LOGR = Logger.getLogger(ScenarioCreator.class.getName());
+	
+	private String scenarioName;
+	private int buttonsAvailable;
+	private int cellsAvailable;
 
 	/*
 	 * ---[ GUI for start Window / primary stage
@@ -699,9 +704,7 @@ public class ScenarioCreator extends Application {
 			} else {
 				// send blocklist to printer == save txt file
 				try {
-					printer = new Printer(scenarioNameField.getText() + ".txt",
-							Integer.parseInt(brailleCellsField.getText()),
-							Integer.parseInt(answerButtonsField.getText()));
+					printer = new Printer(scenarioName, cellsAvailable, buttonsAvailable);
 					printer.addBlockList(blockList);
 					scenarioSavedWindow.show();
 					printer.print();
@@ -728,9 +731,7 @@ public class ScenarioCreator extends Application {
 				} else {
 					// send blocklist to printer == save txt file
 					try {
-						printer = new Printer(scenarioNameField.getText() + ".txt",
-								Integer.parseInt(brailleCellsField.getText()),
-								Integer.parseInt(answerButtonsField.getText()));
+						printer = new Printer(scenarioName, cellsAvailable, buttonsAvailable);
 						printer.addBlockList(blockList);
 						scenarioSavedWindow.show();
 						printer.print();
@@ -1548,13 +1549,80 @@ public class ScenarioCreator extends Application {
 		loadButton.setOnAction(e1 -> {
 
 			// load function here
+			
+			FileChooser fileChooser = new FileChooser();
+			fileChooser.setTitle("Open Scenario File");
+			File file = fileChooser.showOpenDialog(primaryStage);
 			primaryStage.close();
+			try {
+				
+				blockList = Loader2.load(file);
+				
+				scenarioName = file.getName();
+				
+				Block fakeBlock = blockList.get(0);
+				blockList.remove(0);
+				
+				buttonsAvailable = fakeBlock.buttonsUsed;
+				cellsAvailable = fakeBlock.answer;
+				
+				for(Block i : blockList) {
+					blockMap.put(i.name, i);
+					comboBoxList.add(i.name);
+					comboBox.setItems(comboBoxList);
+				}
+				
+				scenarioCreator.show();
+				
+			} catch (FileNotFoundException e2) {
+				LOGR.warning(e2.getMessage());
+				e2.printStackTrace();
+			} catch (CorruptFileException e2) {
+				LOGR.warning(e2.getMessage());
+				e2.printStackTrace();
+			} catch (InvalidBlockException e2) {
+				LOGR.warning(e2.getMessage());
+				e2.printStackTrace();
+			}
 		});
 		loadButton.setOnKeyPressed(e -> {
 			if (e.getCode() == KeyCode.ENTER) {
 				
 				// load function here
+				FileChooser fileChooser = new FileChooser();
+				fileChooser.setTitle("Open Scenario File");
+				File file = fileChooser.showOpenDialog(primaryStage);
 				primaryStage.close();
+				try {
+					
+					blockList = Loader2.load(file);
+					
+					scenarioName = file.getName();
+					
+					Block fakeBlock = blockList.get(0);
+					blockList.remove(0);
+					
+					buttonsAvailable = fakeBlock.buttonsUsed;
+					cellsAvailable = fakeBlock.answer;
+					
+					for(Block i : blockList) {
+						blockMap.put(i.name, i);
+						comboBoxList.add(i.name);
+						comboBox.setItems(comboBoxList);
+					}
+					
+					scenarioCreator.show();
+					
+				} catch (FileNotFoundException e2) {
+					LOGR.warning(e2.getMessage());
+					e2.printStackTrace();
+				} catch (CorruptFileException e2) {
+					LOGR.warning(e2.getMessage());
+					e2.printStackTrace();
+				} catch (InvalidBlockException e2) {
+					LOGR.warning(e2.getMessage());
+					e2.printStackTrace();
+				}
 			}
 		});
 	}
@@ -1909,9 +1977,7 @@ public class ScenarioCreator extends Application {
 			} else {
 				// send blocklist to printer == save txt file
 				try {
-					printer = new Printer(scenarioNameField.getText() + ".txt",
-							Integer.parseInt(brailleCellsField.getText()),
-							Integer.parseInt(answerButtonsField.getText()));
+					printer = new Printer(scenarioName, cellsAvailable, buttonsAvailable);
 					printer.addBlockList(blockList);
 					scenarioSavedWindow.show();
 					printer.print();
@@ -2110,6 +2176,12 @@ public class ScenarioCreator extends Application {
 		} else {
 			try {
 				scenarioCreator.show();
+				
+				//Loader Variables Assignment
+				scenarioName = scenarioNameField.getText() + ".txt";
+				buttonsAvailable = Integer.parseInt(answerButtonsField.getText());
+				cellsAvailable = Integer.parseInt(brailleCellsField.getText());
+				
 				brailleCellsUsedWindow.close();
 				LOGR.info("New scenario created");
 			} catch (NumberFormatException e3) {
