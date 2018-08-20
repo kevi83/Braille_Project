@@ -83,7 +83,7 @@ public class ScenarioCreator extends Application {
 	private Button record;
 	private GridPane recordLayout;
 	private Button exitButton;
-	private boolean recording;
+	//private boolean recording;
 	private final static Logger LOGR = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
 	/*
@@ -2045,7 +2045,7 @@ public class ScenarioCreator extends Application {
 	}
 
 	/**
-	 * load fields from combobox
+	 * load fields from combo box
 	 * 
 	 * 
 	 */
