@@ -10,6 +10,16 @@ public class Loader2 {
 	
 	static BrailleInterpreter interpreter = new BrailleInterpreter();
 
+	/**
+	 * This is the method this class was designed for. If given a scenario file, it returns an ArrayList of blocks
+	 * which can be entered into Scenario Creator
+	 * 
+	 * @param file - Path to the Scenario File
+	 * @return - Blocklist encompassing the scenario
+	 * @throws FileNotFoundException 
+	 * @throws CorruptFileException
+	 * @throws InvalidBlockException
+	 */
 	public static ArrayList<Block> load(File file) throws FileNotFoundException, CorruptFileException, InvalidBlockException {
 		
 		Scanner reader = new Scanner(file);
@@ -29,6 +39,15 @@ public class Loader2 {
 		return result;
 	}
 	
+	/**
+	 * Private method used by load() for extracting blocks from the scenario file. Returns a block
+	 * if the scanner of a scenario file is passed as a parameter
+	 * 
+	 * @param reader - Scanner object reading a scenario file
+	 * @return - Blocks
+	 * @throws InvalidBlockException
+	 * @throws CorruptFileException
+	 */
 	private static Block loadBlock(Scanner reader) throws InvalidBlockException, CorruptFileException {
 		
 		//Block(String name, String story, String correct, String wrong, int answer, String cells, int buttonsUsed)
@@ -128,6 +147,13 @@ public class Loader2 {
 		}
 	}
 	
+	/**
+	 * Checks the first 5 lines of a Scenario file are valid
+	 * 
+	 * @param reader
+	 * @return
+	 * @throws CorruptFileException
+	 */
 	private static String loadInit(Scanner reader) throws CorruptFileException {
 		
 		String i;
@@ -179,7 +205,12 @@ public class Loader2 {
 		return result;
 	}
 
-	
+	/**
+	 * Reformats each line of the scenario file for easier parsing
+	 * 
+	 * @param line
+	 * @return
+	 */
 	private static String read(String line) {
 		
 		if(isEmpty(line)) return "Empty%" + line;
@@ -196,18 +227,17 @@ public class Loader2 {
 		}
 	}
 	
+	//Easier understood test to see if a line is an empty string
 	private static boolean isEmpty(String string) {
 		return string.equals("");
 	}
 	
+	//Easier understood test to see if a line is a config string
 	private static boolean isConfig(String string) {
 		return string.substring(0, 2).equals("/~");
 	}
 	
-	public static void main(String[] args) throws IOException, OddSpecialCharacterException, InvalidBlockException, InvalidCellException, CorruptFileException {
-		print();
-	}
-	
+	//Original testing method
 	static void print() throws OddSpecialCharacterException, InvalidBlockException, InvalidCellException, IOException, CorruptFileException {
 		Printer printer = new Printer("test.txt", 3, 4);
 		Block tBlock1 = new Block("name", "hi", "yes", "no", 1, "wow", 4);
