@@ -5,6 +5,7 @@ import java.util.HashMap;
 public class BrailleInterpreter {
 
 	public HashMap<Character, String> alphabet = new HashMap<Character, String>();
+	public HashMap<String, Character> translate = new HashMap<String, Character>();
 
 	public BrailleInterpreter() {
 		alphabet.put('a', "10000000");
@@ -34,6 +35,34 @@ public class BrailleInterpreter {
 		alphabet.put('y', "10111100");
 		alphabet.put('z', "10101100");
 		alphabet.put(' ', "11111111");
+		
+		translate.put("10000000", 'a');
+		translate.put("11000000", 'b');
+		translate.put("10100000", 'c');
+		translate.put("10011000", 'd');
+		translate.put("10001000", 'e');
+		translate.put("11010000", 'f');
+		translate.put("11011000", 'g');
+		translate.put("11001000", 'h');
+		translate.put("01010000", 'i');
+		translate.put("01011000", 'j');
+		translate.put("10100000", 'k');
+		translate.put("11100000", 'l');
+		translate.put("10110000", 'm');
+		translate.put("10111000", 'n');
+		translate.put("10101000", 'o');
+		translate.put("11110000", 'p');
+		translate.put("11111000", 'q');
+		translate.put("11101000", 'r');
+		translate.put("01110000", 's');
+		translate.put("01111000", 't');
+		translate.put("10100100", 'u');
+		translate.put("11100100", 'v');
+		translate.put("01011100", 'w');
+		translate.put("10110100", 'x');
+		translate.put("10111100", 'y');
+		translate.put("10101100", 'z');
+		translate.put("11111111", ' ');
 	}
 	
 	/**
@@ -47,6 +76,12 @@ public class BrailleInterpreter {
 	public String getPins(char letter) throws InvalidCellException {
 		String ans = alphabet.get(letter);
 		if(ans == null) throw new InvalidCellException();
+		return ans;
+	}
+	
+
+	public char getChar(String pins) {
+		char ans = translate.get(pins);
 		return ans;
 	}
 }
