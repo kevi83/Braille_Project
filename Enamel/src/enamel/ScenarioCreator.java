@@ -1,9 +1,13 @@
 package enamel;
 
 import java.awt.Desktop;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -40,6 +44,8 @@ import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import java.util.logging.*;
+
+import com.oracle.tools.packager.Log;
 
 public class ScenarioCreator extends Application {
 
@@ -83,8 +89,8 @@ public class ScenarioCreator extends Application {
 	private Button record;
 	private GridPane recordLayout;
 	private Button exitButton;
-	//private boolean recording;
-	private final static Logger LOGR = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+	private boolean recording;
+	private final static Logger LOGR = Logger.getLogger(ScenarioCreator.class.getName());
 
 	/*
 	 * ---[ GUI for start Window / primary stage
@@ -1006,8 +1012,7 @@ public class ScenarioCreator extends Application {
 		scene4 = new Scene(layout4);
 		brailleWindow.setScene(scene4);
 		brailleWindow.setTitle("Error");
-		brailleEntry = new Text(
-				"The braille field can not be empty and can only contain a letter");
+		brailleEntry = new Text("The braille field can not be empty and can only contain a letter");
 		brailleEntry.setFill(Color.WHITE);
 		layout4.add(brailleEntry, 0, 0, 2, 1);
 		brailleOkay = new Button("Okay");
@@ -1129,14 +1134,15 @@ public class ScenarioCreator extends Application {
 		scene3 = new Scene(layout3);
 		notANumberWindow.setScene(scene3);
 		notANumberWindow.setTitle("Error");
-		answerIsNumber = new Text("The answer field needs to contain a number less than the number of buttons used");
+		answerIsNumber = new Text(
+				"The answer field needs to contain a number that is less than the number of answer buttons available");
 		answerIsNumber.setFill(Color.WHITE);
 		layout3.add(answerIsNumber, 0, 0, 2, 1);
 		answerOkay = new Button("Okay");
 		answerOkay.setStyle("-fx-base: #87ceeb;"); // sky blue
 		answerOkay.setAccessibleRoleDescription("Okay button");
 		answerOkay.setAccessibleText(
-				"The answer field and answer buttons used field needs to contain a number, press enter to return to main window");
+				"Section can not be saved. The answer field needs to contain a number that is less than the number of answer buttons available press enter to return to main window");
 		layout3.add(answerOkay, 2, 1);
 
 		// action button for answer okay
@@ -1151,9 +1157,7 @@ public class ScenarioCreator extends Application {
 	}
 
 	/**
-	 * Error GUI - for brailleCellsUsedWindow errors: no scenario name braille field
-	 * empty answer field empty
-	 * 
+	 * <GUI Warning - starting window missing fields
 	 * 
 	 */
 
@@ -1194,10 +1198,7 @@ public class ScenarioCreator extends Application {
 	}
 
 	/*
-	 * 
-	 * pop up window adding sound
-	 * 
-	 * 
+	 * <GUI Add sound
 	 * 
 	 */
 
@@ -1271,7 +1272,7 @@ public class ScenarioCreator extends Application {
 	}
 
 	/**
-	 * name sound file
+	 * <GUI name sound file
 	 * 
 	 * 
 	 */
@@ -1346,7 +1347,7 @@ public class ScenarioCreator extends Application {
 	}
 
 	/**
-	 * record sound
+	 * <GUI record sound window
 	 * 
 	 * 
 	 */
@@ -1449,7 +1450,7 @@ public class ScenarioCreator extends Application {
 	}
 
 	/**
-	 * Naming scenario GUI
+	 * <GUI Starting window
 	 * 
 	 * 
 	 * enter scenario name number of braille cells available number of answer
@@ -1457,6 +1458,7 @@ public class ScenarioCreator extends Application {
 	 * 
 	 * 
 	 */
+
 	private void setupScenarioGUI(Stage primaryStage) {
 
 		brailleCellsUsedWindow = new Stage();
@@ -1513,7 +1515,6 @@ public class ScenarioCreator extends Application {
 		okayStart.setAccessibleText("Press enter to start creating a scenario");
 		layout11.add(okayStart, 2, 3);
 
-		// open scenario creator or display error message
 		okayStart.setOnAction(e -> {
 
 			nameNewScenario(scenarioCreator, errorWindow, brailleCellsUsedWindow, scenarioNameField, brailleCellsField,
@@ -1528,14 +1529,8 @@ public class ScenarioCreator extends Application {
 			}
 		});
 
-		/*
-		 * action event (starting window - create button)
-		 * 
-		 * 
-		 * opens new window for naming scenario
-		 * 
-		 * 
-		 */
+		// action listeners
+
 		createButton.setOnAction(e1 -> {
 			brailleCellsUsedWindow.show();
 			primaryStage.close();
@@ -1547,6 +1542,10 @@ public class ScenarioCreator extends Application {
 			}
 		});
 	}
+
+	/*
+	 * ---[ scenario menu button
+	 */
 
 	private void scenarioMenuButton() {
 		// manage scenario button
@@ -1567,8 +1566,7 @@ public class ScenarioCreator extends Application {
 	}
 
 	/*
-	 * .* comboBox
-	 * 
+	 * .comboBox
 	 * 
 	 */
 
@@ -1590,6 +1588,10 @@ public class ScenarioCreator extends Application {
 		});
 	}
 
+	/*
+	 * main method
+	 */
+
 	public static void main(String[] args) {
 
 		// ---[ logger
@@ -1606,6 +1608,43 @@ public class ScenarioCreator extends Application {
 		// Inherited method from Application that lunches GUI - JavaFx
 		launch(args);
 	}
+
+	
+	// counter for log
+	
+	public int getCount() {
+		
+		int count = 0;
+		try {
+			if (!new File("Count Log.txt").exists()) {
+				return 1;
+			} else {
+				BufferedReader br = new BufferedReader(new FileReader(new File("Count Log.txt")));
+				String s = br.readLine();
+				count = Integer.parseInt(s);
+				br.close();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return count;
+	}
+		
+    public void putCount(int count) {
+        try {
+            BufferedWriter bw = new BufferedWriter(new FileWriter(new File("Count Log.txt")));
+            bw.write(Integer.toString(count));
+            bw.close();
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public void incCount() { 
+        int count = getCount();            
+        count++;
+        putCount(count);            
+    }
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
@@ -1631,13 +1670,8 @@ public class ScenarioCreator extends Application {
 		comboBoxOpen();
 
 		/*
-		 * 
-		 * 
 		 *
 		 * --------------------<{Other Scenes and Action Events
-		 * 
-		 * 
-		 * 
 		 * 
 		 */
 
@@ -1647,6 +1681,7 @@ public class ScenarioCreator extends Application {
 		recordSoundGUI();
 		nameSoundErrorGUI();
 		scenarioMenuGUI();
+		visualOrAudioPlayerGUI();
 
 		// Scene
 		primaryStage.setTitle("Welcome");
@@ -1656,7 +1691,7 @@ public class ScenarioCreator extends Application {
 		layout1.setBackground(
 				new Background(new BackgroundFill(Color.gray(0.05, 0.6), CornerRadii.EMPTY, Insets.EMPTY)));
 
-		// ----------------------------<<[warnings
+		// -----------------------<<[warnings
 
 		/**
 		 * GUI for errors
@@ -1681,8 +1716,6 @@ public class ScenarioCreator extends Application {
 		savingSectionGUI();
 
 		// ---------<<[ other GUIs
-
-		visualOrAudioPlayerGUI();
 
 		/*
 		 * -----<<[save section button
@@ -1803,7 +1836,6 @@ public class ScenarioCreator extends Application {
 			brailleCellsField.clear();
 			answerButtonsField.clear();
 			clearSection();
-			LOGR.info("New project created");
 		});
 
 		warningOkay.setOnKeyPressed(e1 -> {
@@ -1815,7 +1847,6 @@ public class ScenarioCreator extends Application {
 				brailleCellsField.clear();
 				answerButtonsField.clear();
 				clearSection();
-				LOGR.info("New project created");
 			}
 		});
 
@@ -1902,7 +1933,6 @@ public class ScenarioCreator extends Application {
 
 		/*
 		 * ------<<[go to menu
-		 * 
 		 *
 		 */
 
@@ -1964,7 +1994,7 @@ public class ScenarioCreator extends Application {
 				new KeyCodeCombination(KeyCode.S, KeyCodeCombination.CONTROL_DOWN, KeyCodeCombination.SHIFT_DOWN));
 
 		/*
-		 * <<<starting window>>>
+		 * .test button action on starting window
 		 * 
 		 */
 
@@ -1990,7 +2020,6 @@ public class ScenarioCreator extends Application {
 	 * 
 	 * 
 	 */
-	private Desktop desktop = Desktop.getDesktop();
 
 	private void runTest(Stage primaryStage, Stage playerSelectionWindow, RadioButton visualButton,
 			RadioButton audioButton) {
@@ -2025,8 +2054,10 @@ public class ScenarioCreator extends Application {
 	 * opening window Scenario name braille cells used answer buttons available
 	 * 
 	 */
+
 	private void nameNewScenario(Stage scenarioCreator, Stage errorWindow, Stage brailleCellsUsedWindow,
 			TextField scenarioNameField, TextField brailleCellsField, TextField answerButtonsField) {
+
 		if (scenarioNameField.getText().isEmpty() || brailleCellsField.getText().isEmpty()
 				|| answerButtonsField.getText().isEmpty() || !brailleCellsField.getText().matches("[0-9]+")
 				|| !answerButtonsField.getText().matches("[0-9]+") || Integer.parseInt(brailleCellsField.getText()) == 0
@@ -2037,6 +2068,7 @@ public class ScenarioCreator extends Application {
 				scenarioCreator.show();
 				brailleCellsUsedWindow.close();
 				LOGR.info("New scenario created");
+				this.incCount();
 			} catch (NumberFormatException e3) {
 				errorWindow.show();
 				LOGR.warning("Invalid input for the number of braille cells and answer buttons available");
@@ -2065,7 +2097,7 @@ public class ScenarioCreator extends Application {
 	}
 
 	/**
-	 * clear section
+	 * .clear section
 	 * 
 	 * 
 	 */
