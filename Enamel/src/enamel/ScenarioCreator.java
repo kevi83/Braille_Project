@@ -1558,9 +1558,6 @@ public class ScenarioCreator extends Application {
 			}
 		});
 	}
-
-
-
 	
 	/*
 	 * ---[ scenario menu button
