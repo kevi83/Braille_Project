@@ -1696,6 +1696,7 @@ public class ScenarioCreator extends Application {
 			fileChooser.setTitle("Open Scenario File");
 			File file = fileChooser.showOpenDialog(loadWarning);
 			loadWarning.close();
+			scenarioCreator.close();
 			
 			try {
 				
@@ -1739,6 +1740,7 @@ public class ScenarioCreator extends Application {
 				fileChooser.setTitle("Open Scenario File");
 				File file = fileChooser.showOpenDialog(loadWarning);
 				loadWarning.close();
+				scenarioWindow.close();
 				
 				try {
 					
@@ -1757,7 +1759,8 @@ public class ScenarioCreator extends Application {
 						comboBoxList.add(i.name);
 						comboBox.setItems(comboBoxList);
 					}
-										
+					scenarioWindow.show();			
+					
 				} catch (FileNotFoundException e) {
 					LOGR.warning(e.getMessage());
 					e.printStackTrace();
