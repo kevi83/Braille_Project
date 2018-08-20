@@ -1554,6 +1554,7 @@ public class ScenarioCreator extends Application {
 			fileChooser.setTitle("Open Scenario File");
 			File file = fileChooser.showOpenDialog(primaryStage);
 			primaryStage.close();
+			
 			try {
 				
 				blockList = Loader2.load(file);
@@ -1585,6 +1586,7 @@ public class ScenarioCreator extends Application {
 				e2.printStackTrace();
 			}
 		});
+		
 		loadButton.setOnKeyPressed(e -> {
 			if (e.getCode() == KeyCode.ENTER) {
 				
@@ -1689,6 +1691,43 @@ public class ScenarioCreator extends Application {
 			clearSection();
 
 			// load function here
+			
+			FileChooser fileChooser = new FileChooser();
+			fileChooser.setTitle("Open Scenario File");
+			File file = fileChooser.showOpenDialog(loadWarning);
+			loadWarning.close();
+			
+			try {
+				
+				blockList = Loader2.load(file);
+				
+				scenarioName = file.getName();
+				
+				Block fakeBlock = blockList.get(0);
+				blockList.remove(0);
+				
+				buttonsAvailable = fakeBlock.buttonsUsed;
+				cellsAvailable = fakeBlock.answer;
+				
+				for(Block i : blockList) {
+					blockMap.put(i.name, i);
+					comboBoxList.add(i.name);
+					comboBox.setItems(comboBoxList);
+				}
+				
+				scenarioCreator.show();
+				
+			} catch (FileNotFoundException e2) {
+				LOGR.warning(e2.getMessage());
+				e2.printStackTrace();
+			} catch (CorruptFileException e2) {
+				LOGR.warning(e2.getMessage());
+				e2.printStackTrace();
+			} catch (InvalidBlockException e2) {
+				LOGR.warning(e2.getMessage());
+				e2.printStackTrace();
+			}
+			
 		});
 
 		loadScenarioButtonOkay.setOnKeyPressed(e2 -> {
@@ -1696,7 +1735,39 @@ public class ScenarioCreator extends Application {
 				clearSection();
 
 				// load function here
-
+				FileChooser fileChooser = new FileChooser();
+				fileChooser.setTitle("Open Scenario File");
+				File file = fileChooser.showOpenDialog(loadWarning);
+				loadWarning.close();
+				
+				try {
+					
+					blockList = Loader2.load(file);
+					
+					scenarioName = file.getName();
+					
+					Block fakeBlock = blockList.get(0);
+					blockList.remove(0);
+					
+					buttonsAvailable = fakeBlock.buttonsUsed;
+					cellsAvailable = fakeBlock.answer;
+					
+					for(Block i : blockList) {
+						blockMap.put(i.name, i);
+						comboBoxList.add(i.name);
+						comboBox.setItems(comboBoxList);
+					}
+										
+				} catch (FileNotFoundException e) {
+					LOGR.warning(e.getMessage());
+					e.printStackTrace();
+				} catch (CorruptFileException e) {
+					LOGR.warning(e.getMessage());
+					e.printStackTrace();
+				} catch (InvalidBlockException e) {
+					LOGR.warning(e.getMessage());
+					e.printStackTrace();
+				}
 			}
 		});
 
