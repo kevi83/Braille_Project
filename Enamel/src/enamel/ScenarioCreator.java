@@ -45,8 +45,6 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import java.util.logging.*;
 
-import com.oracle.tools.packager.Log;
-
 public class ScenarioCreator extends Application {
 
 	Printer printer;
