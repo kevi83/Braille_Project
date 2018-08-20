@@ -1609,43 +1609,6 @@ public class ScenarioCreator extends Application {
 		launch(args);
 	}
 
-	
-	// counter for log
-	
-	public int getCount() {
-		
-		int count = 0;
-		try {
-			if (!new File("Count Log.txt").exists()) {
-				return 1;
-			} else {
-				BufferedReader br = new BufferedReader(new FileReader(new File("Count Log.txt")));
-				String s = br.readLine();
-				count = Integer.parseInt(s);
-				br.close();
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return count;
-	}
-		
-    public void putCount(int count) {
-        try {
-            BufferedWriter bw = new BufferedWriter(new FileWriter(new File("Count Log.txt")));
-            bw.write(Integer.toString(count));
-            bw.close();
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
-    }
-    
-    public void incCount() { 
-        int count = getCount();            
-        count++;
-        putCount(count);            
-    }
-
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 
@@ -2068,7 +2031,6 @@ public class ScenarioCreator extends Application {
 				scenarioCreator.show();
 				brailleCellsUsedWindow.close();
 				LOGR.info("New scenario created");
-				this.incCount();
 			} catch (NumberFormatException e3) {
 				errorWindow.show();
 				LOGR.warning("Invalid input for the number of braille cells and answer buttons available");
@@ -2134,8 +2096,10 @@ public class ScenarioCreator extends Application {
 				|| brailleText.getText().length() > Integer.parseInt(brailleCellsField.getText())
 				|| !brailleText.getText().matches("[A-z]+")) {
 			brailleWindow.show();
-		} else if (answerText.getText().isEmpty() || answerButtonsUsedField.getText().isEmpty() || Integer
-				.parseInt(answerButtonsUsedField.getText()) > Integer.parseInt(answerButtonsField.getText())) {
+		} else if (answerText.getText().isEmpty() || answerButtonsUsedField.getText().isEmpty()
+				|| !answerText.getText().matches("[0+9]+") || !(answerButtonsUsedField.getText().matches("[0+9]+"))
+				|| Integer.parseInt(answerButtonsUsedField.getText()) > Integer
+						.parseInt(answerButtonsField.getText())) {
 			buttonsUsedWindow.show();
 		} else if (Integer.parseInt(answerText.getText()) > Integer.parseInt(answerButtonsUsedField.getText())
 				|| Integer.parseInt(answerText.getText()) > Integer.parseInt(answerButtonsField.getText())) {
