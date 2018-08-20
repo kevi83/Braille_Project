@@ -1,13 +1,8 @@
 package enamel;
 
-import java.awt.Desktop;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -51,19 +46,19 @@ public class ScenarioCreator extends Application {
 	ArrayList<Block> blockList = new ArrayList<>();
 	HashMap<String, Block> blockMap = new HashMap<String, Block>();
 	GridPane layout, layout1, layout2, layout3, layout4, layout5, layout6, layout7, layout8, layout9, layout10,
-			layout11, layout12, layout13, layout14, layout15, layout16, layout17, layout18, layout19;
+			layout11, layout12, layout13, layout14, layout15, layout16, layout17, layout18, layout19, layout20;
 	Scene scene, scene1, scene2, scene3, scene4, scene5, scene6, scene7, scene8, scene9, scene10, scene11, scene12,
-			scene13, scene14, scene15, scene16, scene17, scene18, scene19;
+			scene13, scene14, scene15, scene16, scene17, scene18, scene19, scene20;;
 	Button createButton, testButton, sound, saveButton, scenarioMenuButton, clearSectionButton, errorMessageButton,
 			okayStart, warningOkay, warningCancel, soundRecord, soundImport, soundExit, answerOkay, brailleOkay,
 			emptyNameButton, buttonsUsedWindowOkay, emptyStoryOkay, noSectionSavedOkay, saveOkayButton,
 			scenarioSavedOkay, clearSectionButtonOkay, clearSectionButtonCancel, soundErrorButton, soundNameOkay,
 			soundNameCancel, nameSoundErrorButton, newScenarioButton, loadScenarioButton, saveScenarioButton,
-			cancelScenarioButton, testScenarioButton;
+			cancelScenarioButton, testScenarioButton, loadOkay, loadCancel, loadButton;
 	Stage scenarioCreator, errorWindow, brailleCellsUsedWindow, soundWindow, notANumberWindow, brailleWindow,
 			emptyNameWindow, buttonsUsedWindow, emptyStoryWindow, noSectionsSavedWindow, saveWindow,
 			scenarioSavedWindow, warningWindow, playerSelectionWindow, scenarioMenuWindow, soundErrorWindow,
-			clearSectionWarning, nameSoundFileWindow, nameSoundErrorWindow, scenarioWindow;
+			clearSectionWarning, nameSoundFileWindow, nameSoundErrorWindow, scenarioWindow, loadWarning;
 	Text startWindowText, sectionName, answerButtonsUsedText, correct, story, braille, answer, incorrect,
 			scenarioNameText, nameBrailleAnswer, brailleCellsText, answerButtonsText, blank1, errorMessage, warningText,
 			soundMessage, answerIsNumber, brailleEntry, emptyName, buttonsUsedError, emptyStoryText, noSectionsSaved,
@@ -105,24 +100,33 @@ public class ScenarioCreator extends Application {
 		layout1.setHgap(10);
 		layout1.setVgap(10);
 		layout1.setPadding(new Insets(5, 15, 10, 15));
-		scene1 = new Scene(layout1, 550, 200);
+		scene1 = new Scene(layout1, 500, 200);
 
-		startWindowText = new Text("                       Welcome to Scenario Creator");
+		startWindowText = new Text("                   Welcome to Scenario Creator");
 		startWindowText.setFont(Font.font("Arial", FontWeight.BOLD, 20));
 		startWindowText.setFill(Color.WHITE);
-		layout1.add(startWindowText, 0, 2, 3, 1);
+		layout1.add(startWindowText, 0, 2, 6, 1);
+		
 		createButton = new Button("Create New Scenario");
 		createButton.setMinSize(150, 60);
 		createButton.setStyle("-fx-base: #87ceeb;"); // sky blue
 		createButton.setAccessibleRoleDescription("Create New Scenario button");
 		createButton.setAccessibleText("Welcome to Scenario Creator, press enter to start creating a new scenario");
 		layout1.add(createButton, 0, 6);
+		
+		loadButton = new Button("Load Scenario");
+		loadButton.setMinSize(150, 60);
+		loadButton.setStyle("-fx-base: #87ceeb;"); // sky blue
+		loadButton.setAccessibleRoleDescription("LoadScenario button");
+		loadButton.setAccessibleText("Press enter to load a new scenario");
+		layout1.add(loadButton, 1, 6);
+		
 		testButton = new Button("Test Scenario");
 		testButton.setMinSize(150, 60);
-		testButton.setStyle("-fx-base: #87ceeb;"); // sky blue
+		testButton.setStyle("-fx-base: #ffffff;"); // sky blue
 		testButton.setAccessibleRoleDescription("Test Scenario button");
 		testButton.setAccessibleText("To test a previously saved scenario, press enter");
-		layout1.add(testButton, 3, 6);
+		layout1.add(testButton, 2, 6);
 
 		// GUI for scenario Creator
 		scenarioCreator = new Stage();
@@ -669,16 +673,18 @@ public class ScenarioCreator extends Application {
 		});
 
 		/*
-		 * <GUI Load Scenario>
+		 * .GUI Load Scenario>
 		 * 
 		 */
 		loadScenarioButton.setOnAction(e -> {
-
+			loadWarning.show();
+			scenarioWindow.close();
 		});
 
 		loadScenarioButton.setOnKeyPressed(e -> {
 			if (e.getCode() == KeyCode.ENTER) {
-
+				loadWarning.show();
+				scenarioWindow.close();
 			}
 		});
 
@@ -751,7 +757,6 @@ public class ScenarioCreator extends Application {
 
 		testScenarioButton.setOnAction(e -> {
 			runTest(brailleCellsUsedWindow, playerSelectionWindow, visualButton, audioButton);
-			scenarioWindow.close();
 		});
 
 		testScenarioButton.setOnKeyPressed(e -> {
@@ -1539,8 +1544,24 @@ public class ScenarioCreator extends Application {
 				primaryStage.close();
 			}
 		});
+		
+		loadButton.setOnAction(e1 -> {
+
+			// load function here
+			primaryStage.close();
+		});
+		loadButton.setOnKeyPressed(e -> {
+			if (e.getCode() == KeyCode.ENTER) {
+				
+				// load function here
+				primaryStage.close();
+			}
+		});
 	}
 
+
+
+	
 	/*
 	 * ---[ scenario menu button
 	 */
@@ -1556,9 +1577,70 @@ public class ScenarioCreator extends Application {
 		scenarioMenuButton.setOnAction(e1 -> {
 			scenarioWindow.show();
 		});
-		createButton.setOnKeyPressed(e -> {
+		scenarioMenuButton.setOnKeyPressed(e -> {
 			if (e.getCode() == KeyCode.ENTER) {
 				scenarioWindow.show();
+			}
+		});
+	}
+
+	/*
+	 * <GUI warning : load scenario will delete unsaved progress
+	 */
+
+	private void loadWarningWindow() {
+
+		loadWarning = new Stage();
+		layout20 = new GridPane();
+		layout20.setHgap(10);
+		layout20.setVgap(10);
+		layout20.setPadding(new Insets(0, 5, 5, 5));
+		scene20 = new Scene(layout20);
+		loadWarning.setScene(scene20);
+		loadWarning.setTitle("Warning");
+
+		Text loadWarningText = new Text(
+				"                 Selecting okay will clear all text fields, all unsaved progress will be lost");
+		loadWarningText.setFill(Color.WHITE);
+		layout20.add(loadWarningText, 0, 0);
+
+		Button loadScenarioButtonOkay = new Button("Okay");
+		loadScenarioButtonOkay.setStyle("-fx-base: #87ceeb;"); // sky blue
+		loadScenarioButtonOkay.setAccessibleRoleDescription("Okay Button");
+		loadScenarioButtonOkay.setAccessibleText(
+				"All unsaved progress will be lost, press enter to clear all fields and load a scenario");
+		layout20.add(loadScenarioButtonOkay, 0, 1);
+
+		Button loadScenarioButtonCancel = new Button("Cancel");
+		loadScenarioButtonCancel.setAccessibleRoleDescription("Cancel Button");
+		loadScenarioButtonCancel.setStyle("-fx-base: #ffffff;");
+		loadScenarioButtonCancel.setAccessibleText("Press enter to return to previous screen");
+		layout20.add(loadScenarioButtonCancel, 1, 1);
+		layout20.setBackground(
+				new Background(new BackgroundFill(Color.gray(0.3, 0.8), CornerRadii.EMPTY, Insets.EMPTY)));
+
+		// action events
+		loadScenarioButtonOkay.setOnAction(e1 -> {
+			clearSection();
+
+			// load function here
+		});
+
+		loadScenarioButtonOkay.setOnKeyPressed(e2 -> {
+			if (e2.getCode() == KeyCode.ENTER) {
+				clearSection();
+
+				// load function here
+
+			}
+		});
+
+		loadScenarioButtonCancel.setOnAction(e1 -> {
+			loadWarning.close();
+		});
+		loadScenarioButtonCancel.setOnKeyPressed(e2 -> {
+			if (e2.getCode() == KeyCode.ENTER) {
+				loadWarning.close();
 			}
 		});
 	}
@@ -1669,6 +1751,7 @@ public class ScenarioCreator extends Application {
 		noSectionErrorGUI();
 		clearSectionWarningGUI();
 		soundErrorWindowGUI();
+		loadWarningWindow();
 
 		/////////////////////////////////////////////////////////////////////////////////////////
 
@@ -1856,8 +1939,11 @@ public class ScenarioCreator extends Application {
 		// File menu selection : load project
 
 		loadProject.setOnAction(e -> {
-
+			loadWarning.show();
 		});
+
+		loadProject.setAccelerator(
+				new KeyCodeCombination(KeyCode.L, KeyCodeCombination.CONTROL_DOWN, KeyCodeCombination.ALT_DOWN));
 
 		// file menu selection : test project
 
