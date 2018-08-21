@@ -238,7 +238,7 @@ public class Loader2 {
 		return string.substring(0, 2).equals("/~");
 	}
 	
-	//Original testing method
+	/*Original testing method
 	static void print() throws OddSpecialCharacterException, InvalidBlockException, InvalidCellException, IOException, CorruptFileException {
 		Printer printer = new Printer("test.txt", 3, 4);
 		Block tBlock1 = new Block("name", "hi", "yes", "no", 1, "wow", 4);
@@ -250,4 +250,5 @@ public class Loader2 {
 		printer.print();
 		Loader2.load(new File("test.txt"));
 	}
+	*/
 }
