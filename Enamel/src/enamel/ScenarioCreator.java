@@ -1866,7 +1866,7 @@ public class ScenarioCreator extends Application {
 		visualOrAudioPlayerGUI();
 
 		// Scene
-		primaryStage.setTitle("Welcome");
+		primaryStage.setTitle("Starting Window");
 		primaryStage.setScene(scene1);
 		scene1.setFill(Color.TRANSPARENT);
 		primaryStage.show();
