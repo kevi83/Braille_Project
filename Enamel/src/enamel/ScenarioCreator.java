@@ -47,19 +47,19 @@ public class ScenarioCreator extends Application {
 	ArrayList<Block> blockList = new ArrayList<>();
 	HashMap<String, Block> blockMap = new HashMap<String, Block>();
 	GridPane layout, layout1, layout2, layout3, layout4, layout5, layout6, layout7, layout8, layout9, layout10,
-			layout11, layout12, layout13, layout14, layout15, layout16, layout17, layout18, layout19, layout20;
+			layout11, layout12, layout13, layout14, layout15, layout16, layout17, layout18, layout19, layout20, layout21;
 	Scene scene, scene1, scene2, scene3, scene4, scene5, scene6, scene7, scene8, scene9, scene10, scene11, scene12,
-			scene13, scene14, scene15, scene16, scene17, scene18, scene19, scene20;;
+			scene13, scene14, scene15, scene16, scene17, scene18, scene19, scene20, scene21;
 	Button createButton, testButton, sound, saveButton, scenarioMenuButton, clearSectionButton, errorMessageButton,
 			okayStart, warningOkay, warningCancel, soundRecord, soundImport, soundExit, answerOkay, brailleOkay,
 			emptyNameButton, buttonsUsedWindowOkay, emptyStoryOkay, noSectionSavedOkay, saveOkayButton,
 			scenarioSavedOkay, clearSectionButtonOkay, clearSectionButtonCancel, soundErrorButton, soundNameOkay,
 			soundNameCancel, nameSoundErrorButton, newScenarioButton, loadScenarioButton, saveScenarioButton,
-			cancelScenarioButton, testScenarioButton, loadOkay, loadCancel, loadButton;
+			cancelScenarioButton, testScenarioButton, loadOkay, loadCancel, loadButton, soundAddedButton;
 	Stage scenarioCreator, errorWindow, brailleCellsUsedWindow, soundWindow, notANumberWindow, brailleWindow,
 			emptyNameWindow, buttonsUsedWindow, emptyStoryWindow, noSectionsSavedWindow, saveWindow,
 			scenarioSavedWindow, warningWindow, playerSelectionWindow, scenarioMenuWindow, soundErrorWindow,
-			clearSectionWarning, nameSoundFileWindow, nameSoundErrorWindow, scenarioWindow, loadWarning;
+			clearSectionWarning, nameSoundFileWindow, nameSoundErrorWindow, scenarioWindow, loadWarning, soundFileAdded;
 	Text startWindowText, sectionName, answerButtonsUsedText, correct, story, braille, answer, incorrect,
 			scenarioNameText, nameBrailleAnswer, brailleCellsText, answerButtonsText, blank1, errorMessage, warningText,
 			soundMessage, answerIsNumber, brailleEntry, emptyName, buttonsUsedError, emptyStoryText, noSectionsSaved,
@@ -542,6 +542,48 @@ public class ScenarioCreator extends Application {
 				new Background(new BackgroundFill(Color.gray(0.3, 0.8), CornerRadii.EMPTY, Insets.EMPTY)));
 	}
 
+	/*
+	 * <GUI confirm sound file added 
+	 * 
+	 * 
+	 */
+
+	private void soundFileAddedWindow() {
+
+		soundFileAdded = new Stage();
+		layout21 = new GridPane();
+		layout21.setHgap(10);
+		layout21.setVgap(10);
+		layout21.setPadding(new Insets(5, 5, 5, 5));
+
+		scene21 = new Scene(layout21);
+		soundFileAdded.setScene(scene21);
+		soundFileAdded.setTitle("Sound File Added");
+		Text soundAddedOkay = new Text("Sound file added. Type /~sound: name_of_sound_file.wav to include it in your scenario");
+		soundAddedOkay.setFill(Color.WHITE);
+		layout21.add(soundAddedOkay, 0, 0, 2, 2);
+		soundAddedButton = new Button("Okay");
+		soundAddedButton.setStyle("-fx-base: #87ceeb;"); // sky blue
+		soundAddedButton.setAccessibleRoleDescription("Okay button");
+		soundAddedButton.setAccessibleText(
+				"Sound file added. Type /~sound: name_of_sound_file.wav to include it in your scenario, press enter to return to main window");
+		layout21.add(soundAddedButton, 0, 4);
+		layout21.setBackground(
+				new Background(new BackgroundFill(Color.gray(0.3, 0.8), CornerRadii.EMPTY, Insets.EMPTY)));
+		
+		// action events
+		soundAddedButton.setOnAction(e1 -> {
+			soundFileAdded.close();
+		});
+		
+		soundAddedButton.setOnKeyPressed(e2 -> {
+			if (e2.getCode() == KeyCode.ENTER) {
+				soundFileAdded.close();
+			}
+		});
+		
+	}
+	
 	/*
 	 * <GUI Confirm Section Saved>
 	 * 
@@ -1378,8 +1420,8 @@ public class ScenarioCreator extends Application {
 		exitButton.setStyle("-fx-base: #ffffff"); // white
 		exitButton.setAccessibleRoleDescription("Exit sound window button");
 		exitButton.setAccessibleText("Press enter to exit sound window");
-
 		recordLayout.add(exitButton, 3, 1);
+		
 		exitButton.setOnAction(e -> {
 			recordWindow.close();
 		});
@@ -1396,12 +1438,14 @@ public class ScenarioCreator extends Application {
 
 		record.setOnAction(e -> {
 			recorder.record();
+			soundFileAdded.show();
 			LOGR.info("Sound file recorded");
 		});
 
 		record.setOnKeyReleased(e -> {
 			if (e.getCode() == KeyCode.ENTER) {
 				recorder.record();
+				soundFileAdded.show();
 				LOGR.info("Sound file recorded");
 			}
 		});
@@ -1435,7 +1479,8 @@ public class ScenarioCreator extends Application {
 				int length;
 				while ((length = is.read(buffer)) > 0) {
 					os.write(buffer, 0, length);
-					LOGR.info("Sound file imported");
+				LOGR.info("Sound file imported");
+				soundFileAdded.show();
 				}
 			} catch (IOException e1) {
 				LOGR.warning("Failed or interrupted I/O operation");
@@ -1892,6 +1937,7 @@ public class ScenarioCreator extends Application {
 		clearSectionWarningGUI();
 		soundErrorWindowGUI();
 		loadWarningWindow();
+		soundFileAddedWindow();
 
 		/////////////////////////////////////////////////////////////////////////////////////////
 
