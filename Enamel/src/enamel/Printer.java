@@ -347,7 +347,7 @@ public class Printer {
 		
 		FileHandler fh;
 		try {
-			fh = new FileHandler("Log for printer", true);
+			fh = new FileHandler("The log of doom", true);
 			fh.setLevel(Level.FINE); // level set to fine
 			PRINTERLOGR.addHandler(fh);
 		} catch (SecurityException | IOException e) {

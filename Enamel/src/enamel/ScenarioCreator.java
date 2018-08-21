@@ -47,7 +47,8 @@ public class ScenarioCreator extends Application {
 	ArrayList<Block> blockList = new ArrayList<>();
 	HashMap<String, Block> blockMap = new HashMap<String, Block>();
 	GridPane layout, layout1, layout2, layout3, layout4, layout5, layout6, layout7, layout8, layout9, layout10,
-			layout11, layout12, layout13, layout14, layout15, layout16, layout17, layout18, layout19, layout20, layout21;
+			layout11, layout12, layout13, layout14, layout15, layout16, layout17, layout18, layout19, layout20,
+			layout21;
 	Scene scene, scene1, scene2, scene3, scene4, scene5, scene6, scene7, scene8, scene9, scene10, scene11, scene12,
 			scene13, scene14, scene15, scene16, scene17, scene18, scene19, scene20, scene21;
 	Button createButton, testButton, sound, saveButton, scenarioMenuButton, clearSectionButton, errorMessageButton,
@@ -84,11 +85,14 @@ public class ScenarioCreator extends Application {
 	private GridPane recordLayout;
 	private Button exitButton;
 	private boolean recording;
-	private final static Logger LOGR = Logger.getLogger(ScenarioCreator.class.getName());
-
+	private final static Logger LOGR = Logger.getLogger("The Log of Doom");
 	private String scenarioName;
-	private int buttonsAvailable;
-	private int cellsAvailable;
+	private int buttonsAvailable, cellsAvailable;
+	private static int scenarioSavedCounter, sectionSavedCounter, scenarioLoadedCounter, scenarioTestRunCounter,
+			ioExceptionCounter, oddSpecialCharacterExceptionCounter, invalidBlockExceptionCounter,
+			invalidCellExceptionCounter, sectionClearedCounter, soundFileRecordedCounter, soundFileImportedCounter,
+			soundImportFailedCounter, fileNotFoundExceptionCounter, corruptFileExceptionCounter,
+			securityViolationCounter, numberFormatExceptionCounter = 0;
 
 	/*
 	 * ---[ GUI for start Window / primary stage
@@ -543,7 +547,7 @@ public class ScenarioCreator extends Application {
 	}
 
 	/*
-	 * <GUI confirm sound file added 
+	 * <GUI confirm sound file added
 	 * 
 	 * 
 	 */
@@ -559,7 +563,8 @@ public class ScenarioCreator extends Application {
 		scene21 = new Scene(layout21);
 		soundFileAdded.setScene(scene21);
 		soundFileAdded.setTitle("Sound File Added");
-		Text soundAddedOkay = new Text("Sound file added. Type /~sound: name_of_sound_file.wav to include it in your scenario");
+		Text soundAddedOkay = new Text(
+				"Sound file added. Type /~sound: name_of_sound_file.wav to include it in your scenario");
 		soundAddedOkay.setFill(Color.WHITE);
 		layout21.add(soundAddedOkay, 0, 0, 2, 2);
 		soundAddedButton = new Button("Okay");
@@ -570,20 +575,20 @@ public class ScenarioCreator extends Application {
 		layout21.add(soundAddedButton, 0, 4);
 		layout21.setBackground(
 				new Background(new BackgroundFill(Color.gray(0.3, 0.8), CornerRadii.EMPTY, Insets.EMPTY)));
-		
+
 		// action events
 		soundAddedButton.setOnAction(e1 -> {
 			soundFileAdded.close();
 		});
-		
+
 		soundAddedButton.setOnKeyPressed(e2 -> {
 			if (e2.getCode() == KeyCode.ENTER) {
 				soundFileAdded.close();
 			}
 		});
-		
+
 	}
-	
+
 	/*
 	 * <GUI Confirm Section Saved>
 	 * 
@@ -651,12 +656,18 @@ public class ScenarioCreator extends Application {
 		// action events
 		scenarioSavedOkay.setOnAction(e1 -> {
 			scenarioSavedWindow.close();
-			LOGR.info("Scenario Saved");
+
+			scenarioSavedCounter++;
+			LOGR.log(Level.INFO, "Scenario Saved. Feature accessed: " + scenarioSavedCounter + " time(s)",
+					scenarioSavedCounter);
 		});
 		scenarioSavedOkay.setOnKeyPressed(e2 -> {
 			if (e2.getCode() == KeyCode.ENTER) {
 				scenarioSavedWindow.close();
-				LOGR.info("Scenario Saved");
+
+				scenarioSavedCounter++;
+				LOGR.log(Level.INFO, "Scenario Saved. Feature accessed: " + scenarioSavedCounter + " time(s)",
+						scenarioSavedCounter);
 			}
 		});
 	}
@@ -750,16 +761,24 @@ public class ScenarioCreator extends Application {
 					printer.addBlockList(blockList);
 					scenarioSavedWindow.show();
 					printer.print();
-					LOGR.info("Project Saved");
 				} catch (IOException e3) {
-					LOGR.warning("Failed or interrupted I/O operations");
+					ioExceptionCounter++;
+					LOGR.log(Level.WARNING, "Failed or interrupted I/O operations. Exception occurred "
+							+ ioExceptionCounter + " time(s)", ioExceptionCounter);
 				} catch (OddSpecialCharacterException e3) {
-					LOGR.warning("Odd special character exception");
+					oddSpecialCharacterExceptionCounter++;
+					LOGR.log(
+							Level.WARNING, "Odd special character exception. Exception occurred "
+									+ oddSpecialCharacterExceptionCounter + " time(s)",
+							oddSpecialCharacterExceptionCounter);
 				} catch (InvalidBlockException e3) {
-					LOGR.warning("Invalid input passed to Printer");
+					invalidBlockExceptionCounter++;
+					LOGR.log(Level.WARNING, "Invalid input passed to Printer. Exception occurred "
+							+ invalidBlockExceptionCounter + " time(s)", invalidBlockExceptionCounter);
 				} catch (InvalidCellException e1) {
-					// TODO Auto-generated catch block
-					LOGR.warning("Invalid input passed to Braille Interpreter");
+					invalidCellExceptionCounter++;
+					LOGR.log(Level.WARNING, "Invalid input passed to Braille Interpreter. Exception occurred "
+							+ invalidCellExceptionCounter + " time(s)", invalidCellExceptionCounter);
 				}
 			}
 			scenarioWindow.close();
@@ -777,15 +796,24 @@ public class ScenarioCreator extends Application {
 						printer.addBlockList(blockList);
 						scenarioSavedWindow.show();
 						printer.print();
-						LOGR.info("Project Saved");
 					} catch (IOException e3) {
-						LOGR.warning("Failed or interrupted I/O operations");
+						ioExceptionCounter++;
+						LOGR.log(Level.WARNING, "Failed or interrupted I/O operations. Exception occurred "
+								+ ioExceptionCounter + " time(s)", ioExceptionCounter);
 					} catch (OddSpecialCharacterException e3) {
-						LOGR.warning("Odd special character exception");
+						oddSpecialCharacterExceptionCounter++;
+						LOGR.log(Level.WARNING,
+								"Odd special character exception. Exception occurred "
+										+ oddSpecialCharacterExceptionCounter + " time(s)",
+								oddSpecialCharacterExceptionCounter);
 					} catch (InvalidBlockException e3) {
-						LOGR.warning("Invalid input passed to Printer");
+						invalidBlockExceptionCounter++;
+						LOGR.log(Level.WARNING, "Invalid input passed to Printer. Exception occurred "
+								+ invalidBlockExceptionCounter + " time(s)", invalidBlockExceptionCounter);
 					} catch (InvalidCellException e1) {
-						LOGR.warning("Invalid input passed to Braille Interpreter");
+						invalidCellExceptionCounter++;
+						LOGR.log(Level.WARNING, "Invalid input passed to Braille Interpreter. Exception occurred "
+								+ invalidCellExceptionCounter + " time(s)", invalidCellExceptionCounter);
 					}
 				}
 			}
@@ -860,13 +888,17 @@ public class ScenarioCreator extends Application {
 		// action events
 		clearSectionButtonOkay.setOnAction(e1 -> {
 			clearSection();
-			LOGR.info("Section cleared / new section created");
+			sectionClearedCounter++;
+			LOGR.log(Level.INFO, "Section Cleared. Feature accessed: " + sectionClearedCounter + " time(s)",
+					sectionClearedCounter);
 		});
 
 		clearSectionButtonOkay.setOnKeyPressed(e2 -> {
 			if (e2.getCode() == KeyCode.ENTER) {
 				clearSection();
-				LOGR.info("Section cleared / new section created");
+				sectionClearedCounter++;
+				LOGR.log(Level.INFO, "Section Cleared. Feature accessed: " + sectionClearedCounter + " time(s)",
+						sectionClearedCounter);
 			}
 		});
 
@@ -1421,7 +1453,7 @@ public class ScenarioCreator extends Application {
 		exitButton.setAccessibleRoleDescription("Exit sound window button");
 		exitButton.setAccessibleText("Press enter to exit sound window");
 		recordLayout.add(exitButton, 3, 1);
-		
+
 		exitButton.setOnAction(e -> {
 			recordWindow.close();
 		});
@@ -1439,14 +1471,18 @@ public class ScenarioCreator extends Application {
 		record.setOnAction(e -> {
 			recorder.record();
 			soundFileAdded.show();
-			LOGR.info("Sound file recorded");
+			soundFileRecordedCounter++;
+			LOGR.log(Level.INFO, "Sound file recorded. Feature accessed: " + soundFileRecordedCounter + " time(s)",
+					soundFileRecordedCounter);
 		});
 
 		record.setOnKeyReleased(e -> {
 			if (e.getCode() == KeyCode.ENTER) {
 				recorder.record();
 				soundFileAdded.show();
-				LOGR.info("Sound file recorded");
+				soundFileRecordedCounter++;
+				LOGR.log(Level.INFO, "Sound file recorded. Feature accessed: " + soundFileRecordedCounter + " time(s)",
+						soundFileRecordedCounter);
 			}
 		});
 	}
@@ -1479,22 +1515,33 @@ public class ScenarioCreator extends Application {
 				int length;
 				while ((length = is.read(buffer)) > 0) {
 					os.write(buffer, 0, length);
-				LOGR.info("Sound file imported");
-				soundFileAdded.show();
+					soundFileImportedCounter++;
+					LOGR.log(Level.INFO,
+							"Sound file imported. Feature accessed: " + soundFileImportedCounter + " time(s)",
+							soundFileImportedCounter);
+					soundFileAdded.show();
 				}
 			} catch (IOException e1) {
-				LOGR.warning("Failed or interrupted I/O operation");
+				ioExceptionCounter++;
+				LOGR.log(Level.WARNING,
+						"Failed or interrupted I/O operations. Exception occurred " + ioExceptionCounter + " time(s)",
+						ioExceptionCounter);
 			} finally {
 				try {
 					is.close();
 					os.close();
 				} catch (IOException e1) {
-					LOGR.warning("Failed or interrupted I/O operation");
+					ioExceptionCounter++;
+					LOGR.log(Level.WARNING, "Failed or interrupted I/O operations. Exception occurred "
+							+ ioExceptionCounter + " time(s)", ioExceptionCounter);
 				}
 			}
 		} else {
 			soundErrorWindow.show();
-			LOGR.warning("Sound import failed, file was not of the format .wav");
+			soundImportFailedCounter++;
+			LOGR.log(Level.WARNING,
+					"Failed or interrupted I/O operations. Exception occurred " + soundImportFailedCounter + " time(s)",
+					soundImportFailedCounter);
 		}
 
 	}
@@ -1622,14 +1669,18 @@ public class ScenarioCreator extends Application {
 				scenarioCreator.show();
 
 			} catch (FileNotFoundException e2) {
-				LOGR.warning(e2.getMessage());
-				e2.printStackTrace();
+				fileNotFoundExceptionCounter++;
+				LOGR.log(Level.WARNING,
+						"File not found. Exception occurred " + fileNotFoundExceptionCounter + " time(s)",
+						fileNotFoundExceptionCounter);
 			} catch (CorruptFileException e2) {
-				LOGR.warning(e2.getMessage());
-				e2.printStackTrace();
+				corruptFileExceptionCounter++;
+				LOGR.log(Level.WARNING, "Corrupt file. Exception occurred " + corruptFileExceptionCounter + " time(s)",
+						corruptFileExceptionCounter);
 			} catch (InvalidBlockException e2) {
-				LOGR.warning(e2.getMessage());
-				e2.printStackTrace();
+				invalidBlockExceptionCounter++;
+				LOGR.log(Level.WARNING, "Invalid input passed to Printer. Exception occurred "
+						+ invalidBlockExceptionCounter + " time(s)", invalidBlockExceptionCounter);
 			}
 		});
 
@@ -1660,16 +1711,24 @@ public class ScenarioCreator extends Application {
 					}
 
 					scenarioCreator.show();
+					scenarioLoadedCounter++;
+					LOGR.log(Level.INFO, "Scenario loaded. Function accessed " + scenarioLoadedCounter + " time(s)",
+							scenarioLoadedCounter);
 
 				} catch (FileNotFoundException e2) {
-					LOGR.warning(e2.getMessage());
-					e2.printStackTrace();
+					fileNotFoundExceptionCounter++;
+					LOGR.log(Level.WARNING,
+							"File not found. Exception occurred " + fileNotFoundExceptionCounter + " time(s)",
+							fileNotFoundExceptionCounter);
 				} catch (CorruptFileException e2) {
-					LOGR.warning(e2.getMessage());
-					e2.printStackTrace();
+					corruptFileExceptionCounter++;
+					LOGR.log(Level.WARNING,
+							"Corrupt file. Exception occurred " + corruptFileExceptionCounter + " time(s)",
+							corruptFileExceptionCounter);
 				} catch (InvalidBlockException e2) {
-					LOGR.warning(e2.getMessage());
-					e2.printStackTrace();
+					invalidBlockExceptionCounter++;
+					LOGR.log(Level.WARNING, "Invalid input passed to Printer. Exception occurred "
+							+ invalidBlockExceptionCounter + " time(s)", invalidBlockExceptionCounter);
 				}
 			}
 		});
@@ -1765,14 +1824,18 @@ public class ScenarioCreator extends Application {
 				scenarioCreator.show();
 
 			} catch (FileNotFoundException e2) {
-				LOGR.warning(e2.getMessage());
-				e2.printStackTrace();
+				fileNotFoundExceptionCounter++;
+				LOGR.log(Level.WARNING,
+						"File not found. Exception occurred " + fileNotFoundExceptionCounter + " time(s)",
+						fileNotFoundExceptionCounter);
 			} catch (CorruptFileException e2) {
-				LOGR.warning(e2.getMessage());
-				e2.printStackTrace();
+				corruptFileExceptionCounter++;
+				LOGR.log(Level.WARNING, "Corrupt file. Exception occurred " + corruptFileExceptionCounter + " time(s)",
+						corruptFileExceptionCounter);
 			} catch (InvalidBlockException e2) {
-				LOGR.warning(e2.getMessage());
-				e2.printStackTrace();
+				invalidBlockExceptionCounter++;
+				LOGR.log(Level.WARNING, "Invalid input passed to Printer. Exception occurred "
+						+ invalidBlockExceptionCounter + " time(s)", invalidBlockExceptionCounter);
 			}
 
 		});
@@ -1808,14 +1871,19 @@ public class ScenarioCreator extends Application {
 					scenarioWindow.show();
 
 				} catch (FileNotFoundException e) {
-					LOGR.warning(e.getMessage());
-					e.printStackTrace();
+					fileNotFoundExceptionCounter++;
+					LOGR.log(Level.WARNING,
+							"File not found. Exception occurred " + fileNotFoundExceptionCounter + " time(s)",
+							fileNotFoundExceptionCounter);
 				} catch (CorruptFileException e) {
-					LOGR.warning(e.getMessage());
-					e.printStackTrace();
+					corruptFileExceptionCounter++;
+					LOGR.log(Level.WARNING,
+							"Corrupt file. Exception occurred " + corruptFileExceptionCounter + " time(s)",
+							corruptFileExceptionCounter);
 				} catch (InvalidBlockException e) {
-					LOGR.warning(e.getMessage());
-					e.printStackTrace();
+					invalidBlockExceptionCounter++;
+					LOGR.log(Level.WARNING, "Invalid input passed to Printer. Exception occurred "
+							+ invalidBlockExceptionCounter + " time(s)", invalidBlockExceptionCounter);
 				}
 			}
 		});
@@ -1867,6 +1935,13 @@ public class ScenarioCreator extends Application {
 			fh.setLevel(Level.FINE);
 			LOGR.addHandler(fh);
 		} catch (SecurityException | IOException e) {
+			ioExceptionCounter++;
+			LOGR.log(Level.WARNING,
+					"Failed or interrupted I/O operations. Exception occurred " + ioExceptionCounter + " time(s)",
+					ioExceptionCounter);
+			securityViolationCounter++;
+			LOGR.log(Level.SEVERE, "Security Violation! Exception occurred " + securityViolationCounter + " time(s)",
+					securityViolationCounter);
 			LOGR.severe("Security Violation");
 		}
 
@@ -2102,16 +2177,24 @@ public class ScenarioCreator extends Application {
 					printer.addBlockList(blockList);
 					scenarioSavedWindow.show();
 					printer.print();
-					LOGR.info("Project Saved");
 				} catch (IOException e3) {
-					LOGR.warning("Failed or interrupted I/O operations");
+					ioExceptionCounter++;
+					LOGR.log(Level.WARNING, "Failed or interrupted I/O operations. Exception occurred "
+							+ ioExceptionCounter + " time(s)", ioExceptionCounter);
 				} catch (OddSpecialCharacterException e3) {
-					LOGR.warning("Odd special character exception");
+					oddSpecialCharacterExceptionCounter++;
+					LOGR.log(
+							Level.WARNING, "Odd special character exception. Exception occurred "
+									+ oddSpecialCharacterExceptionCounter + " time(s)",
+							oddSpecialCharacterExceptionCounter);
 				} catch (InvalidBlockException e3) {
-					LOGR.warning("Invalid input passed to Printer");
+					invalidBlockExceptionCounter++;
+					LOGR.log(Level.WARNING, "Invalid input passed to Printer. Exception occurred "
+							+ invalidBlockExceptionCounter + " time(s)", invalidBlockExceptionCounter);
 				} catch (InvalidCellException e4) {
-					// TODO Auto-generated catch block
-					LOGR.warning("Invalid input passed to Braille Interpreter");
+					invalidCellExceptionCounter++;
+					LOGR.log(Level.WARNING, "Invalid input passed to Braille Interpreter. Exception occurred "
+							+ invalidCellExceptionCounter + " time(s)", invalidCellExceptionCounter);
 				}
 			}
 		});
@@ -2133,6 +2216,7 @@ public class ScenarioCreator extends Application {
 
 		testProject.setOnAction(e -> {
 			runTest(brailleCellsUsedWindow, playerSelectionWindow, visualButton, audioButton);
+
 		});
 
 		testProject.setAccelerator(
@@ -2149,7 +2233,6 @@ public class ScenarioCreator extends Application {
 			saveSection(nameSectionField, answerButtonsUsedField, storyText, brailleText, answerText, correctText,
 					incorrectText, comboBoxList, comboBox, brailleCellsField, answerButtonsField, notANumberWindow,
 					brailleWindow, emptyNameWindow, buttonsUsedWindow, emptyStoryWindow, saveWindow);
-			LOGR.info("Section saved");
 		});
 
 		saveSection.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN));
@@ -2266,6 +2349,9 @@ public class ScenarioCreator extends Application {
 
 			ScenarioParser s = new ScenarioParser(true);
 			s.setScenarioFile(file.getAbsolutePath());
+			scenarioTestRunCounter++;
+			LOGR.log(Level.INFO, "Scenario test initiated. Feature accessed " + scenarioTestRunCounter + " time(s)",
+					scenarioTestRunCounter);
 
 		});
 
@@ -2276,6 +2362,9 @@ public class ScenarioCreator extends Application {
 			File file = fileChooser.showOpenDialog(primaryStage);
 			ScenarioParser s = new ScenarioParser(false);
 			s.setScenarioFile(file.getAbsolutePath());
+			scenarioTestRunCounter++;
+			LOGR.log(Level.INFO, "Scenario test initiated. Feature accessed " + scenarioTestRunCounter + " time(s)",
+					scenarioTestRunCounter);
 		});
 	}
 
@@ -2288,6 +2377,8 @@ public class ScenarioCreator extends Application {
 
 	private void nameNewScenario(Stage scenarioCreator, Stage errorWindow, Stage brailleCellsUsedWindow,
 			TextField scenarioNameField, TextField brailleCellsField, TextField answerButtonsField) {
+
+		int newScenarioCounter = 0;
 
 		if (scenarioNameField.getText().isEmpty() || brailleCellsField.getText().isEmpty()
 				|| answerButtonsField.getText().isEmpty() || !brailleCellsField.getText().matches("[0-9]+")
@@ -2304,10 +2395,15 @@ public class ScenarioCreator extends Application {
 				cellsAvailable = Integer.parseInt(brailleCellsField.getText());
 
 				brailleCellsUsedWindow.close();
-				LOGR.info("New scenario created");
+				newScenarioCounter++;
+				LOGR.log(Level.INFO, "New scenario created. Feature accessed: " + newScenarioCounter + " time(s)",
+						newScenarioCounter);
 			} catch (NumberFormatException e3) {
 				errorWindow.show();
-				LOGR.warning("Invalid input for the number of braille cells and answer buttons available");
+				numberFormatExceptionCounter++;
+				LOGR.log(Level.WARNING,
+						"Number format error. Exception occurred " + numberFormatExceptionCounter + " time(s)",
+						numberFormatExceptionCounter);
 			}
 		}
 	}
@@ -2374,8 +2470,8 @@ public class ScenarioCreator extends Application {
 				|| !answerText.getText().matches("[0-9]+") || !answerButtonsUsedField.getText().matches("[0-9]+")) {
 			buttonsUsedWindow.show();
 		} else if (Integer.parseInt(answerText.getText()) > Integer.parseInt(answerButtonsUsedField.getText())
-				|| Integer.parseInt(answerText.getText()) > Integer.parseInt(answerButtonsField.getText())
-				|| Integer.parseInt(answerButtonsUsedField.getText()) > Integer.parseInt(answerButtonsField.getText()))  {
+				|| Integer.parseInt(answerText.getText()) > Integer.parseInt(answerButtonsField.getText()) || Integer
+						.parseInt(answerButtonsUsedField.getText()) > Integer.parseInt(answerButtonsField.getText())) {
 			notANumberWindow.show();
 		} else if (storyText.getText().length() < 14) {
 			emptyStoryWindow.show();
@@ -2387,7 +2483,9 @@ public class ScenarioCreator extends Application {
 				fillFields(nameSectionField, storyText, brailleText, answerText, correctText, incorrectText,
 						answerButtonsField);
 				saveWindow.show();
-				LOGR.info("Section Saved");
+				sectionSavedCounter++;
+				LOGR.log(Level.INFO, "Section Saved. Function accessed: " + sectionSavedCounter + " time(s)",
+						sectionSavedCounter);
 			} else {
 				// save text to block
 				Block blockText;
@@ -2404,9 +2502,15 @@ public class ScenarioCreator extends Application {
 					comboBox.setItems(comboBoxList);
 
 				} catch (NumberFormatException e2) {
-					LOGR.warning("Invalid input for the answer text field");
+					errorWindow.show();
+					numberFormatExceptionCounter++;
+					LOGR.log(Level.WARNING,
+							"Number format error. Exception occurred " + numberFormatExceptionCounter + " time(s)",
+							numberFormatExceptionCounter);
 				} catch (InvalidBlockException e2) {
-					LOGR.warning("Invalid input passed to Block");
+					invalidBlockExceptionCounter++;
+					LOGR.log(Level.WARNING, "Invalid input passed to Printer. Exception occurred "
+							+ invalidBlockExceptionCounter + " time(s)", invalidBlockExceptionCounter);
 				}
 			}
 

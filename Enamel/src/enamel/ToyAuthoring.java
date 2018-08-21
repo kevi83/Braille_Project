@@ -7,6 +7,6 @@ public class ToyAuthoring {
     public static void main(String[] args) { 	
 
     	    ScenarioParser s = new ScenarioParser(false);
-    	    s.setScenarioFile("newNewTest.txt");
+    	    s.setScenarioFile("brailleTest.txt");
     }
 }
