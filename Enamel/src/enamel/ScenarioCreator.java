@@ -85,7 +85,7 @@ public class ScenarioCreator extends Application {
 	private Button exitButton;
 	private boolean recording;
 	private final static Logger LOGR = Logger.getLogger(ScenarioCreator.class.getName());
-	
+
 	private String scenarioName;
 	private int buttonsAvailable;
 	private int cellsAvailable;
@@ -111,21 +111,21 @@ public class ScenarioCreator extends Application {
 		startWindowText.setFont(Font.font("Arial", FontWeight.BOLD, 20));
 		startWindowText.setFill(Color.WHITE);
 		layout1.add(startWindowText, 0, 2, 6, 1);
-		
+
 		createButton = new Button("Create New Scenario");
 		createButton.setMinSize(150, 60);
 		createButton.setStyle("-fx-base: #87ceeb;"); // sky blue
 		createButton.setAccessibleRoleDescription("Create New Scenario button");
 		createButton.setAccessibleText("Welcome to Scenario Creator, press enter to start creating a new scenario");
 		layout1.add(createButton, 0, 6);
-		
+
 		loadButton = new Button("Load Scenario");
 		loadButton.setMinSize(150, 60);
 		loadButton.setStyle("-fx-base: #87ceeb;"); // sky blue
 		loadButton.setAccessibleRoleDescription("LoadScenario button");
 		loadButton.setAccessibleText("Press enter to load a new scenario");
 		layout1.add(loadButton, 1, 6);
-		
+
 		testButton = new Button("Test Scenario");
 		testButton.setMinSize(150, 60);
 		testButton.setStyle("-fx-base: #ffffff;"); // sky blue
@@ -1016,14 +1016,15 @@ public class ScenarioCreator extends Application {
 		scene4 = new Scene(layout4);
 		brailleWindow.setScene(scene4);
 		brailleWindow.setTitle("Error");
-		brailleEntry = new Text("The braille field can not be empty and can only contain a letter");
+		brailleEntry = new Text(
+				"The braille field can not be empty or contain a word longer than the number of braille cells available");
 		brailleEntry.setFill(Color.WHITE);
 		layout4.add(brailleEntry, 0, 0, 2, 1);
 		brailleOkay = new Button("Okay");
 		brailleOkay.setStyle("-fx-base: #87ceeb;"); // sky blue
 		brailleOkay.setAccessibleRoleDescription("Okay button");
 		brailleOkay.setAccessibleText(
-				"Section can not be saved. The braille field can not be empty and can only contain a letter, press enter to return to main window");
+				"Section can not be saved. The braille field can not be empty or contain a word longer than the number of braille cells available, press enter to return to main window");
 		layout4.add(brailleOkay, 2, 1);
 		layout4.setBackground(
 				new Background(new BackgroundFill(Color.gray(0.3, 0.8), CornerRadii.EMPTY, Insets.EMPTY)));
@@ -1545,36 +1546,36 @@ public class ScenarioCreator extends Application {
 				primaryStage.close();
 			}
 		});
-		
+
 		loadButton.setOnAction(e1 -> {
 
 			// load function here
-			
+
 			FileChooser fileChooser = new FileChooser();
 			fileChooser.setTitle("Open Scenario File");
 			File file = fileChooser.showOpenDialog(primaryStage);
 			primaryStage.close();
-			
+
 			try {
-				
+
 				blockList = Loader2.load(file);
-				
+
 				scenarioName = file.getName();
-				
+
 				Block fakeBlock = blockList.get(0);
 				blockList.remove(0);
-				
+
 				buttonsAvailable = fakeBlock.buttonsUsed;
 				cellsAvailable = fakeBlock.answer;
-				
-				for(Block i : blockList) {
+
+				for (Block i : blockList) {
 					blockMap.put(i.name, i);
 					comboBoxList.add(i.name);
 					comboBox.setItems(comboBoxList);
 				}
-				
+
 				scenarioCreator.show();
-				
+
 			} catch (FileNotFoundException e2) {
 				LOGR.warning(e2.getMessage());
 				e2.printStackTrace();
@@ -1586,35 +1587,35 @@ public class ScenarioCreator extends Application {
 				e2.printStackTrace();
 			}
 		});
-		
+
 		loadButton.setOnKeyPressed(e -> {
 			if (e.getCode() == KeyCode.ENTER) {
-				
+
 				// load function here
 				FileChooser fileChooser = new FileChooser();
 				fileChooser.setTitle("Open Scenario File");
 				File file = fileChooser.showOpenDialog(primaryStage);
 				primaryStage.close();
 				try {
-					
+
 					blockList = Loader2.load(file);
-					
+
 					scenarioName = file.getName();
-					
+
 					Block fakeBlock = blockList.get(0);
 					blockList.remove(0);
-					
+
 					buttonsAvailable = fakeBlock.buttonsUsed;
 					cellsAvailable = fakeBlock.answer;
-					
-					for(Block i : blockList) {
+
+					for (Block i : blockList) {
 						blockMap.put(i.name, i);
 						comboBoxList.add(i.name);
 						comboBox.setItems(comboBoxList);
 					}
-					
+
 					scenarioCreator.show();
-					
+
 				} catch (FileNotFoundException e2) {
 					LOGR.warning(e2.getMessage());
 					e2.printStackTrace();
@@ -1628,7 +1629,7 @@ public class ScenarioCreator extends Application {
 			}
 		});
 	}
-	
+
 	/*
 	 * ---[ scenario menu button
 	 */
@@ -1691,33 +1692,33 @@ public class ScenarioCreator extends Application {
 			clearSection();
 
 			// load function here
-			
+
 			FileChooser fileChooser = new FileChooser();
 			fileChooser.setTitle("Open Scenario File");
 			File file = fileChooser.showOpenDialog(loadWarning);
 			loadWarning.close();
 			scenarioCreator.close();
-			
+
 			try {
-				
+
 				blockList = Loader2.load(file);
-				
+
 				scenarioName = file.getName();
-				
+
 				Block fakeBlock = blockList.get(0);
 				blockList.remove(0);
-				
+
 				buttonsAvailable = fakeBlock.buttonsUsed;
 				cellsAvailable = fakeBlock.answer;
-				
-				for(Block i : blockList) {
+
+				for (Block i : blockList) {
 					blockMap.put(i.name, i);
 					comboBoxList.add(i.name);
 					comboBox.setItems(comboBoxList);
 				}
-				
+
 				scenarioCreator.show();
-				
+
 			} catch (FileNotFoundException e2) {
 				LOGR.warning(e2.getMessage());
 				e2.printStackTrace();
@@ -1728,7 +1729,7 @@ public class ScenarioCreator extends Application {
 				LOGR.warning(e2.getMessage());
 				e2.printStackTrace();
 			}
-			
+
 		});
 
 		loadScenarioButtonOkay.setOnKeyPressed(e2 -> {
@@ -1741,26 +1742,26 @@ public class ScenarioCreator extends Application {
 				File file = fileChooser.showOpenDialog(loadWarning);
 				loadWarning.close();
 				scenarioWindow.close();
-				
+
 				try {
-					
+
 					blockList = Loader2.load(file);
-					
+
 					scenarioName = file.getName();
-					
+
 					Block fakeBlock = blockList.get(0);
 					blockList.remove(0);
-					
+
 					buttonsAvailable = fakeBlock.buttonsUsed;
 					cellsAvailable = fakeBlock.answer;
-					
-					for(Block i : blockList) {
+
+					for (Block i : blockList) {
 						blockMap.put(i.name, i);
 						comboBoxList.add(i.name);
 						comboBox.setItems(comboBoxList);
 					}
-					scenarioWindow.show();			
-					
+					scenarioWindow.show();
+
 				} catch (FileNotFoundException e) {
 					LOGR.warning(e.getMessage());
 					e.printStackTrace();
@@ -2250,12 +2251,12 @@ public class ScenarioCreator extends Application {
 		} else {
 			try {
 				scenarioCreator.show();
-				
-				//Loader Variables Assignment
+
+				// Loader Variables Assignment
 				scenarioName = scenarioNameField.getText() + ".txt";
 				buttonsAvailable = Integer.parseInt(answerButtonsField.getText());
 				cellsAvailable = Integer.parseInt(brailleCellsField.getText());
-				
+
 				brailleCellsUsedWindow.close();
 				LOGR.info("New scenario created");
 			} catch (NumberFormatException e3) {
@@ -2324,12 +2325,11 @@ public class ScenarioCreator extends Application {
 				|| !brailleText.getText().matches("[A-z]+")) {
 			brailleWindow.show();
 		} else if (answerText.getText().isEmpty() || answerButtonsUsedField.getText().isEmpty()
-				|| !answerText.getText().matches("[0+9]+") || !(answerButtonsUsedField.getText().matches("[0+9]+"))
-				|| Integer.parseInt(answerButtonsUsedField.getText()) > Integer
-						.parseInt(answerButtonsField.getText())) {
+				|| !answerText.getText().matches("[0-9]+") || !answerButtonsUsedField.getText().matches("[0-9]+")) {
 			buttonsUsedWindow.show();
 		} else if (Integer.parseInt(answerText.getText()) > Integer.parseInt(answerButtonsUsedField.getText())
-				|| Integer.parseInt(answerText.getText()) > Integer.parseInt(answerButtonsField.getText())) {
+				|| Integer.parseInt(answerText.getText()) > Integer.parseInt(answerButtonsField.getText())
+				|| Integer.parseInt(answerButtonsUsedField.getText()) > Integer.parseInt(answerButtonsField.getText()))  {
 			notANumberWindow.show();
 		} else if (storyText.getText().length() < 14) {
 			emptyStoryWindow.show();
