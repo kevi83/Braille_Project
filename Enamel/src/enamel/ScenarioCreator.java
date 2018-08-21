@@ -2154,6 +2154,7 @@ public class ScenarioCreator extends Application {
 				clearSection();
 			}
 		});
+		
 
 		warningCancel.setOnAction(e2 -> {
 			warningWindow.close();
