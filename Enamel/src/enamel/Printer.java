@@ -17,6 +17,9 @@ public class Printer {
 	private ArrayList<Block> blocks;
 	private int buttons;
 	private BrailleInterpreter interpreter = new BrailleInterpreter();
+	private static int ioExceptionCounter, oddSpecialCharacterExceptionCounter, invalidBlockExceptionCounter,
+			invalidCellExceptionCounter, securityExceptionCounter, blockAddedCounter, blockAddedToBlockListCounter,
+			clearPinsCounter, setPinsCounter, addResponseCounter, displayStringCounter;
 
 	/**
 	 * Full Constructor
@@ -34,15 +37,31 @@ public class Printer {
 	 */
 	public Printer(String fileName, int cells, int buttonsAvailable)
 			throws IOException, OddSpecialCharacterException, InvalidBlockException {
-		file = new File(fileName);
-		fileWriter = new FileWriter(fileName);
-		printWriter = new PrintWriter(fileWriter);
-		if (!file.exists())
-			file.createNewFile();
-		initialBlock(cells, buttonsAvailable);
-		this.cellsAmt = cells;
-		this.buttons = buttonsAvailable;
-		PRINTERLOGR.info("New scenario .txt file created");
+		try {
+			file = new File(fileName);
+			fileWriter = new FileWriter(fileName);
+			printWriter = new PrintWriter(fileWriter);
+			if (!file.exists())
+				file.createNewFile();
+			initialBlock(cells, buttonsAvailable);
+			this.cellsAmt = cells;
+			this.buttons = buttonsAvailable;
+		} catch (IOException e) {
+			ioExceptionCounter++;
+			PRINTERLOGR.log(Level.WARNING,
+					"Failed or interrupted I/O operations. Exception occurred " + ioExceptionCounter + " time(s)",
+					ioExceptionCounter);
+		} catch (OddSpecialCharacterException e) {
+			oddSpecialCharacterExceptionCounter++;
+			PRINTERLOGR.log(Level.WARNING, "Odd special character exception. Exception occurred "
+					+ oddSpecialCharacterExceptionCounter + " time(s)", oddSpecialCharacterExceptionCounter);
+		} catch (InvalidBlockException e) {
+			invalidBlockExceptionCounter++;
+			PRINTERLOGR.log(Level.WARNING,
+					"Invalid input passed to Printer. Exception occurred " + invalidBlockExceptionCounter + " time(s)",
+					invalidBlockExceptionCounter);
+		}
+
 	}
 
 	/**
@@ -56,8 +75,8 @@ public class Printer {
 	 * @throws InvalidBlockException
 	 */
 	public Printer(String fileName) throws IOException, OddSpecialCharacterException, InvalidBlockException {
+
 		this(fileName, 1, 4);
-		PRINTERLOGR.info("New simplified scenario .txt file created");
 	}
 
 	/**
@@ -70,40 +89,76 @@ public class Printer {
 	 * @throws InvalidBlockException
 	 */
 	public void addBlock(Block block) throws OddSpecialCharacterException, InvalidBlockException, InvalidCellException {
-		boolean repeat = (block.buttonsUsed < this.buttons);
-		addSectionName(block.name);
-		clearPins();
-		if (block.cells.length() > 1)
-			displayString(block.cells);
-		else
-			setPins(block.cells.toCharArray()[0]);
-		if (repeat)
-			addRepeat();
-		addSpoken(block.story);
-		if (repeat) {
-			endRepeat();
-			repeatButton(this.buttons - 1);
+
+		try {
+			boolean repeat = (block.buttonsUsed < this.buttons);
+			addSectionName(block.name);
+			clearPins();
+			if (block.cells.length() > 1)
+				displayString(block.cells);
+			else
+				setPins(block.cells.toCharArray()[0]);
+			if (repeat)
+				addRepeat();
+			addSpoken(block.story);
+			if (repeat) {
+				endRepeat();
+				repeatButton(this.buttons - 1);
+			}
+			addInputBlock(block.buttonsUsed);
+			for (int i = 1; i <= block.buttonsUsed; i++) {
+				addResponse(block, (block.answer == i) ? block.correctResponse : block.wrongResponse, i,
+						(block.answer == i));
+			}
+			newLine();
+			blockAddedCounter++;
+			PRINTERLOGR.log(Level.INFO, "Block Added. Feature accessed " + blockAddedCounter + " time(s)",
+					blockAddedCounter);
+			PRINTERLOGR.info("Block added to text file");
+		} catch (OddSpecialCharacterException e) {
+			oddSpecialCharacterExceptionCounter++;
+			PRINTERLOGR.log(Level.WARNING, "Odd special character exception. Exception occurred "
+					+ oddSpecialCharacterExceptionCounter + " time(s)", oddSpecialCharacterExceptionCounter);
+		} catch (InvalidBlockException e) {
+			invalidBlockExceptionCounter++;
+			PRINTERLOGR.log(Level.WARNING,
+					"Invalid input passed to Printer. Exception occurred " + invalidBlockExceptionCounter + " time(s)",
+					invalidBlockExceptionCounter);
+		} catch (InvalidCellException e) {
+			invalidCellExceptionCounter++;
+			PRINTERLOGR.log(Level.WARNING, "Invalid input passed to Braille Interpreter. Exception occurred "
+					+ invalidCellExceptionCounter + " time(s)", invalidCellExceptionCounter);
 		}
-		addInputBlock(block.buttonsUsed);
-		for (int i = 1; i <= block.buttonsUsed; i++) {
-			addResponse(block, (block.answer == i) ? block.correctResponse : block.wrongResponse, i,
-					(block.answer == i));
-		}
-		newLine();
-		PRINTERLOGR.info("Block added to text file");
 
 	}
 
 	public void addBlockList(ArrayList<Block> blocks)
 			throws OddSpecialCharacterException, InvalidBlockException, InvalidCellException {
 
-		this.blocks = blocks;
-		for (Block block : blocks) {
-			addBlock(block);
+		try {
+			this.blocks = blocks;
+			for (Block block : blocks) {
+				addBlock(block);
+			}
+			addConfig("ENDD");
+			addConfig("disp-cell-clear:0");
+			blockAddedToBlockListCounter++;
+			PRINTERLOGR.log(Level.INFO, "Block Added. Feature accessed " + blockAddedToBlockListCounter + " time(s)",
+					blockAddedToBlockListCounter);
+		} catch (OddSpecialCharacterException e) {
+			oddSpecialCharacterExceptionCounter++;
+			PRINTERLOGR.log(Level.WARNING, "Odd special character exception. Exception occurred "
+					+ oddSpecialCharacterExceptionCounter + " time(s)", oddSpecialCharacterExceptionCounter);
+		} catch (InvalidBlockException e) {
+			invalidBlockExceptionCounter++;
+			PRINTERLOGR.log(Level.WARNING,
+					"Invalid input passed to Printer. Exception occurred " + invalidBlockExceptionCounter + " time(s)",
+					invalidBlockExceptionCounter);
+		} catch (InvalidCellException e) {
+			invalidCellExceptionCounter++;
+			PRINTERLOGR.log(Level.WARNING, "Invalid input passed to Braille Interpreter. Exception occurred "
+					+ invalidCellExceptionCounter + " time(s)", invalidCellExceptionCounter);
 		}
-		addConfig("ENDD");
-		addConfig("disp-cell-clear:0");
-		PRINTERLOGR.info("blocks added to block list");
 	}
 
 	/**
@@ -114,6 +169,7 @@ public class Printer {
 	 *             - Required by Java
 	 */
 	public void print() throws IOException {
+
 		for (String line : lines) {
 			printWriter.print(line);
 		}
@@ -139,16 +195,28 @@ public class Printer {
 	 */
 	private void addSpoken(String line) throws OddSpecialCharacterException, InvalidBlockException {
 
-		if (!line.contains("*") && !line.contains("<") && !line.contains(">")) {
-			lines.add(line + "\n");
-		}
+		try {
 
-		else if (line.contains("<") || line.contains(">")) {
-			arrowTags(line);
-		}
+			if (!line.contains("*") && !line.contains("<") && !line.contains(">")) {
+				lines.add(line + "\n");
+			}
 
-		else {
-			asteriskTags(line);
+			else if (line.contains("<") || line.contains(">")) {
+				arrowTags(line);
+			}
+
+			else {
+				asteriskTags(line);
+			}
+		} catch (OddSpecialCharacterException e) {
+			oddSpecialCharacterExceptionCounter++;
+			PRINTERLOGR.log(Level.WARNING, "Odd special character exception. Exception occurred "
+					+ oddSpecialCharacterExceptionCounter + " time(s)", oddSpecialCharacterExceptionCounter);
+		} catch (InvalidBlockException e) {
+			invalidBlockExceptionCounter++;
+			PRINTERLOGR.log(Level.WARNING,
+					"Invalid input passed to Printer. Exception occurred " + invalidBlockExceptionCounter + " time(s)",
+					invalidBlockExceptionCounter);
 		}
 
 	}
@@ -162,35 +230,47 @@ public class Printer {
 	 */
 	private void arrowTags(String line) throws OddSpecialCharacterException, InvalidBlockException {
 
-		if (!line.contains("<") && line.contains(">"))
-			throw new OddSpecialCharacterException();
-		if (line.contains("<") && !line.contains(">"))
-			throw new OddSpecialCharacterException();
+		try {
 
-		String testLine = line;
-
-		while (testLine.contains("<") || testLine.contains(">")) {
-			if (!testLine.contains("<") && testLine.contains(">"))
+			if (!line.contains("<") && line.contains(">"))
 				throw new OddSpecialCharacterException();
-			if (testLine.contains("<") && !testLine.contains(">"))
-				throw new OddSpecialCharacterException();
-			testLine = testLine.replaceFirst("<", "");
-			testLine = testLine.replaceFirst(">", "");
-		}
-
-		String[] split = line.split("<");
-
-		addSpoken(split[0]);
-
-		for (int i = 1; i < split.length; i++) {
-
-			String[] superSplit = split[i].split(">");
-			if (superSplit.length > 2 || superSplit[0].contains("\\*"))
+			if (line.contains("<") && !line.contains(">"))
 				throw new OddSpecialCharacterException();
 
-			addSound(superSplit[0].trim());
-			if (superSplit.length == 2)
-				addSpoken(superSplit[1]);
+			String testLine = line;
+
+			while (testLine.contains("<") || testLine.contains(">")) {
+				if (!testLine.contains("<") && testLine.contains(">"))
+					throw new OddSpecialCharacterException();
+				if (testLine.contains("<") && !testLine.contains(">"))
+					throw new OddSpecialCharacterException();
+				testLine = testLine.replaceFirst("<", "");
+				testLine = testLine.replaceFirst(">", "");
+			}
+
+			String[] split = line.split("<");
+
+			addSpoken(split[0]);
+
+			for (int i = 1; i < split.length; i++) {
+
+				String[] superSplit = split[i].split(">");
+				if (superSplit.length > 2 || superSplit[0].contains("\\*"))
+					throw new OddSpecialCharacterException();
+
+				addSound(superSplit[0].trim());
+				if (superSplit.length == 2)
+					addSpoken(superSplit[1]);
+			}
+		} catch (OddSpecialCharacterException e) {
+			oddSpecialCharacterExceptionCounter++;
+			PRINTERLOGR.log(Level.WARNING, "Odd special character exception. Exception occurred "
+					+ oddSpecialCharacterExceptionCounter + " time(s)", oddSpecialCharacterExceptionCounter);
+		} catch (InvalidBlockException e) {
+			invalidBlockExceptionCounter++;
+			PRINTERLOGR.log(Level.WARNING,
+					"Invalid input passed to Printer. Exception occurred " + invalidBlockExceptionCounter + " time(s)",
+					invalidBlockExceptionCounter);
 		}
 
 	}
@@ -204,19 +284,30 @@ public class Printer {
 	 */
 	private void asteriskTags(String line) throws OddSpecialCharacterException, InvalidBlockException {
 
-		String[] split = line.split("\\*");
+		try {
+			String[] split = line.split("\\*");
 
-		if (split.length % 2 == 0 && split.length > 2)
-			throw new OddSpecialCharacterException();
+			if (split.length % 2 == 0 && split.length > 2)
+				throw new OddSpecialCharacterException();
 
-		for (int i = 0; i < split.length; i++) {
-			if (i % 2 == 0)
-				addSpoken(split[i]);
-			else {
-				if (split[i].contains("<") || split[i].contains(">"))
-					throw new OddSpecialCharacterException();
-				displayString(split[i]);
+			for (int i = 0; i < split.length; i++) {
+				if (i % 2 == 0)
+					addSpoken(split[i]);
+				else {
+					if (split[i].contains("<") || split[i].contains(">"))
+						throw new OddSpecialCharacterException();
+					displayString(split[i]);
+				}
 			}
+		} catch (OddSpecialCharacterException e) {
+			oddSpecialCharacterExceptionCounter++;
+			PRINTERLOGR.log(Level.WARNING, "Odd special character exception. Exception occurred "
+					+ oddSpecialCharacterExceptionCounter + " time(s)", oddSpecialCharacterExceptionCounter);
+		} catch (InvalidBlockException e) {
+			invalidBlockExceptionCounter++;
+			PRINTERLOGR.log(Level.WARNING,
+					"Invalid input passed to Printer. Exception occurred " + invalidBlockExceptionCounter + " time(s)",
+					invalidBlockExceptionCounter);
 		}
 
 	}
@@ -230,21 +321,44 @@ public class Printer {
 	// buttonsAvailable refers to how many buttons are on the simulator / machine
 	private void initialBlock(int cells, int buttonsAvailable)
 			throws OddSpecialCharacterException, InvalidBlockException {
-		addSpoken("Cell " + cells);
-		addSpoken("Button " + buttonsAvailable);
-		newLine();
-		addPause(1);
-		newLine();
+
+		try {
+			addSpoken("Cell " + cells);
+			addSpoken("Button " + buttonsAvailable);
+			newLine();
+			addPause(1);
+			newLine();
+		} catch (OddSpecialCharacterException e) {
+			oddSpecialCharacterExceptionCounter++;
+			PRINTERLOGR.log(Level.WARNING, "Odd special character exception. Exception occurred "
+					+ oddSpecialCharacterExceptionCounter + " time(s)", oddSpecialCharacterExceptionCounter);
+		} catch (InvalidBlockException e) {
+			invalidBlockExceptionCounter++;
+			PRINTERLOGR.log(Level.WARNING,
+					"Invalid input passed to Printer. Exception occurred " + invalidBlockExceptionCounter + " time(s)",
+					invalidBlockExceptionCounter);
+		}
 	}
 
 	// Standard line used at the beginning of a block
 	private void clearPins() {
 		addConfig("disp-clearAll");
+		clearPinsCounter++;
+		PRINTERLOGR.log(Level.INFO, "Pins Cleared. Feature accessed " + clearPinsCounter + " time(s)",
+				clearPinsCounter);
 	}
 
 	// Sets pins for the requested character
 	private void setPins(char letter) throws InvalidCellException {
-		addConfig("disp-cell-pins:0 " + interpreter.getPins(letter));
+		try {
+			addConfig("disp-cell-pins:0 " + interpreter.getPins(letter));
+			setPinsCounter++;
+			PRINTERLOGR.log(Level.INFO, "Pins set. Feature accessed " + setPinsCounter + " time(s)", setPinsCounter);
+		} catch (InvalidCellException e) {
+			invalidCellExceptionCounter++;
+			PRINTERLOGR.log(Level.WARNING, "Invalid input passed to Braille Interpreter. Exception occurred "
+					+ invalidCellExceptionCounter + " time(s)", invalidCellExceptionCounter);
+		}
 	}
 
 	// Adds sound for the response depending on if the response is correct
@@ -305,9 +419,12 @@ public class Printer {
 	 */
 
 	private void displayString(String in) throws InvalidBlockException {
-		if (in.length() <= this.cellsAmt)
+		if (in.length() <= this.cellsAmt) {
 			addConfig("disp-string:" + in);
-		else {
+			displayStringCounter++;
+			PRINTERLOGR.log(Level.INFO, "String displayed. Feature accessed " + displayStringCounter + " time(s)",
+					displayStringCounter);
+		} else {
 			throw new InvalidBlockException("The length of the string is too long for the Braille Cells to represent");
 		}
 
@@ -327,31 +444,52 @@ public class Printer {
 	// NOTE: button refers to the number displayed on the box / simulation. 1 = 1
 	private void addResponse(Block block, String spoken, int button, boolean correct)
 			throws OddSpecialCharacterException, InvalidBlockException {
-		addConfig("JUMPP" + button);
-		addAnswerSound(correct);
-		addSpoken(spoken);
-		nextSection(block);
+
+		try {
+			addConfig("JUMPP" + button);
+			addAnswerSound(correct);
+			addSpoken(spoken);
+			nextSection(block);
+			addResponseCounter++;
+			PRINTERLOGR.log(Level.INFO, "Response Added. Feature accessed " + addResponseCounter + " time(s)",
+					addResponseCounter);
+		} catch (OddSpecialCharacterException e) {
+			oddSpecialCharacterExceptionCounter++;
+			PRINTERLOGR.log(Level.WARNING, "Odd special character exception. Exception occurred "
+					+ oddSpecialCharacterExceptionCounter + " time(s)", oddSpecialCharacterExceptionCounter);
+		} catch (InvalidBlockException e) {
+			invalidBlockExceptionCounter++;
+			PRINTERLOGR.log(Level.WARNING,
+					"Invalid input passed to Printer. Exception occurred " + invalidBlockExceptionCounter + " time(s)",
+					invalidBlockExceptionCounter);
+		}
+
 	}
 
 	private final static Logger PRINTERLOGR = Logger.getLogger(Printer.class.getName());
 	{
-		
+
 		/*
-		 *   since levels are set to display info and categories above it, you can use...
-		 *   
-		 *   PRINTERLOGR.info("message you want logged");
-		 *   PRINTERLOGR.warning("message you want logged");
-		 *   PRINTERLOGR.severe("message you want logged");
-		 *   
+		 * since levels are set to display info and categories above it, you can use...
+		 * 
+		 * 
+		 * 
 		 */
-		
+
 		FileHandler fh;
 		try {
 			fh = new FileHandler("The log of doom", true);
 			fh.setLevel(Level.FINE); // level set to fine
 			PRINTERLOGR.addHandler(fh);
 		} catch (SecurityException | IOException e) {
-			PRINTERLOGR.severe("Security Violation");
+			ioExceptionCounter++;
+			PRINTERLOGR.log(Level.WARNING,
+					"Failed or interrupted I/O operations. Exception occurred " + ioExceptionCounter + " time(s)",
+					ioExceptionCounter);
+			securityExceptionCounter++;
+			PRINTERLOGR.log(Level.SEVERE,
+					"Security Exception. Exception occurred " + securityExceptionCounter + " time(s)",
+					securityExceptionCounter);
 		}
 	}
 
