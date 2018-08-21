@@ -73,16 +73,16 @@ public class Printer {
 		boolean repeat = (block.buttonsUsed < this.buttons);
 		addSectionName(block.name);
 		clearPins();
-		if (repeat)
-			addRepeat();
 		if (block.cells.length() > 1)
 			displayString(block.cells);
 		else
 			setPins(block.cells.toCharArray()[0]);
+		if (repeat)
+			addRepeat();
 		addSpoken(block.story);
 		if (repeat) {
 			endRepeat();
-			repeatButton(this.buttons);
+			repeatButton(this.buttons - 1);
 		}
 		addInputBlock(block.buttonsUsed);
 		for (int i = 1; i <= block.buttonsUsed; i++) {
